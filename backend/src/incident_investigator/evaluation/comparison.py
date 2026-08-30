@@ -11,6 +11,7 @@ from uuid import UUID
 from incident_investigator.persistence.pricing import estimate_gpt_5_6_sol_cost
 
 STAGE0_ANCHOR_RUN_ID = "02b97b0d-d68e-45f8-b678-386f7558dd02"
+V1_RUN_ID = "7fcf7453-609e-4006-8a72-cd1a6b26bcff"
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -64,12 +65,16 @@ def _trajectory_summary(root: Path) -> dict[str, Any]:
     usage: dict[str, Any] = {}
     case_duration_seconds = 0.0
     estimated_cost_values: list[float] = []
+    per_case_tool_calls: dict[str, int] = {}
     for path in sorted(root.glob("CC-*.jsonl")):
         events = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
         final_events = [event for event in events if event.get("event_type") == "final_output"]
         if not final_events:
             continue
         final = final_events[-1]
+        tool_calls = final.get("tool_call_count", 0)
+        if isinstance(tool_calls, int):
+            per_case_tool_calls[path.stem] = tool_calls
         case_usage = final.get("total_token_usage") or final.get("token_usage") or {}
         if isinstance(case_usage, dict):
             usage = _sum_numeric(usage, case_usage)
@@ -86,6 +91,15 @@ def _trajectory_summary(root: Path) -> dict[str, Any]:
             round(sum(estimated_cost_values), 8)
             if estimated_cost_values
             else estimate_gpt_5_6_sol_cost(usage)
+        ),
+        "per_case_tool_calls": per_case_tool_calls,
+        "average_tool_calls_per_case": (
+            round(sum(per_case_tool_calls.values()) / len(per_case_tool_calls), 6)
+            if per_case_tool_calls
+            else 0.0
+        ),
+        "cases_with_one_or_two_tool_calls": sorted(
+            incident_id for incident_id, count in per_case_tool_calls.items() if 1 <= count <= 2
         ),
     }
 
@@ -200,6 +214,19 @@ def build_run_comparison(
         "cases_improved": improved,
         "cases_regressed": regressed,
         "cases_unchanged": unchanged,
+        "cases_category_changed": sorted(
+            incident_id
+            for incident_id in set(anchor_cases) | set(candidate_cases)
+            if anchor_categories.get(incident_id) != candidate_categories.get(incident_id)
+        ),
+        "tool_calls": {
+            "anchor_average_per_case": anchor_trajectory["average_tool_calls_per_case"],
+            "candidate_average_per_case": candidate_trajectory["average_tool_calls_per_case"],
+            "anchor_cases_with_one_or_two": anchor_trajectory["cases_with_one_or_two_tool_calls"],
+            "candidate_cases_with_one_or_two": candidate_trajectory[
+                "cases_with_one_or_two_tool_calls"
+            ],
+        },
         "cc005": {
             "anchor_category": anchor_categories.get("CC-005"),
             "candidate_category": candidate_categories.get("CC-005"),
@@ -229,16 +256,21 @@ def comparison_csv(comparison: dict[str, Any]) -> str:
     return buffer.getvalue()
 
 
-def comparison_markdown(comparison: dict[str, Any]) -> str:
+def comparison_markdown(
+    comparison: dict[str, Any],
+    *,
+    candidate_label: str = "V1",
+    anchor_label: str = "Pinned Stage 0 Anchor",
+) -> str:
     lines = [
-        "# V1 Comparison to Pinned Stage 0 Anchor",
+        f"# {candidate_label} Comparison to {anchor_label}",
         "",
         f"- Anchor run: `{comparison['anchor_run_id']}`",
         f"- Candidate run: `{comparison['candidate_run_id']}`",
         f"- Model: `{comparison['model']}`",
         f"- Model configuration: `{json.dumps(comparison['model_configuration'], sort_keys=True)}`",
         "",
-        "| Metric | Anchor | V1 | Delta |",
+        f"| Metric | {anchor_label} | {candidate_label} | Delta |",
         "|---|---:|---:|---:|",
     ]
     for metric, values in comparison["metrics"].items():
@@ -252,6 +284,11 @@ def comparison_markdown(comparison: dict[str, Any]) -> str:
             f"- Cases improved: {', '.join(comparison['cases_improved']) or 'none'}",
             f"- Cases regressed: {', '.join(comparison['cases_regressed']) or 'none'}",
             f"- Cases unchanged: {', '.join(comparison['cases_unchanged']) or 'none'}",
+            (
+                "- Cases with changed predicted category: "
+                f"{', '.join(comparison['cases_category_changed']) or 'none'}"
+            ),
+            f"- Tool calls: {comparison['tool_calls']}",
             f"- Execution failures: {comparison['execution_failures']}",
             f"- Runtime: {comparison['runtime']}",
             f"- Token usage: {comparison['usage']}",

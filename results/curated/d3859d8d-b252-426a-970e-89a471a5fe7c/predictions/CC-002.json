@@ -1,0 +1,79 @@
+{
+  "causal_chain": [
+    "staffing_shortfall",
+    "reduced_productive_staffing",
+    "capacity_deficit",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.9,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Logged-in agents fell from 49 before the incident to 44 at 09:15 and ultimately 33; the post-incident mean declined 26.72%.",
+      "signal": "logged_in_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Productive agents fell from 46 at 09:00 to 41 at 09:15 and ultimately 31; the post-incident mean declined 25.58%.",
+      "signal": "productive_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Scheduled staffing remained constant at 49 while the scheduled-to-logged gap increased from zero to as many as 16 agents.",
+      "signal": "stable_headcount",
+      "source": "staffing"
+    },
+    {
+      "finding": "The only recorded event was a center-wide workforce notice at 09:15 reporting multiple same-day absences; no routing or platform event was recorded.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    },
+    {
+      "finding": "Mean service level fell from 90.34% before the incident to 66.86% afterward, a 23.48-point decline.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA increased from 25.21 to 56.66 seconds after incident start, a 124.74% rise.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean offered calls increased only 5.97%, making demand a contributing pressure rather than the primary cause.",
+      "signal": "moderate_volume_increase",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-002",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "STAFFING_SHORTFALL",
+  "primary_root_cause_detail": "Multiple same-day absences caused logged-in and productive staffing to fall beginning at 09:15 despite unchanged scheduled headcount. The resulting capacity deficit aligns with the sharp ASA increase and service-level decline.",
+  "recommended_actions": [
+    "Activate same-day absence coverage and overflow procedures when logged-in staffing falls below plan.",
+    "Alert workforce management on scheduled-to-logged gaps at interval start and escalate persistent deficits.",
+    "Pre-position cross-skilled backup coverage for moderate demand increases during reduced staffing.",
+    "Review the cause and notification timing of the same-day absences and update contingency staffing plans."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Offered volume rose only 5.97%, insufficient to explain the much larger service-level and ASA deterioration compared with the documented 26.72% logged-in staffing loss."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "AHT decreased 0.32% after incident start rather than increasing."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "No routing-change event was recorded, while the center-wide staffing loss directly coincided with degradation."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was recorded; the sole event was a same-day absence notice corroborated by staffing data."
+    }
+  ],
+  "stakeholder_summary": "The service-level breach was most likely caused by same-day absences. Logged-in capacity began falling exactly at 09:15 while scheduled headcount remained unchanged, and productive staffing declined in parallel. Moderate volume growth added pressure, but AHT, routing, and platform explanations were not supported."
+}

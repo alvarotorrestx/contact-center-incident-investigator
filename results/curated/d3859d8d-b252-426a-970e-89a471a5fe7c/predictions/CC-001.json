@@ -1,0 +1,74 @@
+{
+  "causal_chain": [
+    "unexpected_demand",
+    "capacity_deficit",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.94,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Actual offered calls rose to 117 versus 79 forecast at 09:15 (+48.1%) and remained materially above forecast in every subsequent interval.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "Mean service level declined from 90.85% before the incident to 54.33% during and after it.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA increased from 24.78 seconds to 72.50 seconds after incident onset.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Logged-in staffing remained at 49, productive staffing remained at 45\u201346, and adherence slightly improved.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "All four queues experienced broad service-level declines of 26.9\u201340.2 points alongside offered-volume increases of 48.9%\u201365.8%, contradicting a localized queue issue.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "No visible operational event corroborated a routing or platform incident.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-001",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "DEMAND_SPIKE",
+  "primary_root_cause_detail": "Offered demand increased abruptly at 09:15 and remained 24.4%\u201372.2% above forecast, overwhelming otherwise stable productive capacity across all queues.",
+  "recommended_actions": [
+    "Activate surge staffing or cross-skill support when interval demand materially exceeds forecast.",
+    "Apply overflow and callback controls to prevent queue growth during sustained demand surges.",
+    "Review the 09:15 demand source and update short-term forecasting and intraday alert thresholds."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in headcount remained constant, while productive staffing and adherence were stable or slightly improved."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Aggregate AHT was effectively unchanged and queue-level changes were only -0.3% to +0.9%."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "The degradation affected every queue, transfer rates remained stable, and no routing event was visible."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event or call-processing disruption was visible; the demand excess directly preceded and explained capacity saturation."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "The reported service decline was independently corroborated by higher ASA, near-100% occupancy, and consistent queue-level deterioration."
+    }
+  ],
+  "stakeholder_summary": "The service-level incident was most likely caused by an unexpected, sustained demand spike beginning at 09:15. Staffing and AHT remained stable, while all queues experienced higher volume, saturated occupancy, longer waits, and lower service levels."
+}

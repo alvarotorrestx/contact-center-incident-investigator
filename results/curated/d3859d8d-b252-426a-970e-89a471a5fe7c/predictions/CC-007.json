@@ -1,0 +1,89 @@
+{
+  "causal_chain": [
+    "adherence_drop",
+    "reduced_productive_staffing",
+    "capacity_deficit",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.93,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Adherence fell from a 92.2% pre-incident mean to 73.5% at incident onset and averaged 62.0% afterward.",
+      "signal": "adherence_decline",
+      "source": "staffing"
+    },
+    {
+      "finding": "Productive staffing declined 32.8%, from a pre-incident mean of 45.2 agents to 30.4 during/after the incident.",
+      "signal": "productive_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Service level fell from 88.0% before the incident to 51.4% during/after it.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "ASA rose from 28.7 to 79.2 seconds as effective staffing declined and occupancy reached saturation.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Demand averaged only 4.2% above forecast after onset, while required staffing was 36\u201340 agents and productive staffing declined below that requirement.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "All four queues deteriorated, with service-level declines of 20.9 to 45.1 points and ASA increases of 30.3 to 64.4 seconds, indicating a broad capacity constraint rather than isolated misrouting.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "The full visible event window contained no routing-change, platform, or call-processing events.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    },
+    {
+      "finding": "Independent recalculation matched every reported service-level interval exactly; maximum absolute difference was 0.0 percentage points.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-007",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "STAFFING_SHORTFALL",
+  "primary_root_cause_detail": "An adherence-driven loss of productive staffing created an effective capacity shortfall. Scheduled and logged-in headcount remained at 49, but productive agents fell from a pre-incident mean of 45.2 to 36 at 09:15 and then as low as 27, below the forecast-required 36\u201340 agents.",
+  "recommended_actions": [
+    "Investigate the activity states and adherence exceptions that removed agents from productive work beginning at 09:15.",
+    "Restore productive coverage to at least the interval requirement of 36\u201340 agents and monitor occupancy, ASA, and service-level recovery.",
+    "Add real-time alerts for widening logged-in-to-productive staffing gaps and rapid adherence deterioration.",
+    "Review Billing and Escalations first during recovery because they experienced the largest service-level declines.",
+    "Maintain contingency capacity for moderate forecast variance so small volume increases do not amplify future adherence losses."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Volume rose moderately, but averaged only 4.2% above forecast after onset; this was insufficient to explain the much larger productive-capacity loss and performance decline."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "AHT decreased 1.0% after onset and averaged 0.7% below forecast."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "All queues degraded, transfer rates were nearly unchanged, and no routing event was recorded."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was recorded, and the observed staffing-capacity pattern explains the degradation without a call-processing disruption."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Higher ASA and broad queue deterioration corroborated the incident, while recalculated service level matched all reported intervals."
+    }
+  ],
+  "stakeholder_summary": "CC-007 was most likely caused by an adherence-driven effective staffing shortfall. Headcount stayed logged in, but productive capacity dropped below requirements at incident onset, saturating occupancy and degrading every queue. Moderate demand contributed, while AHT, routing, platform, and reporting errors were ruled out as primary causes."
+}

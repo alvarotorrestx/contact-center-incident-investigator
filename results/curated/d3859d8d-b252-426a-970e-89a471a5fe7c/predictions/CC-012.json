@@ -1,0 +1,72 @@
+{
+  "causal_chain": [
+    "data_quality_error",
+    "inconsistent_reported_metric",
+    "service_level_degradation"
+  ],
+  "confidence": 0.97,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "All 11 intervals from 09:15 through 11:45 were reported exactly 26 percentage points below the service-level formula recalculation; earlier intervals matched.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    },
+    {
+      "finding": "Several post-start intervals reported answered calls exceeding offered calls, independently indicating inconsistent interval data.",
+      "signal": "count_conservation_mismatch",
+      "source": "performance"
+    },
+    {
+      "finding": "Post-start offered demand averaged only 0.18% above forecast, excluding a sustained unexpected demand surge.",
+      "signal": "stable_demand",
+      "source": "forecast"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained at 49 agents, productive staffing stayed at 45\u201346, and adherence was stable.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "No routing-change or platform event was recorded during or after incident start.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    },
+    {
+      "finding": "Mean ASA increased 37.7%, corroborating limited real caller delay despite the larger reporting error.",
+      "signal": "asa_increase",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-012",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "DATA_QUALITY",
+  "primary_root_cause_detail": "A reporting defect began at 09:15 and understated service level by exactly 26 percentage points in every subsequent interval. Recalculated service level was mostly above target, although moderate volume pressure caused brief genuine degradation at 09:15 and 09:45.",
+  "recommended_actions": [
+    "Correct the service-level reporting transformation introduced at 09:15 and backfill affected intervals.",
+    "Add automated reconciliation between displayed service level and the count-based formula, with alerts for material discrepancies.",
+    "Validate interval count lineage where answered calls exceed offered calls.",
+    "Retain intraday monitoring for moderate volume pressure and brief genuine service-level misses."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Demand averaged essentially on forecast after incident start; intermittent moderate increases cannot explain the sustained exact 26-point discrepancy."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled, logged-in, and productive staffing remained stable."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Post-start AHT fell 2.1% and averaged 0.59% below forecast."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event or associated operational evidence was present."
+    }
+  ],
+  "stakeholder_summary": "The sustained below-target dashboard alert was primarily a data-quality issue, not a prolonged operational capacity failure. The dashboard understated service level by exactly 26 points from 09:15 onward. Operations experienced brief real pressure, but demand was near forecast, staffing was stable, AHT did not rise, and no platform or routing event occurred."
+}

@@ -1,0 +1,74 @@
+{
+  "causal_chain": [
+    "platform_incident",
+    "call_processing_disruption",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.94,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Voice-platform monitoring reported intermittent call-processing delays across all queues at 09:15, exactly matching incident onset.",
+      "signal": "platform_event",
+      "source": "events"
+    },
+    {
+      "finding": "Service level dropped to 34.78% at 09:15 and remained below the 80% target through 11:45; the post-incident mean was 29.16% versus 88.87% before.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Answered calls fell 30.47%, from 67.6 to 47.0 per interval, while abandonment increased from 2.4 to 30.82 and ASA rose 333.47%.",
+      "signal": "queue_accumulation",
+      "source": "performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained at 49, while productive staffing increased slightly after incident onset.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "All four queues degraded with unchanged queue staffing, supporting a shared all-queue disruption rather than an isolated queue issue.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Offered volume increased 11.17% after incident onset, amplifying pressure but not explaining the disproportionate throughput collapse.",
+      "signal": "moderate_volume_increase",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-009",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "PLATFORM_INCIDENT",
+  "primary_root_cause_detail": "An all-queue voice-platform degradation caused intermittent call-processing delays beginning at 09:15, reducing answered throughput and producing sustained queueing, abandonment, ASA, and service-level deterioration.",
+  "recommended_actions": [
+    "Escalate the 09:15 voice-platform degradation to the telephony provider and preserve platform logs for root-cause analysis.",
+    "Implement monitoring for call-processing latency, answered-throughput drops, and simultaneous cross-queue ASA increases.",
+    "Activate incident routing or overflow contingencies when an all-queue platform disruption is detected.",
+    "Review capacity buffers for moderate demand increases during platform degradation and validate recovery before closing the incident."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Logged-in and scheduled staffing stayed at 49, productive staffing did not decline, and every queue retained its staffed-agent count."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Center AHT decreased 0.24%; queue-level changes were small and mixed."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "Degradation affected every queue, transfer rates were stable or lower, and the only visible event was an all-queue platform degradation."
+    },
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Volume rose only moderately overall, while low-growth queues also deteriorated severely; demand was a contributor rather than the primary cause."
+    }
+  ],
+  "stakeholder_summary": "The service-level failure was most likely caused by an all-queue voice-platform degradation beginning at 09:15. Staffing and AHT remained stable, but answered throughput fell sharply while ASA and abandonment surged. An 11% volume increase amplified the impact but was not the primary cause."
+}

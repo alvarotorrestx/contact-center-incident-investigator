@@ -1,0 +1,77 @@
+{
+  "causal_chain": [
+    "unexpected_demand",
+    "queue_capacity_imbalance",
+    "capacity_deficit",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.82,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Post-incident volume averaged 5.8% above forecast and peaked 22.78% above at 10:15 and 22.37% above at 10:45.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "Service level fell to 75.00% at 10:15 and 77.42% at 10:45, coinciding with the two largest demand variances.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "General Service volume increased 15.27%, ASA increased 42.55%, and service level declined 4.31 points while its staffing and AHT were effectively unchanged.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "All 49 scheduled agents remained logged in; productive staffing changed by less than one agent on average.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Independent recalculation matched every reported service-level interval exactly, rejecting a reporting error.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    },
+    {
+      "finding": "No routing, platform, or other operational event was recorded during the full visible window.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-014",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "DEMAND_SPIKE",
+  "primary_root_cause_detail": "Intermittent unexpected demand exceeded forecast by more than 22% at 10:15 and 10:45. These were exactly the two below-target service-level intervals. The additional load was concentrated in General Service while staffing and AHT remained stable.",
+  "recommended_actions": [
+    "Apply intraday overflow or cross-skilled staffing to General Service when actual demand materially exceeds forecast.",
+    "Set real-time alerts for queue-level volume variance above forecast and associated ASA growth.",
+    "Review the drivers of the localized General Service demand increase and adjust its interval forecast if the pattern recurs."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in headcount remained at 49 throughout, with nearly unchanged productive staffing."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Aggregate AHT declined 1.35%, General Service AHT was flat, and post-start AHT averaged below forecast."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "No routing event was recorded and General Service transfer rate rose only 0.18 percentage points."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event occurred, and the degradation was queue-specific rather than center-wide."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Recalculated service level matched all reported intervals with zero variance."
+    }
+  ],
+  "stakeholder_summary": "CC-014 was most likely caused by short demand spikes concentrated in General Service. The two service-level misses aligned exactly with volume exceeding forecast by more than 22%; staffing, AHT, routing events, platform issues, and metric error were ruled out."
+}

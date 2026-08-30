@@ -8,6 +8,7 @@ from incident_investigator.baseline import build_baseline_prompt
 from incident_investigator.benchmark import AgentVisibleCaseLoader
 from incident_investigator.evaluation import GroundTruthLoader
 from incident_investigator.investigator import build_investigator_prompt
+from incident_investigator.structured_investigator import build_v2_prompt
 from incident_investigator.tools import CaseToolbox
 
 EVALUATOR_ONLY_KEYS = {
@@ -53,6 +54,13 @@ def test_ground_truth_never_reaches_loader_or_prompt(project_root: Path) -> None
             result = toolbox.execute(schema["name"], _valid_tool_arguments(schema["name"], toolbox))
             assert not (_all_keys(result) & EVALUATOR_ONLY_KEYS)
 
+        v2_prompt = build_v2_prompt(visible, toolbox, project_root, 10)
+        for key in EVALUATOR_ONLY_KEYS:
+            assert f'"{key}":' not in v2_prompt.user
+        assert truth.primary_root_cause.detail not in v2_prompt.user
+        for schema in [*v2_prompt.operational_tools, v2_prompt.ledger_tool]:
+            assert not (_all_keys(schema) & EVALUATOR_ONLY_KEYS)
+
 
 def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> None:
     protected = [
@@ -70,6 +78,25 @@ def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> No
         / "prompting.py",
         project_root / "backend" / "src" / "incident_investigator" / "investigator" / "runner.py",
         project_root / "backend" / "src" / "incident_investigator" / "tools",
+        project_root / "backend" / "src" / "incident_investigator" / "hypotheses",
+        project_root
+        / "backend"
+        / "src"
+        / "incident_investigator"
+        / "structured_investigator"
+        / "client.py",
+        project_root
+        / "backend"
+        / "src"
+        / "incident_investigator"
+        / "structured_investigator"
+        / "prompting.py",
+        project_root
+        / "backend"
+        / "src"
+        / "incident_investigator"
+        / "structured_investigator"
+        / "runner.py",
     ]
     for path in protected:
         files = path.rglob("*.py") if path.is_dir() else [path]

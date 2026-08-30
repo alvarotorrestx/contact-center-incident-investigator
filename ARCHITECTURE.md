@@ -79,8 +79,30 @@ loop.
 
 The completed V1 run `7fcf7453-609e-4006-8a72-cd1a6b26bcff` scored 5/10 RCIA versus the pinned
 9/10 baseline. The tool and trajectory infrastructure is retained for later controlled experiments,
-but the current V1 stopping/investigation policy is not promoted over the baseline: seven cases
+but the current V1 stopping/investigation policy is not promoted over the baseline: eight cases
 stopped after one or two calls and often failed to gather enough independent evidence.
+
+### V2 Implementation Boundary
+
+V2 adds a typed, agent-visible hypothesis ledger on a separate workflow path while retaining the
+unchanged V1 operational tools. The model initializes three to six plausible categories, records
+status/confidence/evidence-for/evidence-against, and updates the complete ledger after every
+operational tool result. The runner blocks a normal final answer unless one hypothesis is uniquely
+leading, has two distinct supporting signals from at least two called tools, at least two competing
+hypotheses have evidence-based evaluation, causal timing is supported, and no critical
+contradiction remains. At the unchanged ten-call limit, unmet criteria require `INCONCLUSIVE`.
+
+V2 trajectories add before/after ledger snapshots, structured status/confidence/evidence changes,
+rejected proposed states, and premature-completion blocks. They record concise public summaries,
+not private chain-of-thought. V2 contains no verifier, verifier call, verifier feedback, or revision
+loop.
+
+Official run `d3859d8d-b252-426a-970e-89a471a5fe7c` completed 10/10 cases with zero failures and
+scored 7/10 RCIA. It improved on V1's 5/10 and increased expected-evidence coverage from 17/40 to
+34/40; no case stopped after one or two tools. It remained below the pinned Stage 0 baseline's
+9/10, required 49 tools and 1,410,169 tokens, and produced nine recoverable rejected-ledger
+updates. Keep the structured hypothesis discipline as the stronger tool-using workflow, but do not
+promote it over the Stage 0 baseline on quality, latency, or cost.
 
 ## Deterministic Python Tools
 Initial tool set:
@@ -99,7 +121,7 @@ Principle:
 Use the LLM for judgment and investigation decisions. Use deterministic code for arithmetic, aggregation, filtering, metric calculation, and scoring.
 
 ## Hypothesis Ledger
-Maintain structured state.
+V2 maintains structured state after every operational tool result.
 
 Example:
 

@@ -1,0 +1,82 @@
+{
+  "causal_chain": [
+    "increased_aht",
+    "reduced_throughput",
+    "capacity_deficit",
+    "service_level_degradation"
+  ],
+  "confidence": 0.94,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Mean AHT increased 39.7%, from 375.2 seconds before the incident to 524.2 seconds incident-and-after.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "At 09:15, AHT jumped from 368.2 to 458.3 seconds while service level fell from 85.1% to 75.3%; service level subsequently averaged 60.4%.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA increased from 30.6 to 65.3 seconds, while answered calls fell 17.2% despite stable offered demand.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained at 49; productive staffing changed only from 45.4 to 45.27 agents.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "AHT increased by approximately 40% to 41% in all four queues, with unchanged queue staffing.",
+      "signal": "aht_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Account Support volume increased 16.3%, amplifying that queue's degradation but not explaining the center-wide incident.",
+      "signal": "moderate_volume_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "No mismatch was found: recalculated service level matched every reported interval exactly, with a maximum difference of 0.0 percentage points.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-003",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "HANDLE_TIME_INCREASE",
+  "primary_root_cause_detail": "A broad, sustained increase in average handle time reduced throughput against essentially unchanged staffing and demand. AHT rose at the 09:15 incident boundary and increased by about 40% across every visible queue. The visible data does not identify the underlying process reason for the longer interactions.",
+  "recommended_actions": [
+    "Identify the interaction or after-call-work components that increased at 09:15 across all queues, segmented by contact reason and agent workflow.",
+    "Review process, script, knowledge-base, or system changes capable of increasing handle time across every queue.",
+    "Apply temporary capacity or workload controls until AHT returns to baseline, prioritizing Account Support because of its localized volume increase and larger service-level decline.",
+    "Monitor interval-level AHT, occupancy, answered throughput, ASA, and service level to verify recovery."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Center offered volume averaged 2.6% lower after onset; only Account Support had a moderate localized increase."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in headcount remained constant, and productive staffing declined only 0.28%."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "All queues showed nearly identical proportional AHT growth, and no visible event corroborated a routing change."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No visible platform event corroborated an incident during the evaluation window."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Service level recalculated exactly from visible counts in all 16 intervals."
+    }
+  ],
+  "stakeholder_summary": "The service-level incident was most likely caused by a center-wide increase in handle time, not by a demand surge or staffing loss. AHT rose about 40% at the incident onset across all queues, consuming available capacity and reducing throughput. Account Support's moderate volume increase worsened its local impact. The operational reason for the AHT increase requires follow-up."
+}

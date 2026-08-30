@@ -1,0 +1,79 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "queue_misrouting",
+    "queue_capacity_imbalance",
+    "service_level_degradation"
+  ],
+  "confidence": 0.94,
+  "contributing_factors": [
+    "moderate_volume_increase",
+    "localized_queue_misrouting"
+  ],
+  "evidence": [
+    {
+      "finding": "Billing queue skill mappings were updated at 09:15, exactly when the incident began.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "Billing staffing fell from 12 to 9 agents after incident onset while General Service staffing increased from 19 to 22, indicating capacity redistribution rather than center-wide staff loss.",
+      "signal": "queue_staffing_imbalance",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Billing service level fell 45.1 points to 44.7% and ASA rose 189%; General Service and Escalations improved, and Account Support remained above target.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "All 49 scheduled agents remained logged in, and productive staffing was essentially unchanged across the incident boundary.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Aggregate offered volume increased only 2.6%, from 76 to 78 calls per interval, which does not support a center-wide demand spike.",
+      "signal": "stable_demand",
+      "source": "performance"
+    },
+    {
+      "finding": "Billing offered volume increased 26.9%, adding localized pressure after its staffed capacity was reduced.",
+      "signal": "moderate_volume_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Center service level declined from 88.4% before the incident to 76.5% afterward, while ASA increased from 29.8 to 43.1 seconds.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-005",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "A Billing skill-mapping change at 09:15 redirected three staffed agents from Billing to General Service. Billing capacity fell from 12 to 9 agents, after which Billing service level dropped from 89.8% to 44.7% and ASA increased 189%, while other queues remained stable or improved.",
+  "recommended_actions": [
+    "Restore or correct the pre-incident Billing skill mappings and verify that Billing staffing returns to the intended level.",
+    "Audit the routing change for unintended transfer of Billing-skilled capacity to General Service.",
+    "Temporarily add Billing-skilled coverage while the queue recovers, accounting for the 26.9% localized volume increase.",
+    "Add post-change validation alerts for queue staffing redistribution, service-level divergence, and ASA increases."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Aggregate offered volume rose only 2.6%; localized Billing growth contributed but was not a center-wide surge and does not explain the synchronized agent redistribution."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in staffing remained constant at 49, productive staffing was stable, and Billing's three-agent reduction was offset by a three-agent increase in General Service."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Aggregate AHT decreased 1.1%, and Billing AHT decreased 0.5% despite its severe service-level decline."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was recorded, and the impact was localized to Billing while other queues remained stable or improved."
+    }
+  ],
+  "stakeholder_summary": "The incident was most likely caused by the 09:15 Billing routing change, which shifted three agents out of Billing and created a localized capacity imbalance. Billing performance collapsed while other queues improved; stable center staffing, near-stable aggregate demand, lower AHT, and no platform event rule out the main alternatives."
+}

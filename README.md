@@ -76,6 +76,22 @@ is curated under `results/curated/` and `trajectories/curated/`. The determinist
 trajectory infrastructure are retained; the current investigator policy is not promoted as the
 default system.
 
+## V2 structured-hypothesis investigator
+
+V2 keeps the V1 tools and adds a typed hypothesis ledger, evidence-for/evidence-against tracking,
+competing-explanation evaluation, and application-enforced completion criteria. It uses the same
+frozen benchmark, model, medium reasoning, taxonomy, final schema, and deterministic scorer.
+
+```powershell
+.\.venv\Scripts\python.exe -m incident_investigator --project-root . run-v2
+```
+
+The official V2 run is `d3859d8d-b252-426a-970e-89a471a5fe7c`: ten valid outputs, zero failures,
+7/10 RCIA, and 34/40 expected-evidence coverage. It improved materially over V1's tool-use result
+but remained below the 9/10 Stage 0 anchor and cost substantially more. Complete evidence is curated
+under `results/curated/` and `trajectories/curated/`. V2 does not include a verifier or revision
+loop.
+
 ## Local API and UI
 
 ```powershell
@@ -83,5 +99,6 @@ default system.
 corepack pnpm --dir frontend dev
 ```
 
-Stage 0 exposes only the `baseline` system version. Tool use, a hypothesis ledger, verification,
-revision loops, and the polished product UI require separate phase approval.
+The existing API still exposes only the Stage 0 `baseline` system version. V1/V2 experiments run
+through the CLI; verifier behavior, revision loops, and polished product UI require separate phase
+approval.

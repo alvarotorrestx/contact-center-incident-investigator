@@ -40,6 +40,9 @@ def main() -> None:
     subparsers.add_parser("validate", help="Validate benchmark v1")
     subparsers.add_parser("run-baseline", help="Run the live OpenAI baseline on all cases")
     subparsers.add_parser("run-v1", help="Run the bounded V1 tool investigator on all cases")
+    subparsers.add_parser(
+        "run-v2", help="Run the bounded V2 structured-hypothesis investigator on all cases"
+    )
     evaluate = subparsers.add_parser("evaluate", help="Score saved predictions")
     evaluate.add_argument("--run-id", required=True)
     serve = subparsers.add_parser("serve", help="Run the local FastAPI server")
@@ -70,6 +73,17 @@ def main() -> None:
         print(
             json.dumps(
                 {"run_id": run_id, "scores": scores, "comparison": comparison},
+                indent=2,
+            )
+        )
+    elif args.command == "run-v2":
+        from incident_investigator.config import get_settings
+        from incident_investigator.structured_investigator.batch import run_live_v2
+
+        run_id, scores, comparisons = run_live_v2(get_settings(project_root))
+        print(
+            json.dumps(
+                {"run_id": run_id, "scores": scores, "comparisons": comparisons},
                 indent=2,
             )
         )

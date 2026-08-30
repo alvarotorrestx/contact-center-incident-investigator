@@ -13,20 +13,20 @@ If `TONIGHT_PLAN.md` is present locally, it is an internal execution aid only. I
 
 The project documents above define the intended product, benchmark, evaluation methodology, and agent architecture.
 
-## Authorization State: V1 COMPLETE — AWAITING V2 APPROVAL
+## Authorization State: V2 COMPLETE — AWAITING V3 APPROVAL
 
-Stage 0 is frozen and complete. V1 tool-using investigator implementation and its measured
-ten-case experiment are complete. The project is awaiting explicit approval to begin V2.
+Stage 0 is frozen and complete. V1 tool-use and V2 structured-hypothesis implementations and their
+measured ten-case experiments are complete. The project is awaiting explicit approval to begin V3.
 
-V2 and all later implementation remain **NO-GO** without explicit user approval. V1 was limited to
-deterministic read-only investigation tools, a bounded iterative tool-using investigator, tool
-decision trajectories, the configuration-matched ten-case experiment, and minimal supporting
-integration/documentation.
+V3 and all later implementation remain **NO-GO** without explicit user approval. V2 was limited to
+a structured hypothesis ledger, evidence-for/evidence-against tracking, explicit competing-
+hypothesis evaluation, termination discipline, hypothesis trajectories, the configuration-matched
+ten-case experiment, and minimal supporting integration/documentation.
 
-Do not add a hypothesis ledger, structured evidence-for/evidence-against state, a verifier, verifier
-feedback, a revision loop, or later-stage UI work during V1. V1 does not authorize changing the
-frozen benchmark, ground truth, scoring behavior, taxonomy, output schema, baseline behavior,
-model configuration, or historical experimental artifacts.
+Do not add a verifier, verifier feedback, a revision loop, multi-agent voting, or later-stage UI work
+without explicit approval. V2 did not authorize changing the frozen benchmark, ground truth,
+scoring behavior, taxonomy, output schema, baseline behavior, model configuration, or historical
+experimental artifacts.
 
 ## Strict GO / NO-GO Phase Gates
 

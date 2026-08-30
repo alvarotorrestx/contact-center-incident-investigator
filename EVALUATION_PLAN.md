@@ -158,6 +158,12 @@ The formal Stage 0 comparison anchor for V1–V3 is run
 the baseline receives every visible table in one prompt, while V1 lets the same model select
 deterministic read-only tools over the same visible case.
 
+The official V1 comparison run is `7fcf7453-609e-4006-8a72-cd1a6b26bcff`. The official V2 run is
+`d3859d8d-b252-426a-970e-89a471a5fe7c`. V2 retains the same benchmark, model, medium reasoning,
+taxonomy, final schema, deterministic tools, and scorer as V1, then adds structured hypothesis
+state and application-enforced termination criteria. V2 must be compared against both the pinned
+Stage 0 anchor and V1; its complete curated artifacts are the evidence of record.
+
 ## Reproducibility Controls
 Record:
 - model and exact version/name

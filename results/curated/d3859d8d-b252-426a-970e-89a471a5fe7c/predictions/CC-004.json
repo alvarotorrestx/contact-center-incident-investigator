@@ -1,0 +1,72 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "increased_transfers",
+    "increased_aht",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.82,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Routing version 24.7 was deployed to all queues at 09:15, exactly matching incident onset.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "Transfer rates increased 87.6%\u2013116.9% across all four queues after the deployment.",
+      "signal": "transfer_rate_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "AHT increased approximately 35%\u201338% in every queue after incident onset.",
+      "signal": "aht_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Mean service level declined from 80.8% before onset to 61.0% afterward, while ASA increased 67.5%.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained constant at 49; productive staffing was essentially unchanged.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Mean offered calls decreased 6.1% after onset, contradicting a demand spike.",
+      "signal": "stable_demand",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-004",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "Routing configuration version 24.7 was deployed across all queues at 09:15, coinciding exactly with the incident onset. Transfer rates then increased 87.6%\u2013116.9% and AHT increased approximately 35%\u201338% across queues, reducing throughput and degrading service level despite stable staffing and no demand surge.",
+  "recommended_actions": [
+    "Rollback or correct routing configuration version 24.7 and validate skill-to-queue mappings.",
+    "Monitor transfer rate, AHT, ASA, and service level by queue immediately after remediation.",
+    "Add pre-deployment regression checks for routing paths, transfer loops, and queue assignments.",
+    "Establish automated post-deployment alerts for abrupt cross-queue transfer-rate and AHT increases."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Aggregate offered calls decreased after onset, and three of four queues had lower volume."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in staffing remained constant, with no material productive-headcount loss."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was recorded; the only visible operational event was the routing deployment."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Service level recalculated exactly for all 16 intervals, with zero material mismatch."
+    }
+  ],
+  "stakeholder_summary": "The service-level decline was most likely caused by the 09:15 routing deployment. The change coincided with roughly doubled transfer rates and a 35%\u201338% AHT increase across queues, reducing throughput. Demand and staffing were stable, and reported service-level calculations were valid."
+}
