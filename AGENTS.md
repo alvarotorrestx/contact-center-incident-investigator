@@ -13,13 +13,20 @@ If `TONIGHT_PLAN.md` is present locally, it is an internal execution aid only. I
 
 The project documents above define the intended product, benchmark, evaluation methodology, and agent architecture.
 
-## Authorization State: STAGE 0 COMPLETE — AWAITING V1 APPROVAL
+## Authorization State: V1 COMPLETE — AWAITING V2 APPROVAL
 
-Stage 0 is complete. The project is awaiting explicit approval to begin V1.
+Stage 0 is frozen and complete. V1 tool-using investigator implementation and its measured
+ten-case experiment are complete. The project is awaiting explicit approval to begin V2.
 
-V1 and all later implementation remain **NO-GO** without explicit user approval. Do not add investigation tools, iterative investigator behavior, a hypothesis ledger, verification, revision loops, or later-stage UI work until the corresponding phase is explicitly authorized.
+V2 and all later implementation remain **NO-GO** without explicit user approval. V1 was limited to
+deterministic read-only investigation tools, a bounded iterative tool-using investigator, tool
+decision trajectories, the configuration-matched ten-case experiment, and minimal supporting
+integration/documentation.
 
-While awaiting V1 approval, work is limited to Stage 0 validation, explicitly authorized documentation or configuration cleanup, configuration-matched baseline execution, and evidence curation. These activities do not authorize beginning V1 or changing the frozen benchmark, ground truth, scoring behavior, taxonomy, or historical experimental artifacts.
+Do not add a hypothesis ledger, structured evidence-for/evidence-against state, a verifier, verifier
+feedback, a revision loop, or later-stage UI work during V1. V1 does not authorize changing the
+frozen benchmark, ground truth, scoring behavior, taxonomy, output schema, baseline behavior,
+model configuration, or historical experimental artifacts.
 
 ## Strict GO / NO-GO Phase Gates
 

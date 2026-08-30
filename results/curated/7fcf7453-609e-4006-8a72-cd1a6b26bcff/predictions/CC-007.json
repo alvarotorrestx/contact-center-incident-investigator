@@ -1,0 +1,23 @@
+{
+  "causal_chain": [
+    "service_level_degradation"
+  ],
+  "confidence": 0.1,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Service level declined after the incident boundary.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-007",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "MULTIFACTOR",
+  "primary_root_cause_detail": "The incident requires further evidence review.",
+  "recommended_actions": [
+    "Review staffing, forecast, queue, and event evidence."
+  ],
+  "rejected_hypotheses": [],
+  "stakeholder_summary": "Initial review detected a material service-level decline; further investigation is required."
+}

@@ -1,3 +1,9 @@
+from .comparison import (
+    STAGE0_ANCHOR_RUN_ID,
+    build_run_comparison,
+    comparison_csv,
+    comparison_markdown,
+)
 from .ground_truth import GroundTruth, GroundTruthLoader
 from .scoring import BenchmarkScores, PerCaseScore, score_benchmark, score_prediction
 
@@ -6,6 +12,10 @@ __all__ = [
     "GroundTruth",
     "GroundTruthLoader",
     "PerCaseScore",
+    "STAGE0_ANCHOR_RUN_ID",
+    "build_run_comparison",
+    "comparison_csv",
+    "comparison_markdown",
     "score_benchmark",
     "score_prediction",
 ]

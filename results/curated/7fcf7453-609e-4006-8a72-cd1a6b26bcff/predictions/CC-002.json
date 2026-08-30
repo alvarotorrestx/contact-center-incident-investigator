@@ -1,0 +1,106 @@
+{
+  "causal_chain": [
+    "staffing_shortfall",
+    "reduced_productive_staffing",
+    "capacity_deficit",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.98,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Mean logged-in staffing declined 26.7%, from 49 before the incident to 35.9 afterward, reaching 33 agents despite 49 remaining scheduled.",
+      "signal": "logged_in_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Mean productive staffing declined 25.6%, from 45.2 to 33.6 agents, with a low of 31 versus forecast requirements of 35\u201339 agents.",
+      "signal": "productive_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Scheduled staffing remained constant at 49 and no agents were in training, isolating the capacity loss to same-day availability rather than scheduling or training.",
+      "signal": "stable_headcount",
+      "source": "staffing"
+    },
+    {
+      "finding": "Mean service level fell 23.5 percentage points, from 90.3% before the incident to 66.9% afterward.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA rose from 25.2 to 56.7 seconds, a 124.7% increase, while post-incident occupancy averaged 90.6% and reached 100%.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Offered calls increased 6.0% versus the pre-incident mean, adding moderate pressure but not constituting a demand spike.",
+      "signal": "moderate_volume_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "All four queues experienced staffing reductions of approximately 24.7%\u201328.9% and material service-level declines, demonstrating a center-wide capacity problem rather than an isolated queue failure.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "The only visible event was a center-wide workforce notice at 09:15 reporting multiple same-day absences; no platform or routing event was recorded.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    },
+    {
+      "finding": "Independent recalculation matched every reported service-level interval exactly, with a maximum difference of 0.0 percentage points; therefore, no actual mismatch was found.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-002",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "STAFFING_SHORTFALL",
+  "primary_root_cause_detail": "Same-day absences beginning at 09:15 caused a center-wide decline in logged-in and productive staffing while scheduled headcount remained unchanged. Productive staffing fell below forecast-required capacity, driving high occupancy, longer waits, and sustained service-level degradation.",
+  "recommended_actions": [
+    "Activate same-day absence contingencies, including reserve staffing, voluntary overtime, and cross-skilled backup agents.",
+    "Create real-time alerts when logged-in staffing falls materially below schedule or forecast-required capacity.",
+    "Prioritize staffing recovery for the lowest-performing queues while preserving balanced coverage across all queues.",
+    "Review absence-notification and escalation procedures so workforce management can intervene before the capacity gap expands.",
+    "Monitor service level, ASA, occupancy, and backlog after staffing restoration to confirm recovery."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Post-incident demand was only 6.0% above the pre-incident mean and averaged 2.1% below forecast, insufficient to explain the severity of the degradation."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Post-incident mean AHT decreased 0.3% and was approximately in line with forecast."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Mean adherence increased from 92.2% to 93.7%; the loss occurred in logged-in headcount, not adherence among available agents."
+    },
+    {
+      "category": "TRAINING_CAPACITY_LOSS",
+      "reason": "No agents were recorded in training during any interval."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "No routing event was recorded, and staffing and service-level deterioration occurred across every visible queue."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was visible, and the timing aligns directly with the workforce absence notice and measured staffing loss."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Reported service level matched the specified count-based recalculation in all 16 intervals."
+    },
+    {
+      "category": "FORECAST_ERROR",
+      "reason": "Actual post-incident offered volume and AHT were broadly at or below forecast; the material variance was actual productive staffing falling beneath required capacity."
+    }
+  ],
+  "stakeholder_summary": "CC-002 was caused by a confirmed center-wide staffing shortfall. Multiple same-day absences began at 09:15, reducing productive staffing by 25.6% while scheduled headcount stayed at 49. Demand rose moderately but remained below forecast overall, and AHT, adherence, routing, platform, training, and metric-quality explanations were not supported."
+}

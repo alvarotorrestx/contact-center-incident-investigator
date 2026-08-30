@@ -7,6 +7,8 @@ from pathlib import Path
 from incident_investigator.baseline import build_baseline_prompt
 from incident_investigator.benchmark import AgentVisibleCaseLoader
 from incident_investigator.evaluation import GroundTruthLoader
+from incident_investigator.investigator import build_investigator_prompt
+from incident_investigator.tools import CaseToolbox
 
 EVALUATOR_ONLY_KEYS = {
     "primary_root_cause",
@@ -40,6 +42,17 @@ def test_ground_truth_never_reaches_loader_or_prompt(project_root: Path) -> None
         truth = truth_loader.load(summary.incident_id)
         assert truth.primary_root_cause.detail not in prompt.user
 
+        toolbox = CaseToolbox(visible)
+        investigator_prompt = build_investigator_prompt(visible, toolbox, project_root, 10)
+        for key in EVALUATOR_ONLY_KEYS:
+            assert f'"{key}":' not in investigator_prompt.user
+        assert truth.primary_root_cause.detail not in investigator_prompt.user
+        for schema in investigator_prompt.tools:
+            assert not (_all_keys(schema) & EVALUATOR_ONLY_KEYS)
+        for schema in investigator_prompt.tools:
+            result = toolbox.execute(schema["name"], _valid_tool_arguments(schema["name"], toolbox))
+            assert not (_all_keys(result) & EVALUATOR_ONLY_KEYS)
+
 
 def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> None:
     protected = [
@@ -48,6 +61,15 @@ def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> No
         project_root / "backend" / "src" / "incident_investigator" / "baseline" / "prompting.py",
         project_root / "backend" / "src" / "incident_investigator" / "baseline" / "runner.py",
         project_root / "backend" / "src" / "incident_investigator" / "benchmark" / "loader.py",
+        project_root / "backend" / "src" / "incident_investigator" / "investigator" / "client.py",
+        project_root
+        / "backend"
+        / "src"
+        / "incident_investigator"
+        / "investigator"
+        / "prompting.py",
+        project_root / "backend" / "src" / "incident_investigator" / "investigator" / "runner.py",
+        project_root / "backend" / "src" / "incident_investigator" / "tools",
     ]
     for path in protected:
         files = path.rglob("*.py") if path.is_dir() else [path]
@@ -86,3 +108,13 @@ def test_frozen_case_files_contain_no_evaluator_fields(project_root: Path) -> No
         content = path.read_text(encoding="utf-8")
         for key in EVALUATOR_ONLY_KEYS:
             assert key not in content
+
+
+def _valid_tool_arguments(name: str, toolbox: CaseToolbox) -> dict[str, object]:
+    if name == "analyze_queue":
+        return {"queue_name": toolbox.queue_names[0]}
+    if name == "get_events":
+        return {"time_window": "full", "scope": None}
+    if name == "calculate_metric_change":
+        return {"metric": "service_level_pct", "time_window": "pre_vs_post_incident"}
+    return {}

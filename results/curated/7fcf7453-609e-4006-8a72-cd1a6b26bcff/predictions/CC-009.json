@@ -1,0 +1,65 @@
+{
+  "causal_chain": [
+    "capacity_deficit",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.45,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Mean service level fell from 88.87% before the incident to 29.16% from 09:15 onward, a 59.71-point decline.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA increased from 26.27 seconds to 113.87 seconds, while abandoned calls rose from 2.4 to 30.82 per interval.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Offered calls increased 11.17%, from 70.0 to 77.82 per interval; this was material but not a demand surge.",
+      "signal": "moderate_volume_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "AHT did not increase: it was essentially flat to slightly lower, moving from 375.96 to 375.05 seconds.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Transfer rate did not increase, declining slightly from 6.18% to 6.05%.",
+      "signal": "transfer_rate_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Answered calls fell 30.47% despite higher offered volume, consistent with reduced throughput and sustained queue growth.",
+      "signal": "queue_accumulation",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-009",
+  "investigation_status": "INCONCLUSIVE",
+  "primary_root_cause_category": "MULTIFACTOR",
+  "primary_root_cause_detail": "The incident shows a sustained throughput/capacity failure beginning at 09:15, but center-level performance alone cannot distinguish staffing, routing, queue imbalance, or another operational disruption.",
+  "recommended_actions": [
+    "Inspect interval staffing, adherence, and productive-agent data around 09:15 to identify the source of the capacity loss.",
+    "Compare all queues for service-level divergence, staffing imbalance, or localized misrouting.",
+    "Review the visible operational event and routing configuration effective at the incident boundary.",
+    "Validate actual demand against forecast before changing demand assumptions or staffing plans."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Offered volume rose only 11.17%, which is a moderate increase rather than a surge and is unlikely by itself to explain the 59.71-point service-level collapse."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Post-incident mean AHT decreased by 0.24% rather than increasing."
+    }
+  ],
+  "stakeholder_summary": "A real and sustained service-level incident began at 09:15. Demand increased moderately, but AHT and transfers were stable; the dominant pattern was a sharp loss of answered-call throughput. Available center-level evidence is insufficient to identify whether staffing, routing, queue imbalance, or another disruption caused that loss, so the diagnosis remains inconclusive."
+}

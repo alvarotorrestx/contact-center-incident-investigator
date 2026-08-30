@@ -1,0 +1,58 @@
+{
+  "causal_chain": [
+    "increased_aht",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.95,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Mean AHT rose from 375.2 seconds before 09:15 to 524.2 seconds from 09:15 onward, an increase of 149.0 seconds (39.7%); the window maximum was 573.7 seconds.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean service level fell from 86.7% before the incident to 60.4% afterward, a decline of 26.3 percentage points.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA increased from 30.6 seconds to 65.3 seconds after the incident, a 113.3% increase.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean offered calls were essentially stable across the boundary, moving from 81.0 to 78.9 calls per interval (-2.6%), which does not support a demand spike.",
+      "signal": "stable_demand",
+      "source": "performance"
+    },
+    {
+      "finding": "No operational events were visible during the evaluation window.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-003",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "HANDLE_TIME_INCREASE",
+  "primary_root_cause_detail": "A sustained post-incident increase in average handle time appears to have reduced throughput and driven the service-level deterioration; demand did not increase across the incident boundary.",
+  "recommended_actions": [
+    "Identify the call types, workflows, or agent cohorts responsible for the AHT increase beginning at 09:15.",
+    "Review interval-level transfer rates and queue results to determine whether transfers or localized work mix drove longer handling.",
+    "Implement real-time AHT alerts and intraday capacity actions when handle time materially exceeds plan.",
+    "Validate that staffing and adherence remained adequate before closing the incident review."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Offered calls decreased slightly after the incident boundary rather than surging."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform or other operational event was recorded in the visible event data."
+    }
+  ],
+  "stakeholder_summary": "CC-003 was most likely caused by a sustained handle-time increase beginning at the incident boundary. AHT rose about 40%, while offered demand remained stable; service level fell 26.3 points and ASA more than doubled. No visible event supports a platform explanation. Staffing and queue-level validation would further strengthen attribution."
+}

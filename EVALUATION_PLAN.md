@@ -152,6 +152,12 @@ For each benchmark version:
 8. Produce a comparison table.
 9. Record runtime, model configuration, token usage, and estimated cost if available.
 
+The formal Stage 0 comparison anchor for V1–V3 is run
+`02b97b0d-d68e-45f8-b678-386f7558dd02`: benchmark v1, `gpt-5.6-sol`, and explicitly pinned
+`reasoning_effort=medium`. V1 changes only information presentation and investigation strategy:
+the baseline receives every visible table in one prompt, while V1 lets the same model select
+deterministic read-only tools over the same visible case.
+
 ## Reproducibility Controls
 Record:
 - model and exact version/name

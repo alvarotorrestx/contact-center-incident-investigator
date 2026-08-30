@@ -1,0 +1,59 @@
+{
+  "causal_chain": [
+    "normal_variance",
+    "no_sustained_impact"
+  ],
+  "confidence": 0.62,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Service level reached a minimum of 75%, but averaged 85.98% from incident start onward versus 87.66% before the incident; the post-incident average remained above the 80% target.",
+      "signal": "brief_unsustained_variance",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean offered calls increased 5.45% after the incident boundary, from 76.29 to 80.44 calls per interval.",
+      "signal": "moderate_volume_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA increased 12.29%, from 29.42 to 33.03 seconds, indicating some transient customer-delay impact.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "No operational events were visible in the evaluation window.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    },
+    {
+      "finding": "Handle time did not increase: mean AHT decreased 1.35%, from 377.26 to 372.15 seconds.",
+      "signal": "aht_increase",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-014",
+  "investigation_status": "INCONCLUSIVE",
+  "primary_root_cause_category": "NO_MATERIAL_INCIDENT",
+  "primary_root_cause_detail": "A brief interval-level service-level breach occurred, but window-level performance remained above target and the visible data do not yet establish a sustained operational incident.",
+  "recommended_actions": [
+    "Continue interval-level monitoring and alert only if service level remains below 80% for multiple consecutive intervals or the rolling-window result falls below target.",
+    "Review queue-level and staffing diagnostics before assigning an operational root cause if the breach recurs.",
+    "Retain the moderate volume increase as context, but do not classify it as a demand spike without a larger or sustained forecast variance."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Post-incident mean AHT decreased rather than increased."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform or other operational event was visible."
+    },
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Offered volume rose only 5.45% on average, which supports moderate pressure rather than a clear demand spike."
+    }
+  ],
+  "stakeholder_summary": "CC-014 appears to be a brief, unsustained service-level variance rather than a material incident. Service level dipped to 75% in at least one interval, but averaged 85.98% after 09:45 and there were no visible events; moderate volume growth and higher ASA may have added temporary pressure."
+}

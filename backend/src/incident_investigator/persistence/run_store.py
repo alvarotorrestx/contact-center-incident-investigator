@@ -123,3 +123,13 @@ class RunStore:
             handle.flush()
             os.fsync(handle.fileno())
         return path
+
+    def next_trajectory_step(self, incident_id: str) -> int:
+        path = self.trajectory_root / f"{incident_id}.jsonl"
+        if not path.is_file():
+            return 1
+        lines = path.read_text(encoding="utf-8").splitlines()
+        if not lines:
+            return 1
+        final_event = json.loads(lines[-1])
+        return int(final_event["step_number"]) + 1

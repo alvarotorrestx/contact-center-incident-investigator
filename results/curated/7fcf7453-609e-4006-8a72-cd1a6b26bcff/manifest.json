@@ -1,0 +1,66 @@
+{
+  "aggregate_token_usage": {
+    "input_tokens": 158153,
+    "input_tokens_details": {
+      "cache_write_tokens": 48522,
+      "cached_tokens": 108348
+    },
+    "output_tokens": 15226,
+    "output_tokens_details": {
+      "reasoning_tokens": 1970
+    },
+    "total_tokens": 173379
+  },
+  "aggregate_tool_calls": 21,
+  "benchmark_manifest_sha256": "e8befb1218aa7934d46b9e3ad1338ab3b8cf7e20f58deae176d8caeceaea3fd9",
+  "benchmark_version": "v1",
+  "case_count": 10,
+  "comparison_anchor_run_id": "02b97b0d-d68e-45f8-b678-386f7558dd02",
+  "completed_at": "2026-08-30T04:44:58.474614+00:00",
+  "created_at": "2026-08-30T04:42:02.780005+00:00",
+  "duration_seconds": 175.6597136000055,
+  "estimated_cost_usd": 0.5956012,
+  "failure_count": 0,
+  "information_presentation": "metadata_initially; visible_tables_via_tools",
+  "max_retries": 2,
+  "maximum_tool_calls_per_case": 10,
+  "minimum_tool_calls_per_case": 1,
+  "model": "gpt-5.6-sol",
+  "model_configuration": {
+    "reasoning_effort": "medium",
+    "sampling_parameters": "provider_defaults"
+  },
+  "openai_sdk_version": "2.54.0",
+  "pricing_basis": {
+    "cache_write_per_unit": 5.0,
+    "cached_input_per_unit": 0.4,
+    "currency": "USD",
+    "input_per_unit": 4.0,
+    "output_per_unit": 20.0,
+    "recorded_on": "2026-08-30",
+    "source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+    "unit_tokens": 1000000
+  },
+  "prompt_version": "v1_tool_investigator_1",
+  "run_id": "7fcf7453-609e-4006-8a72-cd1a6b26bcff",
+  "runtime": {
+    "dependency_lock_sha256": "abc716e8d24eca7f3e89b4ccbab60f19d69052732969601283a009ae40192fb8",
+    "packages": {
+      "fastapi": "0.141.1",
+      "numpy": "2.5.2",
+      "openai": "2.54.0",
+      "pandas": "3.0.5",
+      "pydantic": "2.13.5"
+    },
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python_executable": "C:\\Websites\\Projects 2026\\micro1 Hackathon - 2026\\contact-center-incident-investigator\\contact-center-incident-investigator\\.venv\\Scripts\\python.exe",
+    "python_version": "3.12.13"
+  },
+  "scores": {
+    "rcia": 0.5,
+    "root_cause_correct": 5
+  },
+  "status": "COMPLETED",
+  "system_version": "v1_tool_investigator",
+  "tool_version": "v1_tools_1"
+}

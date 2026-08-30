@@ -64,6 +64,24 @@ Responsibilities:
 6. Distinguish symptoms from deeper supported causes.
 7. Propose a diagnosis only after termination criteria are met.
 
+### V1 Implementation Boundary
+
+V1 implements only deterministic read-only tools and a bounded iterative investigator. The
+investigator receives incident metadata, shared taxonomy/catalogs, metric definitions, and the
+unchanged final schema in its initial prompt. Unlike the Stage 0 baseline, raw visible interval
+tables are not serialized initially; the same underlying visible data is made available through
+strict tools over an already-loaded `VisibleCase`.
+
+V1 permits at most 10 operational tool calls per case and records public action rationales, validated
+arguments, structured results, durations, usage, final output, and termination reason. It does not
+maintain a hypothesis ledger or evidence-for/evidence-against state and has no verifier or revision
+loop.
+
+The completed V1 run `7fcf7453-609e-4006-8a72-cd1a6b26bcff` scored 5/10 RCIA versus the pinned
+9/10 baseline. The tool and trajectory infrastructure is retained for later controlled experiments,
+but the current V1 stopping/investigation policy is not promoted over the baseline: seven cases
+stopped after one or two calls and often failed to gather enough independent evidence.
+
 ## Deterministic Python Tools
 Initial tool set:
 

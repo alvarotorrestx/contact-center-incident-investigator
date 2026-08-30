@@ -1,0 +1,23 @@
+{
+  "causal_chain": [
+    "service_level_degradation"
+  ],
+  "confidence": 0.0,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Initial summary shows reported service level fell after the incident boundary.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-012",
+  "investigation_status": "INCONCLUSIVE",
+  "primary_root_cause_category": "DATA_QUALITY",
+  "primary_root_cause_detail": "Investigation is still in progress.",
+  "recommended_actions": [
+    "Complete metric validation and causal analysis."
+  ],
+  "rejected_hypotheses": [],
+  "stakeholder_summary": "Investigation is still in progress."
+}

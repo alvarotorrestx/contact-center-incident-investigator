@@ -1,0 +1,23 @@
+{
+  "causal_chain": [
+    "service_level_degradation"
+  ],
+  "confidence": 0.1,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Post-incident mean service level fell from 90.85% to 54.33%, while ASA rose from 24.78 to 72.50 seconds.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-001",
+  "investigation_status": "INCONCLUSIVE",
+  "primary_root_cause_category": "MULTIFACTOR",
+  "primary_root_cause_detail": "Unable to investigate because the execution window ended before sufficient deterministic evidence could be gathered.",
+  "recommended_actions": [
+    "Re-run the investigation with access to forecast, staffing, queue, and event analyses."
+  ],
+  "rejected_hypotheses": [],
+  "stakeholder_summary": "A material service-level decline is visible, but root cause could not be validated within this run."
+}

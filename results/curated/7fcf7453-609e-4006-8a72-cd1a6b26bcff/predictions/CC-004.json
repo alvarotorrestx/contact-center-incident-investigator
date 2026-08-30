@@ -1,0 +1,94 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "increased_transfers",
+    "increased_aht",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.97,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Routing configuration version 24.7 was deployed to all queues at 09:15, matching the incident start exactly.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "Mean transfer rate rose from 6.22% before the incident to 12.52% afterward, a 101.46% increase beginning at 09:15.",
+      "signal": "transfer_rate_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean AHT increased from 378.0 seconds to 510.5 seconds (+35.0%); post-incident AHT was consistently about 34\u201339% above forecast.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean service level fell from 80.80% to 60.99% (-19.81 percentage points), while ASA rose from 38.1 to 63.8 seconds and answered calls declined 18.2%.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "The routing-related processing shift was broad: all four queues showed AHT increases of about 35\u201338% and transfer-rate increases of about 88\u2013117%; service-level impact varied by queue.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained constant at 49 agents; productive staffing changed only from 45.4 to 45.1 agents on average, and no agents were in training.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Mean offered volume decreased from 85.2 to 80.0 calls per interval after the incident, ruling out a center-level demand surge.",
+      "signal": "stable_demand",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-004",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "Routing configuration version 24.7 was deployed across all queues at 09:15, exactly when transfer rates and AHT stepped up across the center. The resulting call-processing inefficiency reduced throughput and drove sustained service-level degradation despite stable staffing and non-surging demand.",
+  "recommended_actions": [
+    "Roll back or correct routing configuration version 24.7 and validate destination, skill, and overflow rules before redeployment.",
+    "Monitor transfer rate, AHT, queue depth, ASA, and service level at 15-minute intervals after remediation, with queue-level checks for Account Support and General Service.",
+    "Add pre-deployment simulation and post-deployment guardrails that alert or automatically roll back when transfer rate or AHT changes materially across multiple queues.",
+    "Review transferred-call samples to identify the specific routing rules creating unnecessary handoffs."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Post-incident offered volume was 6.1% lower than pre-incident volume and averaged only 4.5% above forecast; the performance break was not demand-led."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in agents stayed at 49 throughout, with only a negligible 0.7% reduction in mean productive staffing."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Mean adherence declined only 0.63 percentage points, insufficient to explain the abrupt, large deterioration."
+    },
+    {
+      "category": "TRAINING_CAPACITY_LOSS",
+      "reason": "No agents were in training during any visible interval."
+    },
+    {
+      "category": "FORECAST_ERROR",
+      "reason": "Forecast AHT closely matched actual AHT before 09:15; the large AHT variance began precisely with the routing deployment, while post-incident volume variance was modest."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Staffed-agent counts were unchanged within every queue, while transfer-rate and AHT increases appeared across all queues, supporting a center-wide routing change rather than a primary capacity imbalance."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "AHT was the immediate operational mechanism, but the deeper supported cause was the coincident all-queue routing deployment and associated doubling of transfers."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "The only visible operational event was a routing deployment; no platform incident was recorded."
+    }
+  ],
+  "stakeholder_summary": "The service-level incident was caused by the all-queue routing deployment at 09:15. Transfer rates approximately doubled and AHT rose 35%, reducing throughput and lowering mean service level by 19.8 percentage points. Demand and staffing remained broadly stable, so neither was a material driver."
+}

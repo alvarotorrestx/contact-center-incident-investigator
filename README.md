@@ -56,6 +56,26 @@ baseline requests explicitly use medium reasoning effort and record it in the ru
 Local outputs are written beneath `results/local/<run-id>` and trajectories beneath
 `trajectories/local/<run-id>`. They are ignored until intentionally curated.
 
+## V1 tool-using investigator
+
+V1 uses the same frozen benchmark, `gpt-5.6-sol`, medium reasoning, taxonomy, and final schema as
+the pinned Stage 0 anchor. It exposes the same agent-visible incident information through bounded,
+deterministic read-only tools instead of embedding every raw table in the initial prompt.
+
+```powershell
+.\.venv\Scripts\python.exe -m incident_investigator --project-root . run-v1
+```
+
+The run writes normal scores plus `comparison_to_anchor.json`, CSV, and Markdown reports against
+anchor run `02b97b0d-d68e-45f8-b678-386f7558dd02`. V1 allows at most 10 tool calls per case and
+does not include a hypothesis ledger, verifier, or revision loop.
+
+The completed V1 run is `7fcf7453-609e-4006-8a72-cd1a6b26bcff`. It produced ten valid outputs and
+zero execution failures but scored 5/10 RCIA versus the 9/10 pinned baseline. Its complete evidence
+is curated under `results/curated/` and `trajectories/curated/`. The deterministic tools and
+trajectory infrastructure are retained; the current investigator policy is not promoted as the
+default system.
+
 ## Local API and UI
 
 ```powershell

@@ -1,0 +1,45 @@
+{
+  "causal_chain": [
+    "increased_aht",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.9,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Mean service level fell from 89.34% before the incident to 50.32% from 09:15 onward, a decline of 39.02 percentage points.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA rose from 27.69 seconds to 77.29 seconds after the incident boundary, consistent with material queueing pressure.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean AHT increased from 373.89 to 517.87 seconds after 09:15, a 38.51% increase.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean offered calls increased from 72.4 to 85.64 per interval, an 18.28% increase; this was material pressure but smaller than the AHT increase.",
+      "signal": "moderate_volume_increase",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-015",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "HANDLE_TIME_INCREASE",
+  "primary_root_cause_detail": "A sustained increase in average handle time after 09:15 reduced processing throughput and drove the service-level decline; demand rose moderately and may have added pressure.",
+  "recommended_actions": [
+    "Investigate the post-09:15 drivers of longer handle time by queue, contact reason, hold time, and after-call work.",
+    "Restore AHT to baseline through targeted operational support while protecting quality and resolution outcomes.",
+    "Maintain short-term overflow or reserve capacity until AHT and queue wait metrics normalize."
+  ],
+  "rejected_hypotheses": [],
+  "stakeholder_summary": "The service-level incident was most likely driven by a sustained 38.5% increase in handle time after 09:15, which reduced throughput and increased waits. Offered demand also rose 18.3% and contributed pressure, but the available center-level evidence indicates handle time was the primary cause."
+}
