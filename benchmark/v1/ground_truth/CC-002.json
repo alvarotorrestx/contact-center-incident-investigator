@@ -1,0 +1,28 @@
+{
+  "contributing_factors": [],
+  "expected_causal_chain": [
+    "staffing_shortfall",
+    "capacity_deficit",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "expected_evidence": [
+    "logged_in_staffing_drop",
+    "productive_staffing_drop",
+    "stable_demand",
+    "service_level_decline"
+  ],
+  "incident_id": "CC-002",
+  "intentional_exceptions": [],
+  "primary_root_cause": {
+    "category": "STAFFING_SHORTFALL",
+    "detail": "Logged-in and productive staffing fell below the scheduled requirement as service deteriorated."
+  },
+  "supported_signal_ids": [
+    "logged_in_staffing_drop",
+    "productive_staffing_drop",
+    "stable_demand",
+    "service_level_decline",
+    "asa_increase"
+  ]
+}

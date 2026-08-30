@@ -1,0 +1,30 @@
+{
+  "contributing_factors": [],
+  "expected_causal_chain": [
+    "adherence_drop",
+    "reduced_productive_staffing",
+    "capacity_deficit",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "expected_evidence": [
+    "adherence_decline",
+    "stable_headcount",
+    "productive_staffing_drop",
+    "service_level_decline"
+  ],
+  "incident_id": "CC-007",
+  "intentional_exceptions": [],
+  "primary_root_cause": {
+    "category": "ADHERENCE_DROP",
+    "detail": "Logged-in headcount stayed stable while adherence and productive staffing dropped."
+  },
+  "supported_signal_ids": [
+    "adherence_decline",
+    "stable_headcount",
+    "productive_staffing_drop",
+    "stable_demand",
+    "service_level_decline",
+    "asa_increase"
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "benchmark_version": "v1",
+  "seed": 42,
+  "interval_minutes": 15,
+  "interval_count": 16,
+  "cases": [
+    {
+      "incident_id": "CC-001",
+      "date": "2026-07-06",
+      "scenario": "Sudden service-level collapse after an unexpected demand spike",
+      "primary_root_cause": "DEMAND_SPIKE",
+      "primary_detail": "Actual demand rose sharply above forecast while staffing and handling time remained stable.",
+      "effect": "demand_spike",
+      "expected_evidence": ["demand_surge", "actual_above_forecast", "stable_staffing", "service_level_decline"],
+      "supported_signals": ["demand_surge", "actual_above_forecast", "stable_staffing", "service_level_decline", "asa_increase"],
+      "contributing_factors": [],
+      "expected_causal_chain": ["unexpected_demand", "capacity_deficit", "queue_growth", "service_level_degradation"]
+    },
+    {
+      "incident_id": "CC-002",
+      "date": "2026-07-07",
+      "scenario": "Gradual service deterioration as staffing falls below plan",
+      "primary_root_cause": "STAFFING_SHORTFALL",
+      "primary_detail": "Logged-in and productive staffing fell below the scheduled requirement as service deteriorated.",
+      "effect": "staffing_shortfall",
+      "expected_evidence": ["logged_in_staffing_drop", "productive_staffing_drop", "stable_demand", "service_level_decline"],
+      "supported_signals": ["logged_in_staffing_drop", "productive_staffing_drop", "stable_demand", "service_level_decline", "asa_increase"],
+      "contributing_factors": [],
+      "expected_causal_chain": ["staffing_shortfall", "capacity_deficit", "queue_growth", "service_level_degradation"]
+    },
+    {
+      "incident_id": "CC-003",
+      "date": "2026-07-08",
+      "scenario": "Queue growth with normal demand and staffing but longer handling time",
+      "primary_root_cause": "HANDLE_TIME_INCREASE",
+      "primary_detail": "Handle time increased materially without a preceding routing event, reducing throughput.",
+      "effect": "handle_time_increase",
+      "expected_evidence": ["aht_increase", "stable_demand", "stable_staffing", "service_level_decline"],
+      "supported_signals": ["aht_increase", "stable_demand", "stable_staffing", "service_level_decline", "asa_increase"],
+      "contributing_factors": [],
+      "expected_causal_chain": ["increased_aht", "reduced_throughput", "queue_growth", "service_level_degradation"]
+    },
+    {
+      "incident_id": "CC-004",
+      "date": "2026-07-09",
+      "scenario": "Transfer and handle-time spike after a routing deployment",
+      "primary_root_cause": "ROUTING_CHANGE",
+      "primary_detail": "A routing deployment increased transfers, which raised handle time and reduced throughput.",
+      "effect": "routing_change",
+      "expected_evidence": ["routing_change_event", "transfer_rate_increase", "aht_increase", "service_level_decline"],
+      "supported_signals": ["routing_change_event", "transfer_rate_increase", "aht_increase", "stable_staffing", "service_level_decline", "asa_increase"],
+      "contributing_factors": [],
+      "expected_causal_chain": ["routing_change", "increased_transfers", "increased_aht", "reduced_throughput", "queue_growth", "service_level_degradation"]
+    },
+    {
+      "incident_id": "CC-005",
+      "date": "2026-07-10",
+      "scenario": "Billing queue failure hidden by an acceptable center average",
+      "primary_root_cause": "QUEUE_IMBALANCE",
+      "primary_detail": "A routing misconfiguration starved Billing of capacity while other queues remained healthy.",
+      "effect": "queue_imbalance",
+      "expected_evidence": ["queue_service_level_divergence", "queue_staffing_imbalance", "routing_change_event", "stable_staffing"],
+      "supported_signals": ["queue_service_level_divergence", "queue_staffing_imbalance", "routing_change_event", "stable_staffing"],
+      "contributing_factors": ["localized_queue_misrouting"],
+      "expected_causal_chain": ["queue_misrouting", "queue_capacity_imbalance", "queue_growth", "service_level_degradation"]
+    },
+    {
+      "incident_id": "CC-007",
+      "date": "2026-07-11",
+      "scenario": "Nominal headcount but poor adherence reduces productive capacity",
+      "primary_root_cause": "ADHERENCE_DROP",
+      "primary_detail": "Logged-in headcount stayed stable while adherence and productive staffing dropped.",
+      "effect": "adherence_drop",
+      "expected_evidence": ["adherence_decline", "stable_headcount", "productive_staffing_drop", "service_level_decline"],
+      "supported_signals": ["adherence_decline", "stable_headcount", "productive_staffing_drop", "stable_demand", "service_level_decline", "asa_increase"],
+      "contributing_factors": [],
+      "expected_causal_chain": ["adherence_drop", "reduced_productive_staffing", "capacity_deficit", "queue_growth", "service_level_degradation"]
+    },
+    {
+      "incident_id": "CC-009",
+      "date": "2026-07-12",
+      "scenario": "Sudden queue accumulation during a voice-platform incident",
+      "primary_root_cause": "PLATFORM_INCIDENT",
+      "primary_detail": "A voice-platform degradation disrupted call processing despite available staffing.",
+      "effect": "platform_incident",
+      "expected_evidence": ["platform_event", "queue_accumulation", "stable_staffing", "service_level_decline"],
+      "supported_signals": ["platform_event", "queue_accumulation", "stable_staffing", "stable_demand", "service_level_decline", "asa_increase"],
+      "contributing_factors": [],
+      "expected_causal_chain": ["platform_incident", "call_processing_disruption", "queue_growth", "service_level_degradation"]
+    },
+    {
+      "incident_id": "CC-012",
+      "date": "2026-07-13",
+      "scenario": "Dashboard service level conflicts with underlying counts",
+      "primary_root_cause": "DATA_QUALITY",
+      "primary_detail": "Reported dashboard metrics are internally inconsistent with the underlying call counts.",
+      "effect": "data_quality",
+      "expected_evidence": ["service_level_recalculation_mismatch", "count_conservation_mismatch", "stable_staffing", "stable_demand"],
+      "supported_signals": ["service_level_recalculation_mismatch", "count_conservation_mismatch", "stable_staffing", "stable_demand"],
+      "contributing_factors": [],
+      "expected_causal_chain": ["inconsistent_reported_metric", "data_quality_error"]
+    },
+    {
+      "incident_id": "CC-014",
+      "date": "2026-07-14",
+      "scenario": "Brief normal fluctuation without corroborating incident evidence",
+      "primary_root_cause": "NO_MATERIAL_INCIDENT",
+      "primary_detail": "The alert reflects brief normal variance rather than a sustained operational incident.",
+      "effect": "normal_variance",
+      "expected_evidence": ["brief_unsustained_variance", "no_corroborating_event", "stable_staffing", "stable_demand"],
+      "supported_signals": ["brief_unsustained_variance", "no_corroborating_event", "stable_staffing", "stable_demand"],
+      "contributing_factors": [],
+      "expected_causal_chain": ["normal_variance", "no_sustained_impact"]
+    },
+    {
+      "incident_id": "CC-015",
+      "date": "2026-07-15",
+      "scenario": "Modest demand rise confounds a routing-driven transfer and AHT spike",
+      "primary_root_cause": "ROUTING_CHANGE",
+      "primary_detail": "A routing deployment drove unnecessary transfers and handle time; modest demand was contributory but insufficient.",
+      "effect": "adversarial_routing",
+      "expected_evidence": ["routing_change_event", "transfer_rate_increase", "aht_increase", "stable_staffing"],
+      "supported_signals": ["routing_change_event", "transfer_rate_increase", "aht_increase", "stable_staffing", "moderate_volume_increase", "service_level_decline", "asa_increase"],
+      "contributing_factors": ["moderate_volume_increase"],
+      "expected_causal_chain": ["routing_change", "increased_transfers", "increased_aht", "reduced_throughput", "queue_growth", "service_level_degradation"]
+    }
+  ]
+}

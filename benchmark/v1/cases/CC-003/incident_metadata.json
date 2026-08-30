@@ -1,0 +1,10 @@
+{
+  "alert": "Service level fell below the 80% target during the evaluation window.",
+  "date": "2026-07-08",
+  "incident_id": "CC-003",
+  "incident_start": "2026-07-08T09:15:00",
+  "service_level_seconds": 30,
+  "service_level_target": 80.0,
+  "window_end": "2026-07-08T11:45:00",
+  "window_start": "2026-07-08T08:00:00"
+}

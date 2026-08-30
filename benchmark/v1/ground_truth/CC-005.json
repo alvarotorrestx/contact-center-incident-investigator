@@ -1,0 +1,29 @@
+{
+  "contributing_factors": [
+    "localized_queue_misrouting"
+  ],
+  "expected_causal_chain": [
+    "queue_misrouting",
+    "queue_capacity_imbalance",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "expected_evidence": [
+    "queue_service_level_divergence",
+    "queue_staffing_imbalance",
+    "routing_change_event",
+    "stable_staffing"
+  ],
+  "incident_id": "CC-005",
+  "intentional_exceptions": [],
+  "primary_root_cause": {
+    "category": "QUEUE_IMBALANCE",
+    "detail": "A routing misconfiguration starved Billing of capacity while other queues remained healthy."
+  },
+  "supported_signal_ids": [
+    "queue_service_level_divergence",
+    "queue_staffing_imbalance",
+    "routing_change_event",
+    "stable_staffing"
+  ]
+}

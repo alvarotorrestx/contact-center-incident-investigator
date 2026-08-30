@@ -1,0 +1,28 @@
+{
+  "contributing_factors": [],
+  "expected_causal_chain": [
+    "inconsistent_reported_metric",
+    "data_quality_error"
+  ],
+  "expected_evidence": [
+    "service_level_recalculation_mismatch",
+    "count_conservation_mismatch",
+    "stable_staffing",
+    "stable_demand"
+  ],
+  "incident_id": "CC-012",
+  "intentional_exceptions": [
+    "service_level_recalculation_mismatch",
+    "count_conservation_mismatch"
+  ],
+  "primary_root_cause": {
+    "category": "DATA_QUALITY",
+    "detail": "Reported dashboard metrics are internally inconsistent with the underlying call counts."
+  },
+  "supported_signal_ids": [
+    "service_level_recalculation_mismatch",
+    "count_conservation_mismatch",
+    "stable_staffing",
+    "stable_demand"
+  ]
+}

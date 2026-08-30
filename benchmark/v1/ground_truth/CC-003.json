@@ -1,0 +1,28 @@
+{
+  "contributing_factors": [],
+  "expected_causal_chain": [
+    "increased_aht",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "expected_evidence": [
+    "aht_increase",
+    "stable_demand",
+    "stable_staffing",
+    "service_level_decline"
+  ],
+  "incident_id": "CC-003",
+  "intentional_exceptions": [],
+  "primary_root_cause": {
+    "category": "HANDLE_TIME_INCREASE",
+    "detail": "Handle time increased materially without a preceding routing event, reducing throughput."
+  },
+  "supported_signal_ids": [
+    "aht_increase",
+    "stable_demand",
+    "stable_staffing",
+    "service_level_decline",
+    "asa_increase"
+  ]
+}

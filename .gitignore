@@ -1,0 +1,62 @@
+# Local planning — intentionally not part of the public repository
+TONIGHT_PLAN.md
+local-planning/
+*.local.md
+
+# Secrets / environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.venv/
+venv/
+env/
+dist/
+build/
+*.egg-info/
+
+# Node / React / Vite
+node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+frontend/dist/
+frontend/coverage/
+dist/
+.vite/
+*.tsbuildinfo
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Runtime / local generated artifacts
+*.log
+tmp/
+.temp/
+.cache/
+benchmark/.staging/
+
+# Local agent/API outputs that should not be committed unless intentionally curated
+results/local/
+trajectories/local/

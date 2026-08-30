@@ -1,0 +1,29 @@
+{
+  "contributing_factors": [],
+  "expected_causal_chain": [
+    "platform_incident",
+    "call_processing_disruption",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "expected_evidence": [
+    "platform_event",
+    "queue_accumulation",
+    "stable_staffing",
+    "service_level_decline"
+  ],
+  "incident_id": "CC-009",
+  "intentional_exceptions": [],
+  "primary_root_cause": {
+    "category": "PLATFORM_INCIDENT",
+    "detail": "A voice-platform degradation disrupted call processing despite available staffing."
+  },
+  "supported_signal_ids": [
+    "platform_event",
+    "queue_accumulation",
+    "stable_staffing",
+    "stable_demand",
+    "service_level_decline",
+    "asa_increase"
+  ]
+}

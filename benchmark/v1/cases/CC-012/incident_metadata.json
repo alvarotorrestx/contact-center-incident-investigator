@@ -1,0 +1,10 @@
+{
+  "alert": "Dashboard service level is below target; validate the reported metric.",
+  "date": "2026-07-13",
+  "incident_id": "CC-012",
+  "incident_start": "2026-07-13T09:15:00",
+  "service_level_seconds": 30,
+  "service_level_target": 80.0,
+  "window_end": "2026-07-13T11:45:00",
+  "window_start": "2026-07-13T08:00:00"
+}

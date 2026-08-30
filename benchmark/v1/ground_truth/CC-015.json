@@ -1,0 +1,34 @@
+{
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "expected_causal_chain": [
+    "routing_change",
+    "increased_transfers",
+    "increased_aht",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "expected_evidence": [
+    "routing_change_event",
+    "transfer_rate_increase",
+    "aht_increase",
+    "stable_staffing"
+  ],
+  "incident_id": "CC-015",
+  "intentional_exceptions": [],
+  "primary_root_cause": {
+    "category": "ROUTING_CHANGE",
+    "detail": "A routing deployment drove unnecessary transfers and handle time; modest demand was contributory but insufficient."
+  },
+  "supported_signal_ids": [
+    "routing_change_event",
+    "transfer_rate_increase",
+    "aht_increase",
+    "stable_staffing",
+    "moderate_volume_increase",
+    "service_level_decline",
+    "asa_increase"
+  ]
+}

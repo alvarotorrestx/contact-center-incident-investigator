@@ -1,0 +1,8 @@
+[
+  {
+    "description": "Voice platform monitoring reported intermittent call-processing delays.",
+    "event_type": "voice_platform_degradation",
+    "scope": "all_queues",
+    "timestamp": "2026-07-12T09:15:00"
+  }
+]

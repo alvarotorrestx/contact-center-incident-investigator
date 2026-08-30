@@ -1,0 +1,28 @@
+{
+  "contributing_factors": [],
+  "expected_causal_chain": [
+    "unexpected_demand",
+    "capacity_deficit",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "expected_evidence": [
+    "demand_surge",
+    "actual_above_forecast",
+    "stable_staffing",
+    "service_level_decline"
+  ],
+  "incident_id": "CC-001",
+  "intentional_exceptions": [],
+  "primary_root_cause": {
+    "category": "DEMAND_SPIKE",
+    "detail": "Actual demand rose sharply above forecast while staffing and handling time remained stable."
+  },
+  "supported_signal_ids": [
+    "demand_surge",
+    "actual_above_forecast",
+    "stable_staffing",
+    "service_level_decline",
+    "asa_increase"
+  ]
+}

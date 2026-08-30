@@ -1,0 +1,31 @@
+{
+  "contributing_factors": [],
+  "expected_causal_chain": [
+    "routing_change",
+    "increased_transfers",
+    "increased_aht",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "expected_evidence": [
+    "routing_change_event",
+    "transfer_rate_increase",
+    "aht_increase",
+    "service_level_decline"
+  ],
+  "incident_id": "CC-004",
+  "intentional_exceptions": [],
+  "primary_root_cause": {
+    "category": "ROUTING_CHANGE",
+    "detail": "A routing deployment increased transfers, which raised handle time and reduced throughput."
+  },
+  "supported_signal_ids": [
+    "routing_change_event",
+    "transfer_rate_increase",
+    "aht_increase",
+    "stable_staffing",
+    "service_level_decline",
+    "asa_increase"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "contributing_factors": [],
+  "expected_causal_chain": [
+    "normal_variance",
+    "no_sustained_impact"
+  ],
+  "expected_evidence": [
+    "brief_unsustained_variance",
+    "no_corroborating_event",
+    "stable_staffing",
+    "stable_demand"
+  ],
+  "incident_id": "CC-014",
+  "intentional_exceptions": [],
+  "primary_root_cause": {
+    "category": "NO_MATERIAL_INCIDENT",
+    "detail": "The alert reflects brief normal variance rather than a sustained operational incident."
+  },
+  "supported_signal_ids": [
+    "brief_unsustained_variance",
+    "no_corroborating_event",
+    "stable_staffing",
+    "stable_demand"
+  ]
+}

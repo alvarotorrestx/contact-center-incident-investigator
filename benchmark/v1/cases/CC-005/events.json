@@ -1,0 +1,8 @@
+[
+  {
+    "description": "Billing queue skill mappings were updated.",
+    "event_type": "routing_configuration",
+    "scope": "Billing",
+    "timestamp": "2026-07-10T09:15:00"
+  }
+]
