@@ -1,0 +1,81 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "increased_transfers",
+    "increased_aht",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.92,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Routing version 24.7 was deployed across all queues at 09:15, matching the incident boundary and the first degraded interval.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "Mean transfer rate increased 115.2%, from 6.18% before the incident to 13.29% afterward.",
+      "signal": "transfer_rate_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean AHT increased 38.5%, from 373.9 to 517.9 seconds after the routing deployment.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean service level fell from 89.34% to 50.32%, while ASA rose 179.2% and answered throughput declined 9.7%.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained at 49; productive staffing changed only from 45.4 to 45.27 agents.",
+      "signal": "stable_headcount",
+      "source": "staffing"
+    },
+    {
+      "finding": "Post-incident demand averaged 12.0% above forecast, materially smaller than the transfer-rate and AHT changes.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "All reported service-level values matched the prescribed count-based calculation exactly, with zero material mismatches.",
+      "signal": "no_corroborating_event",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-015",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "Routing configuration version 24.7 was deployed across all queues at the 09:15 incident boundary. In the first affected interval and thereafter, transfers more than doubled and AHT rose sharply, reducing throughput and degrading service. Stable staffing, moderate rather than extreme demand variance, and exact service-level recalculation make routing change the uniquely leading initiating cause.",
+  "recommended_actions": [
+    "Rollback routing version 24.7 or restore the prior known-good configuration under change control.",
+    "Compare versions for altered skill mappings, transfer paths, escalation rules, and routing loops.",
+    "Review post-deployment call traces to identify repeated or unnecessary transfers.",
+    "After remediation, verify that transfer rate, AHT, ASA, abandonment, and service level return toward pre-incident baselines.",
+    "Maintain temporary overflow coverage while queues recover from the moderate excess demand."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "The AHT increase is a confirmed causal mechanism, but not the deepest observed initiator: it began with the routing deployment and coincided with a 115.2% transfer-rate increase."
+    },
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Demand averaged only 12.0% above forecast and cannot independently explain the much larger transfer and AHT changes; it was an amplifier rather than the primary cause."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Logged-in headcount was unchanged, productive staffing declined only 0.28%, and adherence remained effectively stable."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Service-level arithmetic matched exactly in every interval, and ASA, abandonment, AHT, occupancy, and throughput independently corroborated the degradation."
+    }
+  ],
+  "stakeholder_summary": "Routing version 24.7 is the likely root cause. Its 09:15 deployment aligned with the first affected interval, after which transfers doubled, AHT increased 38.5%, and service level fell by 39 points. Staffing remained stable and demand was only moderately above forecast. Rollback and routing-path validation are recommended."
+}

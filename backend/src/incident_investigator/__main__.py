@@ -46,6 +46,10 @@ def main() -> None:
     subparsers.add_parser(
         "run-v3", help="Run V2 investigation with bounded adversarial verification"
     )
+    subparsers.add_parser(
+        "run-final-candidate",
+        help="Run V2 discipline with baseline-equivalent initial visible context",
+    )
     evaluate = subparsers.add_parser("evaluate", help="Score saved predictions")
     evaluate.add_argument("--run-id", required=True)
     serve = subparsers.add_parser("serve", help="Run the local FastAPI server")
@@ -103,6 +107,17 @@ def main() -> None:
                     "comparisons": comparisons,
                     "verification_analysis": analysis,
                 },
+                indent=2,
+            )
+        )
+    elif args.command == "run-final-candidate":
+        from incident_investigator.config import get_settings
+        from incident_investigator.final_candidate.batch import run_live_final_candidate
+
+        run_id, scores, comparisons = run_live_final_candidate(get_settings(project_root))
+        print(
+            json.dumps(
+                {"run_id": run_id, "scores": scores, "comparisons": comparisons},
                 indent=2,
             )
         )

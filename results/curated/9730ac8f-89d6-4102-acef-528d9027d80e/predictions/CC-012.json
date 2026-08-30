@@ -1,0 +1,66 @@
+{
+  "causal_chain": [
+    "data_quality_error",
+    "inconsistent_reported_metric",
+    "service_level_degradation"
+  ],
+  "confidence": 0.97,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Deterministic recalculation found an exact -26.0-point discrepancy in all 11 intervals from 09:15 through 11:45; all five earlier intervals matched the formula.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    },
+    {
+      "finding": "Post-incident queue service-level means remained 80.30%\u201392.11%, materially above center dashboard readings of 48.42%\u201369.24%.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Queue staffing was unchanged across the incident boundary: General Service 19, Billing 12, Account Support 11, and Escalations 7 agents.",
+      "signal": "stable_staffing",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Offered calls increased 28.10% in General Service and 23.85% in Account Support, creating localized pressure but not explaining the fixed reporting offset.",
+      "signal": "moderate_volume_increase",
+      "source": "queue_performance"
+    }
+  ],
+  "incident_id": "CC-012",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "DATA_QUALITY",
+  "primary_root_cause_detail": "A service-level reporting defect began exactly at 09:15. Every subsequent center interval was understated by exactly 26.0 percentage points relative to the defined count-based formula, while every pre-incident interval reconciled.",
+  "recommended_actions": [
+    "Remove the erroneous 26-point adjustment from the dashboard calculation or transformation.",
+    "Recalculate and backfill center service level from 09:15 onward using the defined formula.",
+    "Add automated interval-level reconciliation between reported service level and component counts.",
+    "Separately monitor localized demand pressure in General Service and Account Support."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Demand increased only in selected queues; Billing was flat and Escalations declined. Volume changes cannot explain an exact fixed 26-point metric discrepancy."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Staffed-agent counts were unchanged in every queue across the incident boundary."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "AHT changes were small and mixed across queues, with no broad sustained increase."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Localized queue pressure existed, especially in Account Support, but queue performance remained substantially healthier than the center dashboard and cannot explain the arithmetic offset."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "Queues continued processing calls with post-incident mean service levels of 80.30%\u201392.11%; the observed dashboard effect is fully explained by the reporting mismatch."
+    }
+  ],
+  "stakeholder_summary": "The dashboard alert was caused primarily by a confirmed reporting defect, not a center-wide operational collapse. The defect began at the incident boundary and understated every subsequent interval by exactly 26 points. Some localized demand pressure occurred, but staffing remained stable and queue-level results were materially healthier than the reported center metric."
+}

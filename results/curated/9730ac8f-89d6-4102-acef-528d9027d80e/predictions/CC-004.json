@@ -1,0 +1,81 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "increased_transfers",
+    "increased_aht",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.94,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Routing version 24.7 was deployed across all queues at the 09:15 incident start.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "Mean transfer rate rose 101.46%, from 6.2163% before the incident to 12.5234% afterward.",
+      "signal": "transfer_rate_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean AHT rose 35.04%, from 378.037 to 510.5161 seconds after incident onset.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean service level fell 19.8117 percentage points, from 80.7977% to 60.986%.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Observed offered calls declined 6.10% across the incident boundary, excluding an aggregate demand surge.",
+      "signal": "stable_demand",
+      "source": "forecast"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained at 49; productive staffing changed by only 0.68%.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Every queue experienced an approximately 35\u201338% AHT increase and 88\u2013117% transfer-rate increase, while service-level severity varied by queue.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    }
+  ],
+  "incident_id": "CC-004",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "Routing configuration version 24.7 was deployed across all queues at 09:15, exactly when transfer rates doubled and AHT increased roughly 35% across every queue. The added transfer and handling workload reduced throughput, increased ASA, and degraded service level despite stable staffing and flat-to-lower demand.",
+  "recommended_actions": [
+    "Roll back or correct routing configuration version 24.7 and validate route and transfer rules before redeployment.",
+    "Monitor transfer rate, AHT, ASA, and service level by queue immediately after remediation.",
+    "Add predeployment tests for transfer loops, unintended queue hops, and queue-level routing outcomes.",
+    "Establish automated postdeployment alerts for abrupt transfer-rate and AHT changes."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Aggregate offered volume declined after incident onset, and no queue experienced a material demand surge."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in headcount remained constant, with no material productive-staffing reduction."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Queue staffing was unchanged and the transfer/AHT shock affected every queue, indicating a system-wide routing effect rather than a localized capacity imbalance."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event corroborated the degradation; the only contemporaneous operational event was the routing deployment."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "The AHT increase was a material mechanism, but the exactly contemporaneous routing deployment and transfer-rate increase provide the deeper initiating cause."
+    }
+  ],
+  "stakeholder_summary": "The service-level incident was most likely caused by routing version 24.7. Its deployment coincided exactly with system-wide increases in transfers and handling time, reducing throughput while demand and staffing remained stable."
+}

@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 from time import perf_counter
 from typing import Any
 
 from pydantic import ValidationError
 
 from incident_investigator.benchmark import AgentVisibleCaseLoader
-from incident_investigator.contracts import FinalDiagnosis
+from incident_investigator.contracts import FinalDiagnosis, VisibleCase
 from incident_investigator.hypotheses import (
     HypothesisLedger,
     HypothesisLedgerUpdate,
@@ -27,7 +29,9 @@ from incident_investigator.verifier import (
 )
 
 from .client import V2InvestigatorClient, V2TurnMode
-from .prompting import build_v2_prompt
+from .prompting import V2Prompt, build_v2_prompt
+
+PromptBuilder = Callable[[VisibleCase, CaseToolbox, Path, int], V2Prompt]
 
 
 @dataclass(frozen=True)
@@ -58,6 +62,8 @@ class StructuredHypothesisRunner:
         verifier_client: VerifierClient | None = None,
         max_revisions: int = 0,
         system_version: str = "v2_structured_hypothesis_investigator",
+        prompt_builder: PromptBuilder = build_v2_prompt,
+        information_presentation: str = "metadata_initially; visible_tables_via_tools",
     ):
         if not 1 <= max_tool_calls <= 12:
             raise ValueError("max_tool_calls must be between 1 and 12")
@@ -83,12 +89,14 @@ class StructuredHypothesisRunner:
         self.verifier_client = verifier_client
         self.max_revisions = max_revisions
         self.system_version = system_version
+        self.prompt_builder = prompt_builder
+        self.information_presentation = information_presentation
 
     def run_case(self, incident_id: str) -> V2RunResult:
         started = perf_counter()
         case = self.loader.load(incident_id)
         toolbox = CaseToolbox(case)
-        prompt = build_v2_prompt(case, toolbox, self.store.project_root, self.max_tool_calls)
+        prompt = self.prompt_builder(case, toolbox, self.store.project_root, self.max_tool_calls)
         ledger = HypothesisLedger()
         step_number = 1
         self.store.append_trajectory(
@@ -109,7 +117,7 @@ class StructuredHypothesisRunner:
                 "prompt_sha256": prompt.sha256,
                 "maximum_operational_tool_calls": self.max_tool_calls,
                 "minimum_distinct_supporting_tools_for_completion": 2,
-                "information_presentation": "metadata_initially; visible_tables_via_tools",
+                "information_presentation": self.information_presentation,
             },
         )
 

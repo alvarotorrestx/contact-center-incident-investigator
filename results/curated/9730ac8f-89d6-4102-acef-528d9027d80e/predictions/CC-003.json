@@ -1,0 +1,84 @@
+{
+  "causal_chain": [
+    "increased_aht",
+    "capacity_deficit",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.96,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Mean AHT increased from 375.2 seconds before the incident to 524.2 seconds afterward (+39.7%).",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean service level declined from 86.7% to 60.4% after incident onset.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA rose from 30.6 to 65.3 seconds (+113.3%).",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Average abandonments increased from 2.2 to 13.6 per interval while answered calls declined 17.2%.",
+      "signal": "queue_accumulation",
+      "source": "performance"
+    },
+    {
+      "finding": "Logged-in staffing remained 49 and productive staffing was essentially unchanged, while occupancy increased from 74.4% to 96.6%.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "AHT increased by approximately 40% in every queue, demonstrating a center-wide rather than localized pattern.",
+      "signal": "aht_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Account Support volume increased 16.3%, amplifying local impact, while aggregate demand declined slightly.",
+      "signal": "moderate_volume_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "No platform or routing events were recorded during the full evaluation window.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-003",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "HANDLE_TIME_INCREASE",
+  "primary_root_cause_detail": "A synchronized center-wide increase in average handle time began at the 09:15 incident boundary. The longer workload saturated otherwise stable staffing, reduced answered throughput, increased queueing and abandonments, and drove service level below target.",
+  "recommended_actions": [
+    "Identify the interaction or process change that caused the 09:15 center-wide AHT increase, including application latency, workflow changes, and contact complexity.",
+    "Activate intraday AHT alerts and capacity reforecasting when sustained AHT exceeds plan.",
+    "Use temporary overflow or cross-skilled staffing while AHT remains elevated.",
+    "Review Account Support capacity because its localized volume increase amplified service-level degradation."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Aggregate offered volume decreased 2.6% after incident onset, and three of four queues had lower volume."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in headcount remained constant at 49, with productive staffing changing by only -0.3%."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Queue staffing remained unchanged and all queues experienced nearly identical proportional AHT increases."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No corroborating platform event was recorded in the incident window."
+    }
+  ],
+  "stakeholder_summary": "The incident was most likely caused by a sustained, center-wide AHT increase beginning at 09:15\u2014not by higher aggregate demand or reduced staffing. Longer calls saturated available capacity, lowered throughput, and produced sustained queueing and service-level degradation."
+}

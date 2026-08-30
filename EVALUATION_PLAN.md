@@ -152,7 +152,7 @@ For each benchmark version:
 8. Produce a comparison table.
 9. Record runtime, model configuration, token usage, and estimated cost if available.
 
-The formal Stage 0 comparison anchor for V1–V3 is run
+The formal Stage 0 comparison anchor for V1 through the final-candidate experiment is run
 `02b97b0d-d68e-45f8-b678-386f7558dd02`: benchmark v1, `gpt-5.6-sol`, and explicitly pinned
 `reasoning_effort=medium`. V1 changes only information presentation and investigation strategy:
 the baseline receives every visible table in one prompt, while V1 lets the same model select
@@ -163,6 +163,12 @@ The official V1 comparison run is `7fcf7453-609e-4006-8a72-cd1a6b26bcff`. The of
 taxonomy, final schema, deterministic tools, and scorer as V1, then adds structured hypothesis
 state and application-enforced termination criteria. V2 must be compared against both the pinned
 Stage 0 anchor and V1; its complete curated artifacts are the evidence of record.
+
+The official V3 run is `5324184e-c646-456c-b58b-8e1c2e89a2fc`. It added a bounded adversarial
+verifier but did not improve V2's 7/10 RCIA, so the verifier is preserved as a removed experiment.
+The official final-candidate run is `9730ac8f-89d6-4102-acef-528d9027d80e`. It removed the verifier,
+retained V2 discipline and tools, and supplied every visible table initially. It scored 8/10 RCIA
+and must be compared against Stage 0, V1, V2, and V3 using the unchanged deterministic scorer.
 
 ## Reproducibility Controls
 Record:

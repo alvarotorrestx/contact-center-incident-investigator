@@ -13,22 +13,25 @@ If `TONIGHT_PLAN.md` is present locally, it is an internal execution aid only. I
 
 The project documents above define the intended product, benchmark, evaluation methodology, and agent architecture.
 
-## Authorization State: V3 COMPLETE — AWAITING V4 APPROVAL
+## Authorization State: FINAL CANDIDATE EXPERIMENT COMPLETE — AWAITING V4 APPROVAL
 
 Stage 0 is frozen and complete. V1 tool use, V2 structured-hypothesis investigation, and V3
 adversarial verification implementations and their measured ten-case experiments are complete. The
-project is awaiting explicit approval to begin V4.
+final-candidate experiment composing V2 discipline with baseline-equivalent initial information
+visibility is also complete. The project is awaiting explicit approval to begin V4.
 
 V4 and all later implementation remain **NO-GO** without explicit user approval. V3 was limited to
 the preserved V2 workflow, one tool-free adversarial verifier, structured contradiction findings,
 at most two verifier-driven revisions per case, verifier/revision trajectories, the configuration-
-matched ten-case experiment, and minimal supporting integration/documentation.
+matched ten-case experiment, and minimal supporting integration/documentation. The final candidate
+was limited to the preserved V2 tools, ledger, termination discipline, and trajectories with all
+agent-visible case data supplied initially; it explicitly excluded the V3 verifier and revision loop.
 
-V3 validation, authorized documentation/configuration cleanup, configuration-matched evidence
-reproduction, and evidence curation are allowed. Do not begin V4 UI/product work, add multi-agent
-voting or unrestricted recursive critique, or change the frozen benchmark, ground truth, scoring
-behavior, taxonomy, output schema, baseline behavior, model configuration, or historical
-experimental artifacts without explicit approval.
+Completed-experiment validation, authorized documentation/configuration cleanup, configuration-
+matched evidence reproduction, and evidence curation are allowed. Do not begin V4 UI/product work,
+add multi-agent voting or unrestricted recursive critique, or change the frozen benchmark, ground
+truth, scoring behavior, taxonomy, output schema, baseline behavior, model configuration, or
+historical experimental artifacts without explicit approval.
 
 ## Strict GO / NO-GO Phase Gates
 

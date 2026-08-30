@@ -110,7 +110,9 @@ class MappingV2Client:
         )
 
     def respond(self, prompt: V2Prompt, *, mode: str, **kwargs: object) -> InvestigatorTurn:
-        incident_id = json.loads(prompt.user)["incident_metadata"]["incident_id"]
+        payload = json.loads(prompt.user)
+        metadata = payload.get("incident_metadata") or payload["incident"]["incident_metadata"]
+        incident_id = metadata["incident_id"]
         self.turns[incident_id] = self.turns.get(incident_id, 0) + 1
         turn = self.turns[incident_id]
         diagnosis = self.diagnoses[incident_id]

@@ -109,6 +109,24 @@ changed and no V2 error was corrected. Runtime increased to 1,421.897 seconds, t
 and `trajectories/curated/`. This controlled negative result is preserved; V3 verification is not
 recommended for the final workflow without a separately approved new experiment.
 
+## Final candidate: full context with V2 discipline
+
+The final candidate removes V3 verification, retains the V2 tools/ledger/termination workflow, and
+supplies every agent-visible incident table in the initial request, matching Stage 0 information
+visibility.
+
+```powershell
+.\.venv\Scripts\python.exe -m incident_investigator --project-root . run-final-candidate
+```
+
+Official run `9730ac8f-89d6-4102-acef-528d9027d80e` completed all ten cases with zero failures and
+scored 8/10 RCIA. It improved CC-007 versus V2 with no V2 RCIA regression and used 4.4 tools per
+case, but remained below Stage 0's 9/10, covered 31/40 expected evidence items, used 2,462,287
+tokens, ran for 850.179 seconds, and cost an estimated $4.542473. The measured recommendation is to
+use the Stage 0 complete-context structured analyst as the default reasoning path while retaining
+the deterministic tools, V2 ledger workflow, and trajectories as an optional deep-investigation
+and audit mode. The V3 verifier remains removed.
+
 ## Local API and UI
 
 ```powershell
@@ -116,5 +134,6 @@ recommended for the final workflow without a separately approved new experiment.
 corepack pnpm --dir frontend dev
 ```
 
-The existing API still exposes only the Stage 0 `baseline` system version. V1/V2/V3 experiments run
-through the CLI; polished V4 product UI work requires separate phase approval.
+The existing API still exposes only the Stage 0 `baseline` system version. V1/V2/V3 and final-
+candidate experiments run through the CLI; polished V4 product UI work requires separate phase
+approval.

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -7,6 +8,7 @@ from pathlib import Path
 from incident_investigator.baseline import build_baseline_prompt
 from incident_investigator.benchmark import AgentVisibleCaseLoader
 from incident_investigator.evaluation import GroundTruthLoader
+from incident_investigator.final_candidate.prompting import build_final_candidate_prompt
 from incident_investigator.investigator import build_investigator_prompt
 from incident_investigator.structured_investigator import build_v2_prompt
 from incident_investigator.tools import CaseToolbox
@@ -61,6 +63,18 @@ def test_ground_truth_never_reaches_loader_or_prompt(project_root: Path) -> None
         for schema in [*v2_prompt.operational_tools, v2_prompt.ledger_tool]:
             assert not (_all_keys(schema) & EVALUATOR_ONLY_KEYS)
 
+        final_candidate_prompt = build_final_candidate_prompt(visible, toolbox, project_root, 10)
+        final_payload = json.loads(final_candidate_prompt.user)
+        assert final_payload["incident"] == visible_payload
+        for key in EVALUATOR_ONLY_KEYS:
+            assert f'"{key}":' not in final_candidate_prompt.user
+        assert truth.primary_root_cause.detail not in final_candidate_prompt.user
+        for schema in [
+            *final_candidate_prompt.operational_tools,
+            final_candidate_prompt.ledger_tool,
+        ]:
+            assert not (_all_keys(schema) & EVALUATOR_ONLY_KEYS)
+
 
 def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> None:
     protected = [
@@ -100,6 +114,18 @@ def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> No
         project_root / "backend" / "src" / "incident_investigator" / "verifier" / "client.py",
         project_root / "backend" / "src" / "incident_investigator" / "verifier" / "models.py",
         project_root / "backend" / "src" / "incident_investigator" / "verifier" / "prompting.py",
+        project_root
+        / "backend"
+        / "src"
+        / "incident_investigator"
+        / "final_candidate"
+        / "prompting.py",
+        project_root
+        / "backend"
+        / "src"
+        / "incident_investigator"
+        / "final_candidate"
+        / "__init__.py",
     ]
     for path in protected:
         files = path.rglob("*.py") if path.is_dir() else [path]
@@ -128,6 +154,22 @@ def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> No
         text=True,
     )
     assert check.returncode == 0, check.stderr
+
+    final_candidate_check = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            (
+                "import sys; import incident_investigator.final_candidate; "
+                "assert 'incident_investigator.evaluation' not in sys.modules"
+            ),
+        ],
+        cwd=project_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert final_candidate_check.returncode == 0, final_candidate_check.stderr
 
 
 def test_frozen_case_files_contain_no_evaluator_fields(project_root: Path) -> None:

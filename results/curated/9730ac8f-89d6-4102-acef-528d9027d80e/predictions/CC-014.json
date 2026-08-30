@@ -1,0 +1,73 @@
+{
+  "causal_chain": [
+    "unexpected_demand",
+    "queue_capacity_imbalance",
+    "queue_growth",
+    "service_level_degradation",
+    "no_sustained_impact"
+  ],
+  "confidence": 0.86,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Offered volume was 97 versus 79 forecast at 10:15 and 93 versus 76 forecast at 10:45.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "Service level fell to 75.0% at 10:15 and 77.42% at 10:45; deterministic recalculation exactly verified both values.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "All 49 scheduled agents remained logged in throughout; productive staffing was essentially stable and did not fall during either sub-target interval.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "General Service post-incident volume increased 15.27% with staffing fixed at 19 agents, while its average service level declined 4.31 points.",
+      "signal": "moderate_volume_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "No routing, platform, or other operational event was recorded anywhere in the full evaluation window.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-014",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "DEMAND_SPIKE",
+  "primary_root_cause_detail": "Intermittent above-forecast demand caused the verified service-level misses. The only sub-target intervals, 10:15 and 10:45, coincided with the two largest volume variances: +18 calls (+22.78%) and +17 calls (+22.37%). Fixed General Service capacity amplified the load concentration.",
+  "recommended_actions": [
+    "Add intraday volume alerts when actual demand exceeds forecast by 10% or more.",
+    "Create a rapid rebalancing plan for General Service when queue load rises without matching capacity.",
+    "Review forecast drivers for the 10:15\u201310:45 period and incorporate the observed demand pattern.",
+    "Continue interval-level service-level validation and event logging."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in staffing remained constant at 49, with no staffing reduction aligned to the service-level misses."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Post-start AHT averaged 0.84% below forecast and remained near forecast during the two demand spikes."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Service level recalculated exactly for all 16 intervals, with no count-derived mismatch."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "No routing event was recorded; queue divergence is explained by localized volume growth with fixed capacity rather than a documented routing change."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event or corroborating call-processing disruption was recorded."
+    }
+  ],
+  "stakeholder_summary": "The service-level misses were genuine but brief. Intermittent demand spikes\u2014concentrated in General Service while staffing stayed fixed\u2014are the likely cause. Staffing loss, higher handle time, metric error, routing change, and platform disruption were not supported."
+}

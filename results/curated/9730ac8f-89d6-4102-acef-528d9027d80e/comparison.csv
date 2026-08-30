@@ -1,0 +1,11 @@
+incident_id,valid_prediction,validation_error,root_cause_correct,evidence_covered,evidence_expected,non_allowlisted_evidence_count,predicted_evidence_count,contributing_exact,contributing_true_positive,contributing_predicted,contributing_expected,causal_reasoning_score
+CC-001,True,,True,4,4,2,6,True,0,0,0,2
+CC-002,True,,True,4,4,3,8,False,0,1,0,2
+CC-003,True,,True,3,4,3,7,False,0,1,0,2
+CC-004,True,,True,4,4,2,7,True,0,0,0,1
+CC-005,True,,False,3,4,3,6,False,1,2,1,0
+CC-007,True,,True,3,4,2,6,False,0,1,0,1
+CC-009,True,,True,3,4,2,7,False,0,1,0,2
+CC-012,True,,True,2,4,2,4,False,0,1,0,1
+CC-014,True,,False,2,4,3,5,False,0,1,0,0
+CC-015,True,,True,3,4,3,7,True,1,1,1,2

@@ -1,0 +1,129 @@
+{
+  "anchor_run_id": "5324184e-c646-456c-b58b-8e1c2e89a2fc",
+  "benchmark_manifest_sha256": "e8befb1218aa7934d46b9e3ad1338ab3b8cf7e20f58deae176d8caeceaea3fd9",
+  "benchmark_version": "v1",
+  "candidate_run_id": "9730ac8f-89d6-4102-acef-528d9027d80e",
+  "cases_category_changed": [
+    "CC-007"
+  ],
+  "cases_improved": [
+    "CC-007"
+  ],
+  "cases_regressed": [],
+  "cases_unchanged": [
+    "CC-001",
+    "CC-002",
+    "CC-003",
+    "CC-004",
+    "CC-005",
+    "CC-009",
+    "CC-012",
+    "CC-014",
+    "CC-015"
+  ],
+  "cc005": {
+    "anchor_category": "ROUTING_CHANGE",
+    "anchor_correct": false,
+    "candidate_category": "ROUTING_CHANGE",
+    "candidate_correct": false
+  },
+  "estimated_cost_usd": {
+    "anchor": 5.8938618,
+    "candidate": 4.542473
+  },
+  "execution_failures": {
+    "anchor": 0,
+    "candidate": 0
+  },
+  "information_presentation": {
+    "anchor": "metadata initially; visible tables via tools; verifier receives accumulated visible evidence",
+    "candidate": "all_visible_tables_initially; deterministic_tools_for_analysis"
+  },
+  "metrics": {
+    "causal_reasoning_average": {
+      "anchor": 0.9,
+      "candidate": 1.3,
+      "delta": 0.4
+    },
+    "contributing_exact_accuracy": {
+      "anchor": 0.3,
+      "candidate": 0.3,
+      "delta": 0.0
+    },
+    "contributing_f1": {
+      "anchor": 0.3636363636363636,
+      "candidate": 0.3636363636363636,
+      "delta": 0.0
+    },
+    "contributing_precision": {
+      "anchor": 0.2222222222222222,
+      "candidate": 0.2222222222222222,
+      "delta": 0.0
+    },
+    "contributing_recall": {
+      "anchor": 1.0,
+      "candidate": 1.0,
+      "delta": 0.0
+    },
+    "evidence_coverage": {
+      "anchor": 0.825,
+      "candidate": 0.775,
+      "delta": -0.05
+    },
+    "non_allowlisted_evidence_rate": {
+      "anchor": 0.417910447761194,
+      "candidate": 0.3968253968253968,
+      "delta": -0.021085050936
+    },
+    "rcia": {
+      "anchor": 0.7,
+      "candidate": 0.8,
+      "delta": 0.1
+    }
+  },
+  "model": "gpt-5.6-sol",
+  "model_configuration": {
+    "reasoning_effort": "medium",
+    "sampling_parameters": "provider_defaults"
+  },
+  "runtime": {
+    "anchor_summed_case_seconds": 1421.85583,
+    "anchor_wall_seconds": 1421.932136,
+    "candidate_summed_case_seconds": 850.12984,
+    "candidate_wall_seconds": 850.226785
+  },
+  "tool_calls": {
+    "anchor_average_per_case": 6.0,
+    "anchor_cases_with_one_or_two": [],
+    "candidate_average_per_case": 4.4,
+    "candidate_cases_with_one_or_two": [
+      "CC-012"
+    ]
+  },
+  "usage": {
+    "anchor": {
+      "input_tokens": 2153092,
+      "input_tokens_details": {
+        "cache_write_tokens": 622391,
+        "cached_tokens": 1520427
+      },
+      "output_tokens": 106632,
+      "output_tokens_details": {
+        "reasoning_tokens": 15492
+      },
+      "total_tokens": 2259724
+    },
+    "candidate": {
+      "input_tokens": 2401312,
+      "input_tokens_details": {
+        "cache_write_tokens": 507811,
+        "cached_tokens": 1886135
+      },
+      "output_tokens": 60975,
+      "output_tokens_details": {
+        "reasoning_tokens": 6850
+      },
+      "total_tokens": 2462287
+    }
+  }
+}

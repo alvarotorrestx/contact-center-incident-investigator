@@ -104,6 +104,20 @@ scored 7/10 RCIA. It improved on V1's 5/10 and increased expected-evidence cover
 updates. Keep the structured hypothesis discipline as the stronger tool-using workflow, but do not
 promote it over the Stage 0 baseline on quality, latency, or cost.
 
+### Final Candidate Experiment
+
+The final candidate retains the V2 deterministic tools, typed ledger, evidence-for/evidence-against
+tracking, termination discipline, and trajectories, but supplies the complete `VisibleCase` in the
+initial request exactly as the Stage 0 baseline does. Tools remain available for deterministic
+calculation, comparison, drill-down, and validation. The V3 verifier and revision loop are disabled.
+
+Official run `9730ac8f-89d6-4102-acef-528d9027d80e` completed 10/10 cases with zero failures and
+scored 8/10 RCIA. It corrected CC-007 relative to V2 with no RCIA regression versus V2 and reduced
+average tools from 4.9 to 4.4, but it remained below the Stage 0 baseline's 9/10 and regressed
+CC-014 relative to that anchor. The default final reasoning architecture should therefore remain
+the complete-context single-stage structured analyst. Retain tools, the ledger workflow, and rich
+trajectories as an optional deep-investigation/audit path. Do not retain the V3 verifier.
+
 ## Deterministic Python Tools
 Initial tool set:
 
@@ -277,6 +291,12 @@ against the same frozen, configuration-matched anchor.
 ### V3 — Adversarial Verification
 Add an adversarial verifier and bounded verifier-driven revision loop. Benchmark against
 the same frozen, configuration-matched anchor.
+
+Measured outcome: preserve V3 as a removed experiment; it did not improve V2.
+
+### Final Candidate — Full Context + V2 Discipline
+Supply every agent-visible table initially while retaining V2 tools, ledger, and termination
+discipline. Measured outcome: 8/10 RCIA, better than V2 but below the 9/10 Stage 0 anchor.
 
 ### V4 — Product Quality
 Add the polished React investigation experience and presentation improvements.

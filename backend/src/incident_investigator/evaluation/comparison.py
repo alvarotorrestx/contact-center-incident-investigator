@@ -13,6 +13,7 @@ from incident_investigator.persistence.pricing import estimate_gpt_5_6_sol_cost
 STAGE0_ANCHOR_RUN_ID = "02b97b0d-d68e-45f8-b678-386f7558dd02"
 V1_RUN_ID = "7fcf7453-609e-4006-8a72-cd1a6b26bcff"
 V2_RUN_ID = "d3859d8d-b252-426a-970e-89a471a5fe7c"
+V3_RUN_ID = "5324184e-c646-456c-b58b-8e1c2e89a2fc"
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -235,11 +236,9 @@ def build_run_comparison(
             "candidate_correct": candidate_cases["CC-005"]["root_cause_correct"],
         },
         "information_presentation": {
-            "anchor": "all visible raw tables serialized in the initial prompt",
-            "candidate": (
-                "incident metadata in the initial prompt; the same visible tables accessed through "
-                "deterministic read-only tools selected by the investigator"
-            ),
+            "anchor": anchor_manifest.get("information_presentation")
+            or "all_visible_tables_in_initial_prompt",
+            "candidate": candidate_manifest.get("information_presentation") or "unspecified",
         },
     }
 

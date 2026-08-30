@@ -1,0 +1,94 @@
+{
+  "causal_chain": [
+    "staffing_shortfall",
+    "reduced_productive_staffing",
+    "capacity_deficit",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.97,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Mean logged-in staffing declined 26.7%, from 49 before the incident to 35.9 at/after it; the first drop occurred at 09:15.",
+      "signal": "logged_in_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Mean productive staffing declined 25.6%, from 45.2 before the incident to 33.6 at/after it.",
+      "signal": "productive_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Scheduled staffing remained fixed at 49, confirming an unplanned realized-staffing gap.",
+      "signal": "stable_headcount",
+      "source": "staffing"
+    },
+    {
+      "finding": "Mean service level fell 23.48 percentage points, from 90.34% to 66.86%.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA increased 124.7%, from 25.21 seconds to 56.66 seconds.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean abandoned calls rose from 0.6 to 11.1 per interval while answered calls declined.",
+      "signal": "queue_accumulation",
+      "source": "performance"
+    },
+    {
+      "finding": "Incident-period offered volume averaged 2.13% below forecast, excluding a sustained unexpected demand surge.",
+      "signal": "stable_demand",
+      "source": "forecast"
+    },
+    {
+      "finding": "All queues lost approximately 24.7%\u201328.9% of staffed agents and all experienced service deterioration, indicating center-wide capacity loss rather than localized misallocation.",
+      "signal": "queue_staffing_imbalance",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "A center-wide workforce notice reported multiple same-day absences at 09:15, coinciding with the initial staffing decline.",
+      "signal": "logged_in_staffing_drop",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-002",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "STAFFING_SHORTFALL",
+  "primary_root_cause_detail": "Multiple same-day absences created a center-wide realized staffing shortfall beginning at 09:15. Logged-in staffing subsequently fell from 49 to 33 and productive staffing from 46 to 31, reducing throughput and driving queue growth, higher ASA, abandonment, and sustained service-level degradation.",
+  "recommended_actions": [
+    "Activate same-day absence coverage and cross-skilled reserve staffing when realized staffing falls below requirements.",
+    "Set alerts on scheduled-to-logged and required-to-productive staffing gaps, with escalation beginning at incident onset.",
+    "Rebalance available cross-skilled agents across queues based on live backlog and ASA until staffing recovers.",
+    "Review absence contingency procedures and maintain an on-call or voluntary overtime roster for forecast-critical intervals."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Although offered calls averaged 6.0% above the lower pre-incident actual mean, incident-period demand averaged 2.13% below forecast and showed no sustained surge."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Mean AHT decreased 0.32% after incident start and averaged 0.11% below forecast."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Mean adherence increased from 92.24% before the incident to 93.71% afterward."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Staffing fell proportionally across every queue and all queues degraded, rather than capacity being diverted from one queue."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform or routing event was recorded; transfer rates also declined rather than indicating call-processing disruption."
+    }
+  ],
+  "stakeholder_summary": "The service-level incident was most likely caused by same-day absences, not excess demand, higher handle time, adherence loss, queue misallocation, or a platform event. The staffing loss began at 09:15 and affected every queue, reducing productive capacity by about 26% and causing sustained wait-time and service-level deterioration."
+}

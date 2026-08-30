@@ -1,0 +1,79 @@
+{
+  "causal_chain": [
+    "adherence_drop",
+    "reduced_productive_staffing",
+    "capacity_deficit",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.97,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Mean adherence fell from 92.2% before the incident to 62.0% at/after onset, beginning at 09:15.",
+      "signal": "adherence_decline",
+      "source": "staffing"
+    },
+    {
+      "finding": "Mean productive staffing fell 32.8%, from 45.2 to 30.4 agents, while scheduled and logged-in staffing remained fixed at 49.",
+      "signal": "productive_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Mean service level declined from 88.0% before onset to 51.4% at/after onset.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA rose from 28.7 to 79.2 seconds as productive capacity declined.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Post-onset volume averaged only 4.2% above forecast, making demand a contributor rather than the primary cause.",
+      "signal": "moderate_volume_increase",
+      "source": "forecast"
+    },
+    {
+      "finding": "All four queues experienced service-level and ASA deterioration, indicating a center-wide capacity issue rather than an isolated queue problem.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    }
+  ],
+  "incident_id": "CC-007",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "ADHERENCE_DROP",
+  "primary_root_cause_detail": "Adherence collapsed at incident onset, reducing mean productive staffing from 45.2 to 30.4 agents despite all 49 scheduled agents remaining logged in. This capacity loss explains the simultaneous center-wide increase in ASA and decline in service level.",
+  "recommended_actions": [
+    "Identify and correct the agent-state or schedule-adherence behavior that began at 09:15.",
+    "Restore productive staffing to required levels through real-time adherence intervention, reserve activation, or intraday schedule changes.",
+    "Alert workforce management when productive staffing diverges materially from logged-in headcount.",
+    "Temporarily rebalance capacity toward Billing while its elevated volume persists.",
+    "Review adherence recovery and service-level normalization at 15-minute intervals."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Volume averaged only 4.2% above forecast after onset, materially below the 32.8% productive-staffing reduction."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Mean AHT decreased after onset and averaged 0.7% below forecast."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Every queue degraded while queue staffing counts remained unchanged; the effect was not isolated to one queue."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "Logged-in headcount and transfer rates remained stable, with no corroborating platform event."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "The service-level decline was corroborated by higher ASA and abandonment, lower answered volume, and queue-level degradation."
+    }
+  ],
+  "stakeholder_summary": "The service-level incident was most likely caused by a sharp adherence decline that removed roughly one-third of productive capacity while logged-in headcount stayed constant. A moderate volume increase added pressure, but demand, AHT, platform, and queue-specific explanations do not account for the center-wide sustained impact."
+}
