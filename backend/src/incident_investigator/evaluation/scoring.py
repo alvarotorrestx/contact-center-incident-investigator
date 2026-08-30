@@ -20,8 +20,8 @@ class PerCaseScore(BaseModel):
     root_cause_correct: bool
     evidence_covered: int
     evidence_expected: int
-    unsupported_evidence_claims: int
-    evidence_claims: int
+    non_allowlisted_evidence_count: int
+    predicted_evidence_count: int
     contributing_exact: bool
     contributing_true_positive: int
     contributing_predicted: int
@@ -38,9 +38,9 @@ class BenchmarkScores(BaseModel):
     evidence_covered: int
     evidence_expected: int
     evidence_coverage: float
-    unsupported_evidence_claims: int
-    evidence_claims: int
-    unsupported_claim_rate: float
+    non_allowlisted_evidence_count: int
+    predicted_evidence_count: int
+    non_allowlisted_evidence_rate: float
     contributing_exact_count: int
     contributing_exact_accuracy: float
     contributing_precision: float
@@ -64,10 +64,10 @@ class BenchmarkScores(BaseModel):
             "# Benchmark Scores\n\n"
             f"- Cases: {self.case_count}\n"
             f"- RCIA: {self.root_cause_correct}/{self.case_count} ({self.rcia:.3f})\n"
-            f"- Evidence coverage: {self.evidence_covered}/{self.evidence_expected} "
+            f"- Expected-evidence coverage: {self.evidence_covered}/{self.evidence_expected} "
             f"({self.evidence_coverage:.3f})\n"
-            f"- Unsupported structured-claim rate: {self.unsupported_evidence_claims}/"
-            f"{self.evidence_claims} ({self.unsupported_claim_rate:.3f})\n"
+            f"- Non-allowlisted evidence rate: {self.non_allowlisted_evidence_count}/"
+            f"{self.predicted_evidence_count} ({self.non_allowlisted_evidence_rate:.3f})\n"
             f"- Contributing-factor exact accuracy: {self.contributing_exact_accuracy:.3f}\n"
             f"- Contributing-factor F1: {self.contributing_f1:.3f}\n"
             f"- Mean causal reasoning score: {self.causal_reasoning_average:.3f}/2\n"
@@ -106,8 +106,8 @@ def score_prediction(
             root_cause_correct=False,
             evidence_covered=0,
             evidence_expected=len(set(truth.expected_evidence)),
-            unsupported_evidence_claims=0,
-            evidence_claims=0,
+            non_allowlisted_evidence_count=0,
+            predicted_evidence_count=0,
             contributing_exact=False,
             contributing_true_positive=0,
             contributing_predicted=0,
@@ -130,8 +130,8 @@ def score_prediction(
         root_cause_correct=root_correct,
         evidence_covered=len(predicted_evidence & expected_evidence),
         evidence_expected=len(expected_evidence),
-        unsupported_evidence_claims=len(predicted_evidence - supported_evidence),
-        evidence_claims=len(predicted_evidence),
+        non_allowlisted_evidence_count=len(predicted_evidence - supported_evidence),
+        predicted_evidence_count=len(predicted_evidence),
         contributing_exact=predicted_contributing == expected_contributing,
         contributing_true_positive=len(predicted_contributing & expected_contributing),
         contributing_predicted=len(predicted_contributing),
@@ -153,8 +153,8 @@ def score_benchmark(
     root_correct = sum(item.root_cause_correct for item in per_case)
     evidence_covered = sum(item.evidence_covered for item in per_case)
     evidence_expected = sum(item.evidence_expected for item in per_case)
-    unsupported = sum(item.unsupported_evidence_claims for item in per_case)
-    evidence_claims = sum(item.evidence_claims for item in per_case)
+    non_allowlisted = sum(item.non_allowlisted_evidence_count for item in per_case)
+    predicted_evidence = sum(item.predicted_evidence_count for item in per_case)
     contributing_exact = sum(item.contributing_exact for item in per_case)
     contributing_tp = sum(item.contributing_true_positive for item in per_case)
     contributing_predicted = sum(item.contributing_predicted for item in per_case)
@@ -170,9 +170,9 @@ def score_benchmark(
         evidence_covered=evidence_covered,
         evidence_expected=evidence_expected,
         evidence_coverage=_fraction(evidence_covered, evidence_expected),
-        unsupported_evidence_claims=unsupported,
-        evidence_claims=evidence_claims,
-        unsupported_claim_rate=_fraction(unsupported, evidence_claims),
+        non_allowlisted_evidence_count=non_allowlisted,
+        predicted_evidence_count=predicted_evidence,
+        non_allowlisted_evidence_rate=_fraction(non_allowlisted, predicted_evidence),
         contributing_exact_count=contributing_exact,
         contributing_exact_accuracy=_fraction(contributing_exact, case_count),
         contributing_precision=precision,

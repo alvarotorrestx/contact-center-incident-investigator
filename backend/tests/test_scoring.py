@@ -15,7 +15,7 @@ def test_perfect_prediction_scores_deterministically(project_root: Path) -> None
 
     assert score.root_cause_correct
     assert score.evidence_covered == score.evidence_expected
-    assert score.unsupported_evidence_claims == 0
+    assert score.non_allowlisted_evidence_count == 0
     assert score.contributing_exact
     assert score.causal_reasoning_score == 2
 
@@ -29,3 +29,14 @@ def test_invalid_and_missing_predictions_are_auditable(project_root: Path) -> No
     assert scores.rcia == 0
     assert not scores.per_case[0].valid_prediction
     assert scores.per_case[1].validation_error == "missing_prediction"
+
+
+def test_score_reports_use_precise_evidence_allowlist_terminology(project_root: Path) -> None:
+    truths = GroundTruthLoader(project_root / "benchmark" / "v1" / "ground_truth").load_all()
+    scores = score_benchmark({}, truths)
+
+    serialized = scores.model_dump(mode="json")
+    assert "non_allowlisted_evidence_rate" in serialized
+    assert "unsupported_claim_rate" not in serialized
+    assert "Non-allowlisted evidence rate" in scores.to_markdown()
+    assert "Unsupported structured-claim rate" not in scores.to_markdown()

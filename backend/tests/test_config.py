@@ -30,6 +30,7 @@ def test_settings_load_openai_config_from_explicit_project_root(
 
     assert settings.openai_api_key == "test-only-placeholder"
     assert settings.openai_model == "test-model"
+    assert settings.openai_reasoning_effort == "medium"
     assert settings.project_root == project_root.resolve()
 
 

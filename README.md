@@ -7,6 +7,10 @@ API, and a React/Vite smoke interface.
 The benchmark is intentionally frozen at `benchmark/v1`. Do not change cases after observing model
 predictions to improve a score. Genuine benchmark defects require documentation and a new version.
 
+Stage 0 reports expected-evidence coverage and a non-allowlisted evidence rate. The latter counts
+predicted structured evidence IDs absent from each case's non-exhaustive `supported_signal_ids`
+allowlist; it is not a hallucination or factual-error rate.
+
 ## Local setup
 
 Python 3.12 is preferred; compatible Python 3.11+ is supported. From the repository root:
@@ -42,9 +46,12 @@ frozen case with the same model configuration and preserves all valid outputs an
 
 ```powershell
 $env:OPENAI_API_KEY = "your-key"
-$env:OPENAI_MODEL = "your-model-name"
+$env:OPENAI_MODEL = "gpt-5.6-sol"
 .\.venv\Scripts\python.exe -m incident_investigator --project-root . run-baseline
 ```
+
+The CLI also loads both variables automatically from the project-root `.env`. Future controlled
+baseline requests explicitly use medium reasoning effort and record it in the run manifest.
 
 Local outputs are written beneath `results/local/<run-id>` and trajectories beneath
 `trajectories/local/<run-id>`. They are ignored until intentionally curated.
@@ -58,4 +65,3 @@ corepack pnpm --dir frontend dev
 
 Stage 0 exposes only the `baseline` system version. Tool use, a hypothesis ledger, verification,
 revision loops, and the polished product UI require separate phase approval.
-

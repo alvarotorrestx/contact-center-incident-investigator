@@ -226,15 +226,22 @@ Store representative trajectories in a human-readable form for submission.
 Single general-purpose analyst.
 
 ### V1 — Tool-Using Investigator
-Add deterministic analysis tools and iterative tool selection.
+Add deterministic read-only analysis tools, a bounded iterative tool-using investigator,
+and trajectory capture for tool decisions. Do not add a hypothesis ledger, verifier, or
+revision loop in V1.
 
 ### V2 — Structured Hypothesis Investigation
-Add explicit hypothesis ledger and evidence-for/evidence-against behavior.
+Add an explicit hypothesis ledger and evidence-for/evidence-against tracking. Benchmark
+against the same frozen, configuration-matched anchor.
 
 ### V3 — Adversarial Verification
-Add verifier and bounded revision loop.
+Add an adversarial verifier and bounded verifier-driven revision loop. Benchmark against
+the same frozen, configuration-matched anchor.
 
 ### V4 — Product Quality
-Add polished React analyst/stakeholder views and trajectory visualization.
+Add the polished React investigation experience and presentation improvements.
 
-Each stage must be benchmarked. Keep only changes that improve the solution or clearly improve end-to-end usability.
+At every phase, stop after tests and measured benchmark results and wait for explicit
+approval before beginning the next phase. Keep the frozen benchmark, taxonomy, output
+contract, model, and model configuration constant unless a separately documented
+experiment intentionally changes one of those resources.

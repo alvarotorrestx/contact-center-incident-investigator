@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Protocol
+from typing import Any, Literal, Protocol
 
 from incident_investigator.contracts import FinalDiagnosis
 
@@ -22,11 +22,19 @@ class BaselineClient(Protocol):
 
 
 class OpenAIBaselineClient:
-    def __init__(self, *, api_key: str, model: str, max_retries: int = 2):
+    def __init__(
+        self,
+        *,
+        api_key: str,
+        model: str,
+        max_retries: int = 2,
+        reasoning_effort: Literal["medium"] = "medium",
+    ):
         from openai import OpenAI
 
         self.model = model
         self.max_retries = max_retries
+        self.reasoning_effort = reasoning_effort
         self._client = OpenAI(api_key=api_key, max_retries=max_retries)
 
     def analyze(self, prompt: BaselinePrompt) -> BaselineResponse:
@@ -37,6 +45,7 @@ class OpenAIBaselineClient:
                 {"role": "user", "content": prompt.user},
             ],
             text_format=FinalDiagnosis,
+            reasoning={"effort": self.reasoning_effort},
         )
         if response.output_parsed is None:
             raise ValueError("OpenAI response did not contain a parsed diagnosis")

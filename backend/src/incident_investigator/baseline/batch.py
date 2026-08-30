@@ -27,7 +27,10 @@ def run_baseline_batch(
             "system_version": "baseline",
             "benchmark_version": settings.benchmark_version,
             "model": client.model,
-            "model_configuration": {"sampling_parameters": "provider_defaults"},
+            "model_configuration": {
+                "sampling_parameters": "provider_defaults",
+                "reasoning_effort": settings.openai_reasoning_effort,
+            },
             "openai_sdk_version": version("openai"),
             "max_retries": settings.openai_max_retries,
             "prompt_version": "baseline_v1",
@@ -81,5 +84,6 @@ def run_live_baseline(settings: Settings) -> tuple[str, dict[str, object]]:
         api_key=settings.openai_api_key,
         model=settings.openai_model,
         max_retries=settings.openai_max_retries,
+        reasoning_effort=settings.openai_reasoning_effort,
     )
     return run_baseline_batch(settings, client)

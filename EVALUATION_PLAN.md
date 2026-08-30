@@ -23,17 +23,23 @@ Do not invent results. Report only benchmark outputs produced by actual runs.
 
 ## Secondary Metrics
 
-### Evidence Coverage
-Expected supporting evidence correctly surfaced / total expected evidence items.
+### Expected-Evidence Coverage
+Designated scenario evidence correctly surfaced / total designated expected evidence items.
 
-### Unsupported Claim Rate
-Unsupported factual claims / total factual claims.
+This measures whether the system found the evidence selected as important to the
+scenario. It is not a measure of every factual observation the system could
+legitimately make from the visible data.
 
-Where possible, claims should be checked against structured benchmark data instead of judged by another LLM.
+### Non-Allowlisted Evidence Rate
+Predicted structured evidence signal IDs absent from the case-specific
+`supported_signal_ids` allowlist / all predicted structured evidence signal IDs.
 
-For benchmark `v1`, this metric is deliberately scoped to structured evidence:
-unsupported predicted evidence signal IDs / all predicted evidence signal IDs.
-Free-form stakeholder prose is not scored as an atomic factual-claim set.
+For benchmark `v1`, the case-specific allowlists are intentionally not exhaustive
+factual catalogs. A non-allowlisted evidence ID may be a legitimate secondary
+observation, an imprecise canonical-ID choice, an inference not directly represented
+in the visible schema, or genuine model overreach. Therefore this metric must not be
+reported as a hallucination rate, factual-error rate, or direct measure of unsupported
+reasoning. Free-form stakeholder prose is not scored as an atomic factual-claim set.
 
 ### Contributing-Factor Accuracy
 Measure whether the system distinguishes:
@@ -41,6 +47,11 @@ Measure whether the system distinguishes:
 - contributing factors
 
 This is especially important in multifactor and adversarial cases.
+
+Benchmark `v1` does not define a quantitative materiality threshold for promoting a
+visible deviation into a contributing cause. Contributor materiality is therefore a
+known limitation that must be considered alongside exact-set accuracy, precision,
+recall, and F1; it must not be repaired retroactively after observing predictions.
 
 ### Causal Reasoning Score
 Per incident:

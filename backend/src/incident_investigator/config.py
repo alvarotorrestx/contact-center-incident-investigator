@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -18,6 +19,7 @@ class Settings(BaseSettings):
     openai_api_key: str | None = None
     openai_model: str | None = None
     openai_max_retries: int = 2
+    openai_reasoning_effort: Literal["medium"] = "medium"
     benchmark_version: str = "v1"
 
     @property

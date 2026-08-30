@@ -25,6 +25,10 @@ def test_mock_batch_runs_and_scores_all_ten_cases(isolated_project: Path) -> Non
     manifest = json.loads((result_root / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["status"] == "COMPLETED"
     assert manifest["failure_count"] == 0
+    assert manifest["model_configuration"] == {
+        "sampling_parameters": "provider_defaults",
+        "reasoning_effort": "medium",
+    }
     assert len(list((result_root / "predictions").glob("CC-*.json"))) == 10
     assert len(list(trajectory_root.glob("CC-*.jsonl"))) == 10
     assert (result_root / "scores.json").is_file()

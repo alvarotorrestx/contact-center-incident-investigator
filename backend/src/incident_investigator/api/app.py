@@ -28,6 +28,7 @@ def _default_client_factory(settings: Settings) -> BaselineClient:
         api_key=settings.openai_api_key,
         model=settings.openai_model,
         max_retries=settings.openai_max_retries,
+        reasoning_effort=settings.openai_reasoning_effort,
     )
 
 
@@ -71,7 +72,10 @@ def create_app(
                 "benchmark_version": settings.benchmark_version,
                 "model": client.model,
                 "scope": "single_case_api",
-                "model_configuration": {"sampling_parameters": "provider_defaults"},
+                "model_configuration": {
+                    "sampling_parameters": "provider_defaults",
+                    "reasoning_effort": settings.openai_reasoning_effort,
+                },
                 "openai_sdk_version": version("openai"),
                 "max_retries": settings.openai_max_retries,
                 "prompt_version": "baseline_v1",

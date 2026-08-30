@@ -38,6 +38,10 @@ def test_api_exposes_visible_data_and_runs_mock_baseline(isolated_project: Path)
     saved = client.get(f"/api/runs/{payload['run_id']}")
     assert saved.status_code == 200
     assert saved.json()["manifest"]["system_version"] == "baseline"
+    assert saved.json()["manifest"]["model_configuration"] == {
+        "sampling_parameters": "provider_defaults",
+        "reasoning_effort": "medium",
+    }
 
 
 def test_api_rejects_unknown_incident_and_non_baseline_version(isolated_project: Path) -> None:

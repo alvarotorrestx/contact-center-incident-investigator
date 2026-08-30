@@ -13,13 +13,13 @@ If `TONIGHT_PLAN.md` is present locally, it is an internal execution aid only. I
 
 The project documents above define the intended product, benchmark, evaluation methodology, and agent architecture.
 
-## Authorization State: PLANNING ONLY
+## Authorization State: STAGE 0 COMPLETE — AWAITING V1 APPROVAL
 
-The current authorization is **PLANNING ONLY**.
+Stage 0 is complete. The project is awaiting explicit approval to begin V1.
 
-Do not create application code, install dependencies, scaffold projects, generate benchmark files, or modify implementation files until the user explicitly approves Stage 0.
+V1 and all later implementation remain **NO-GO** without explicit user approval. Do not add investigation tools, iterative investigator behavior, a hypothesis ledger, verification, revision loops, or later-stage UI work until the corresponding phase is explicitly authorized.
 
-The first task is to read the project documents and propose a concise implementation plan.
+While awaiting V1 approval, work is limited to Stage 0 validation, explicitly authorized documentation or configuration cleanup, configuration-matched baseline execution, and evidence curation. These activities do not authorize beginning V1 or changing the frozen benchmark, ground truth, scoring behavior, taxonomy, or historical experimental artifacts.
 
 ## Strict GO / NO-GO Phase Gates
 

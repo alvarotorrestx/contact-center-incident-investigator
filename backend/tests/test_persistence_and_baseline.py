@@ -2,13 +2,38 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 from helpers import MockBaselineClient, diagnosis_from_truth
 
-from incident_investigator.baseline import BaselineRunner
+from incident_investigator.baseline import BaselinePrompt, BaselineRunner, OpenAIBaselineClient
 from incident_investigator.benchmark import AgentVisibleCaseLoader
 from incident_investigator.evaluation import GroundTruthLoader
 from incident_investigator.persistence import RunStore
+
+
+def test_openai_client_pins_medium_reasoning_effort(isolated_project: Path) -> None:
+    truth = GroundTruthLoader(isolated_project / "benchmark" / "v1" / "ground_truth").load("CC-001")
+    diagnosis = diagnosis_from_truth(truth)
+    captured: dict[str, object] = {}
+
+    class FakeResponses:
+        def parse(self, **kwargs: object) -> object:
+            captured.update(kwargs)
+            return SimpleNamespace(output_parsed=diagnosis, usage=None, id="mock-response")
+
+    client = OpenAIBaselineClient(
+        api_key="test-only-placeholder",
+        model="gpt-5.6-sol",
+        reasoning_effort="medium",
+    )
+    client._client = SimpleNamespace(responses=FakeResponses())
+
+    response = client.analyze(BaselinePrompt(system="system", user="user", version="test"))
+
+    assert response.diagnosis == diagnosis
+    assert captured["reasoning"] == {"effort": "medium"}
+    assert "test-only-placeholder" not in str(captured)
 
 
 def test_mock_baseline_persists_manifest_prediction_and_trajectory(isolated_project: Path) -> None:
