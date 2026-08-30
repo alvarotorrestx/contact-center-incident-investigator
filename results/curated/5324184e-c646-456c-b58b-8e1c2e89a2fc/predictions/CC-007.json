@@ -1,0 +1,85 @@
+{
+  "causal_chain": [
+    "adherence_drop",
+    "reduced_productive_staffing",
+    "staffing_shortfall",
+    "capacity_deficit",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.74,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Adherence fell from a 92.2% pre-incident mean to 62.0% afterward; an independent calculation confirmed a 30.3-point decline.",
+      "signal": "adherence_decline",
+      "source": "staffing"
+    },
+    {
+      "finding": "Productive staffing fell from 45.2 to 30.4 agents while all 49 scheduled agents remained logged in.",
+      "signal": "productive_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Productive staffing dropped below the 36\u201340 agent requirement, while demand averaged a moderate 4.2% above forecast.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "Service level fell from 88.0% to 51.4% beginning in the same interval as the adherence and productive-staffing changes.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "ASA rose 176%, answered calls fell 13.4%, and abandonment increased sharply, demonstrating reduced throughput and congestion.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "All queues degraded, including Account Support where offered volume declined 11.7%, opposing demand as the primary explanation.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "No mismatch was found: reported service level matched deterministic recalculation in every interval.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    },
+    {
+      "finding": "No recorded event corroborated a routing or platform explanation, though absence of an event does not prove no issue occurred.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-007",
+  "investigation_status": "INCONCLUSIVE",
+  "primary_root_cause_category": "STAFFING_SHORTFALL",
+  "primary_root_cause_detail": "The ledger-aligned category is an adherence-driven productive staffing shortfall. At 09:15, adherence, productive staffing, and service performance deteriorated within the same 15-minute interval. The data establish onset alignment and a direct capacity mechanism, but cannot prove finer-grained temporal ordering or identify why adherence collapsed. ADHERENCE_DROP is therefore a plausible deeper taxonomy category, while STAFFING_SHORTFALL describes the immediately observed operating condition.",
+  "recommended_actions": [
+    "Investigate the activity-state, schedule, WFM, or other operational condition behind the 09:15 adherence collapse.",
+    "Review sub-interval agent-state logs to determine whether adherence loss preceded service degradation within the 09:15 interval.",
+    "Restore productive staffing to the interval requirement and alert on widening logged-in-to-productive staffing gaps.",
+    "Retain moderate demand variance as a contributing factor in intraday capacity planning."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Demand was only moderately above forecast, was not persistently elevated, and cannot explain degradation in a queue with declining volume."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "AHT declined approximately 1.0% after onset and averaged below forecast."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "Transfer rates were stable, the cross-queue pattern did not show shifted load, and no routing event corroborated the hypothesis."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Service level matched deterministic recalculation in all intervals."
+    }
+  ],
+  "stakeholder_summary": "A real, material capacity incident is established, but final causal taxonomy remains inconclusive. Adherence and productive staffing collapsed in the same 15-minute interval as service performance. The evidence supports an adherence-driven productive staffing deficit, but available granularity cannot determine whether ADHERENCE_DROP or the resulting STAFFING_SHORTFALL should be treated as the definitive primary category, nor what caused the adherence decline."
+}

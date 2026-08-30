@@ -1,0 +1,76 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "queue_misrouting",
+    "queue_capacity_imbalance",
+    "capacity_deficit",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.96,
+  "contributing_factors": [
+    "moderate_volume_increase",
+    "localized_queue_misrouting"
+  ],
+  "evidence": [
+    {
+      "finding": "Billing queue skill mappings were updated at 09:15, exactly when the incident began.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "Billing staffing fell from 12 to 9 while General Service staffing rose from 19 to 22, with center-wide staffing unchanged.",
+      "signal": "queue_staffing_imbalance",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Billing service level fell from 89.8% to 44.7% and ASA rose from 29.9 to 86.3 seconds, while General Service improved.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained at 49 agents, and productive staffing was essentially unchanged.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "After incident onset, offered volume averaged only 1.8% above forecast, although Billing experienced a localized moderate increase.",
+      "signal": "stable_demand",
+      "source": "forecast"
+    },
+    {
+      "finding": "Center service level declined from 88.4% before the incident to 76.5% during and after it.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-005",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "A Billing skill-mapping update at 09:15 redistributed three staffed agents from Billing to General Service. The resulting localized Billing capacity imbalance caused sharply higher waits and lower service level.",
+  "recommended_actions": [
+    "Revert or correct the Billing skill-mapping change and restore the three-agent Billing allocation.",
+    "Validate Billing and General Service skill assignments before republishing routing configuration.",
+    "Monitor queue-level staffing, ASA, and service level after correction to confirm recovery.",
+    "Add change controls and automated alerts for offsetting queue-level staffing shifts after routing updates."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Center demand rose only 2.6% pre-to-post and averaged 1.8% above forecast; this does not explain the localized queue divergence."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Total scheduled and logged-in staffing remained constant at 49, with no material productive-staffing decline."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Aggregate AHT decreased 1.1%, Billing AHT decreased 0.5%, and post-onset AHT was below forecast."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was visible, and degradation was localized to Billing while other queues improved."
+    }
+  ],
+  "stakeholder_summary": "The service-level decline was most likely caused by a 09:15 Billing routing change that shifted three agents to General Service. Billing then deteriorated sharply despite stable total staffing and near-forecast center demand; localized higher Billing volume amplified the impact."
+}

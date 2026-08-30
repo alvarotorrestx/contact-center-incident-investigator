@@ -1,0 +1,81 @@
+{
+  "causal_chain": [
+    "unexpected_demand",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.72,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Aggregate offered volume was 22.78% above forecast at 10:15 and 22.37% above forecast at 10:45.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "The only below-target intervals were 10:15 and 10:45, exactly coinciding with the two largest post-onset demand peaks; service level was 75.00% and 77.42%.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "ASA peaked at 48.73 seconds at 10:15 and 47.73 seconds at 10:45, contemporaneous with the demand peaks and service-level breaches.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "At 10:15, General Service received 50 calls but answered 43; ASA reached 63.71 seconds and service level fell to 63.27% with staffing fixed at 19.",
+      "signal": "queue_accumulation",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Service remained above target at 09:45 and 10:00, recovered to 84.52% between the two breaches, and recovered after 10:45; the impact was transient rather than continuously sustained.",
+      "signal": "brief_unsustained_variance",
+      "source": "performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained constant at 49 throughout the window, and queue staffing did not decline.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "No routing-change or platform event was recorded.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-014",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "DEMAND_SPIKE",
+  "primary_root_cause_detail": "Transient post-onset demand spikes most likely caused the two actual below-target intervals. At 10:15 and 10:45, aggregate demand was more than 22% above forecast and coincided with peak ASA and service levels of 75.00% and 77.42%. General Service directly accumulated seven calls during the 10:15 spike. The degradation was recurrent but not continuous, and the 09:45 interval itself was above target.",
+  "recommended_actions": [
+    "Use interval-level demand-over-forecast alerts to trigger temporary overflow coverage before service falls below target.",
+    "Review intraday capacity thresholds for General Service, particularly when offered volume approaches 50 calls per interval.",
+    "Monitor queue accumulation and ASA alongside service level to distinguish transient demand pressure from sustained incidents.",
+    "Align incident timestamps with the first verified below-target interval; in this case the first demonstrated breach was 10:15, not 09:45."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "NO_MATERIAL_INCIDENT",
+      "reason": "Although the post-onset mean remained above target, two separate intervals breached 80%; both coincided with demand and ASA peaks, and the 10:15 interval included directly observed queue accumulation."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in staffing remained constant, with only a 0.77% reduction in mean productive staffing."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Aggregate AHT decreased after onset, and General Service AHT was normal during its severe 10:15 breach."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "No routing event or material transfer-rate increase was observed."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event occurred, and performance recovered between demand peaks."
+    }
+  ],
+  "stakeholder_summary": "Two recurrent but noncontinuous service-level breaches occurred after the stated incident start. Both aligned with the largest above-forecast demand intervals and peak ASA; General Service also showed direct queue accumulation at 10:15. Transient demand pressure remains the most likely cause, with moderate confidence."
+}

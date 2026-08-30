@@ -1,0 +1,70 @@
+{
+  "causal_chain": [
+    "unexpected_demand",
+    "capacity_deficit",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.96,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Mean offered calls increased 60.7%, from 74.0 before the incident to 118.9 during/after it.",
+      "signal": "demand_surge",
+      "source": "performance"
+    },
+    {
+      "finding": "Volume was 48.1% above forecast at incident onset and remained 24.4%\u201372.2% above forecast for the rest of the window.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "Mean service level fell from 90.85% before the incident to 54.33% during/after it, while ASA increased from 24.78 to 72.50 seconds.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained constant at 49; productive staffing did not decline, while occupancy increased from 68.1% to 98.9%.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "All four queues experienced 49%\u201366% volume growth and 27%\u201343% service-level deterioration with unchanged queue staffing.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "No routing, platform, or other operational event was recorded in the full visible window.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-001",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "DEMAND_SPIKE",
+  "primary_root_cause_detail": "An unexpected, center-wide demand surge began at 09:15. Offered volume remained 24.4%\u201372.2% above forecast, saturating otherwise stable staffing and causing service-level deterioration across all queues.",
+  "recommended_actions": [
+    "Activate intraday surge staffing or cross-skilled overflow when actual demand materially exceeds forecast.",
+    "Configure real-time alerts for sustained actual-versus-forecast volume variance and occupancy approaching saturation.",
+    "Review the source of the 09:15 demand increase and incorporate any repeatable driver into forecasting and contingency plans."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Logged-in staffing remained at 49, productive staffing slightly increased, and adherence improved after incident onset."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Center AHT was essentially unchanged and averaged 0.24% below forecast during/after the incident."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "Transfer rates were stable, degradation affected every queue, and no routing-change event was recorded."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was recorded, and the operational pattern is explained by above-forecast demand saturating stable capacity."
+    }
+  ],
+  "stakeholder_summary": "The service-level incident was most likely caused by an unexpected center-wide demand surge beginning at 09:15, not by staffing loss, higher handle time, routing changes, or a platform incident. Stable capacity became saturated as volume substantially exceeded forecast across all queues."
+}

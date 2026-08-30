@@ -43,6 +43,9 @@ def main() -> None:
     subparsers.add_parser(
         "run-v2", help="Run the bounded V2 structured-hypothesis investigator on all cases"
     )
+    subparsers.add_parser(
+        "run-v3", help="Run V2 investigation with bounded adversarial verification"
+    )
     evaluate = subparsers.add_parser("evaluate", help="Score saved predictions")
     evaluate.add_argument("--run-id", required=True)
     serve = subparsers.add_parser("serve", help="Run the local FastAPI server")
@@ -84,6 +87,22 @@ def main() -> None:
         print(
             json.dumps(
                 {"run_id": run_id, "scores": scores, "comparisons": comparisons},
+                indent=2,
+            )
+        )
+    elif args.command == "run-v3":
+        from incident_investigator.config import get_settings
+        from incident_investigator.verifier.batch import run_live_v3
+
+        run_id, scores, comparisons, analysis = run_live_v3(get_settings(project_root))
+        print(
+            json.dumps(
+                {
+                    "run_id": run_id,
+                    "scores": scores,
+                    "comparisons": comparisons,
+                    "verification_analysis": analysis,
+                },
                 indent=2,
             )
         )

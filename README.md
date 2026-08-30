@@ -92,6 +92,23 @@ but remained below the 9/10 Stage 0 anchor and cost substantially more. Complete
 under `results/curated/` and `trajectories/curated/`. V2 does not include a verifier or revision
 loop.
 
+## V3 adversarial verification
+
+V3 preserves the V2 investigator and adds one tool-free structured verifier. A `REVISE` result can
+return findings to the investigator at most twice; the verifier cannot rewrite the diagnosis or use
+ground truth, scores, historical outcomes, or filesystem tools.
+
+```powershell
+.\.venv\Scripts\python.exe -m incident_investigator --project-root . run-v3
+```
+
+Official run `5324184e-c646-456c-b58b-8e1c2e89a2fc` completed all ten cases with zero failures and
+scored 7/10 RCIA, unchanged from V2. It made 13 verifier calls and 3 revisions, but no final category
+changed and no V2 error was corrected. Runtime increased to 1,421.897 seconds, token use to
+2,259,724, and estimated cost to $5.8938618. The complete run is curated under `results/curated/`
+and `trajectories/curated/`. This controlled negative result is preserved; V3 verification is not
+recommended for the final workflow without a separately approved new experiment.
+
 ## Local API and UI
 
 ```powershell
@@ -99,6 +116,5 @@ loop.
 corepack pnpm --dir frontend dev
 ```
 
-The existing API still exposes only the Stage 0 `baseline` system version. V1/V2 experiments run
-through the CLI; verifier behavior, revision loops, and polished product UI require separate phase
-approval.
+The existing API still exposes only the Stage 0 `baseline` system version. V1/V2/V3 experiments run
+through the CLI; polished V4 product UI work requires separate phase approval.

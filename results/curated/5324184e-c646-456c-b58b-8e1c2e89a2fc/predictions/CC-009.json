@@ -1,0 +1,82 @@
+{
+  "causal_chain": [
+    "platform_incident",
+    "call_processing_disruption",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.9,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Voice-platform monitoring reported intermittent call-processing delays across all queues at the 09:15 incident onset.",
+      "signal": "platform_event",
+      "source": "events"
+    },
+    {
+      "finding": "Mean service level fell from 88.9% before the incident to 29.2% during/after it.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA increased from 26.3 seconds to 113.9 seconds during/after the incident.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "All four queues experienced material degradation despite unchanged queue staffing, indicating a shared rather than localized mechanism.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained at 49; productive staffing and adherence slightly improved.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Offered volume was 7.6% below forecast at onset and averaged only 2.1% above forecast afterward.",
+      "signal": "stable_demand",
+      "source": "forecast"
+    },
+    {
+      "finding": "Recalculated service level matched every reported interval exactly, with zero percentage-point variance.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-009",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "PLATFORM_INCIDENT",
+  "primary_root_cause_detail": "An all-queues voice-platform degradation causing intermittent call-processing delays began at 09:15, exactly when service performance deteriorated. Stable capacity, near-forecast demand, and valid metric calculations rule out the principal alternatives.",
+  "recommended_actions": [
+    "Escalate the 09:15 all-queues voice-platform degradation to the platform provider and obtain component-level incident logs.",
+    "Validate call-processing latency, routing-engine response times, and media/session establishment across the affected period.",
+    "Apply platform failover or traffic-diversion procedures when processing-delay alerts recur.",
+    "Correlate recovery timestamps with ASA and service-level normalization, then document the incident timeline and preventive controls."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in headcount were unchanged, while productive staffing and adherence improved."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Center AHT declined slightly, and queue-level AHT changes were small and mixed."
+    },
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Demand was below forecast at onset and near forecast on average afterward; low-growth queues also degraded severely."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "No routing event was reported, and transfer rates remained stable or slightly lower."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Service-level recalculation matched all reported intervals exactly, and a contemporaneous platform event corroborated the operational impact."
+    }
+  ],
+  "stakeholder_summary": "The service-level failure was most likely caused by an all-queues voice-platform processing incident beginning at 09:15. Staffing and AHT were stable, demand was near forecast, and the reported service-level metric was accurate. Moderate volume growth may have amplified the impact but was not the primary cause."
+}

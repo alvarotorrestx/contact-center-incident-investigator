@@ -1,0 +1,516 @@
+{
+  "diagnosis_category_unchanged_after_successful_revision": [
+    "CC-014"
+  ],
+  "finding_patterns": {
+    "alternative_explanation": 2,
+    "causal_timing": 4,
+    "contributor_role": 2,
+    "evidence_presence": 13,
+    "incident_significance": 1,
+    "materiality": 1,
+    "symptom_vs_root_cause": 4
+  },
+  "per_case": [
+    {
+      "diagnosis_category_changed": false,
+      "execution_failure": false,
+      "final_v3_category": "DEMAND_SPIKE",
+      "final_v3_correct": true,
+      "incident_id": "CC-001",
+      "initial_v3_category": "DEMAND_SPIKE",
+      "initial_v3_correct": true,
+      "revisions": 0,
+      "termination_reason": "verifier_verified",
+      "tool_calls": 5,
+      "v2_category": "DEMAND_SPIKE",
+      "v2_correct": true,
+      "verification_rounds": [
+        {
+          "critical_contradictions": [],
+          "recommended_revision": "Minor only: describe the intermediate condition as inferred congestion or capacity saturation unless direct queue-accumulation data are added. This does not change the primary diagnosis.",
+          "stronger_alternative_if_any": null,
+          "unsupported_or_weak_claims": [
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "queue_accumulation",
+              "finding": "The causal-chain step \"queue_growth\" is plausible from the sharp ASA increase and near-100% occupancy, but actual queue backlog or accumulation was not directly measured in the visible evidence.",
+              "source_tool": "summarize_incident_window"
+            }
+          ],
+          "verification_status": "VERIFIED",
+          "verification_summary": "The diagnosis survives challenge. Demand rose abruptly at the 09:15 onset, remained materially above forecast throughout the remaining window, and coincided with sustained service-level and ASA deterioration across every queue. Staffing, productive capacity, adherence, and AHT did not worsen, while no routing or platform event was visible. No investigated alternative explains the broad pattern better than DEMAND_SPIKE."
+        }
+      ],
+      "verification_statuses": [
+        "VERIFIED"
+      ],
+      "verifier_calls": 1
+    },
+    {
+      "diagnosis_category_changed": false,
+      "execution_failure": false,
+      "final_v3_category": "STAFFING_SHORTFALL",
+      "final_v3_correct": true,
+      "incident_id": "CC-002",
+      "initial_v3_category": "STAFFING_SHORTFALL",
+      "initial_v3_correct": true,
+      "revisions": 0,
+      "termination_reason": "verifier_verified",
+      "tool_calls": 4,
+      "v2_category": "STAFFING_SHORTFALL",
+      "v2_correct": true,
+      "verification_rounds": [
+        {
+          "critical_contradictions": [],
+          "recommended_revision": null,
+          "stronger_alternative_if_any": null,
+          "unsupported_or_weak_claims": [
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "queue_accumulation",
+              "finding": "The causal-chain step \u201creduced throughput\u201d is not directly measured by handled-call or queue-accumulation evidence; it is a reasonable inference from the capacity loss, ASA increase, and service-level decline, but should be described as inferred.",
+              "source_tool": null
+            }
+          ],
+          "verification_status": "VERIFIED",
+          "verification_summary": "The diagnosis survives challenge. A substantial logged-in and productive staffing loss began at incident onset despite unchanged schedules, was corroborated by a same-day absence notice, persisted across every queue, and coincided with sharply higher ASA and lower service level. Stable or improved adherence, essentially unchanged AHT, broad rather than localized queue degradation, and only moderate aggregate volume growth make the investigated alternatives materially weaker. The unmeasured throughput step is a minor evidentiary limitation and does not change the root cause."
+        }
+      ],
+      "verification_statuses": [
+        "VERIFIED"
+      ],
+      "verifier_calls": 1
+    },
+    {
+      "diagnosis_category_changed": false,
+      "execution_failure": false,
+      "final_v3_category": "HANDLE_TIME_INCREASE",
+      "final_v3_correct": true,
+      "incident_id": "CC-003",
+      "initial_v3_category": "HANDLE_TIME_INCREASE",
+      "initial_v3_correct": true,
+      "revisions": 0,
+      "termination_reason": "verifier_verified",
+      "tool_calls": 6,
+      "v2_category": "HANDLE_TIME_INCREASE",
+      "v2_correct": true,
+      "verification_rounds": [
+        {
+          "critical_contradictions": [],
+          "recommended_revision": "Minor qualification only: state that no visible evidence corroborates a platform incident, rather than implying one is conclusively excluded, and distinguish the verified AHT-driven capacity failure from the still-unresolved underlying driver of AHT.",
+          "stronger_alternative_if_any": null,
+          "unsupported_or_weak_claims": [
+            {
+              "check": "alternative_explanation",
+              "evidence_signal": "no_corroborating_event",
+              "finding": "The absence of a recorded platform event does not independently exclude unlogged application latency or another platform-related driver of AHT. It only establishes that no corroborating event is visible.",
+              "source_tool": "get_events"
+            },
+            {
+              "check": "symptom_vs_root_cause",
+              "evidence_signal": "aht_increase",
+              "finding": "HANDLE_TIME_INCREASE is the strongest supported operational cause of the service decline, but the common driver of the AHT increase remains unidentified; confidence should be understood as applying to the proximal cause rather than its underlying mechanism.",
+              "source_tool": "get_performance_trends"
+            }
+          ],
+          "verification_status": "VERIFIED",
+          "verification_summary": "The diagnosis survives challenge. AHT rose sharply at the incident boundary and remained elevated across all four queues while aggregate demand, staffing, adherence, training, and transfer rates remained effectively stable. Service level, ASA, abandonment, throughput, and occupancy changed in the expected capacity-constrained direction, and the service-level calculation was validated. No investigated alternative explains the visible evidence better. The underlying reason for the common-mode AHT increase remains unresolved, but this does not invalidate HANDLE_TIME_INCREASE as the best-supported operational root-cause category."
+        }
+      ],
+      "verification_statuses": [
+        "VERIFIED"
+      ],
+      "verifier_calls": 1
+    },
+    {
+      "diagnosis_category_changed": false,
+      "execution_failure": false,
+      "final_v3_category": "ROUTING_CHANGE",
+      "final_v3_correct": true,
+      "incident_id": "CC-004",
+      "initial_v3_category": "ROUTING_CHANGE",
+      "initial_v3_correct": true,
+      "revisions": 0,
+      "termination_reason": "verifier_verified",
+      "tool_calls": 6,
+      "v2_category": "ROUTING_CHANGE",
+      "v2_correct": true,
+      "verification_rounds": [
+        {
+          "critical_contradictions": [],
+          "recommended_revision": null,
+          "stronger_alternative_if_any": null,
+          "unsupported_or_weak_claims": [
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "routing_change_event",
+              "finding": "The evidence establishes tight temporal and scope alignment, but does not directly prove that version 24.7 caused the transfer increase through a specific defective rule or mapping; that mechanism remains appropriately framed as likely pending rollback or configuration validation.",
+              "source_tool": "get_events"
+            }
+          ],
+          "verification_status": "VERIFIED",
+          "verification_summary": "The diagnosis survives challenge. The all-queue routing deployment coincided exactly with sustained, broad transfer-rate and AHT increases and immediate aggregate service-level deterioration. Demand declined, staffing remained stable, and service-level arithmetic was valid, weakening the principal alternatives. HANDLE_TIME_INCREASE is better treated as an intermediate operating condition than the deepest supported cause. The causal attribution remains inferential, but the proposal labels it LIKELY and recommends rollback validation, so no material revision is required."
+        }
+      ],
+      "verification_statuses": [
+        "VERIFIED"
+      ],
+      "verifier_calls": 1
+    },
+    {
+      "diagnosis_category_changed": false,
+      "execution_failure": false,
+      "final_v3_category": "ROUTING_CHANGE",
+      "final_v3_correct": false,
+      "incident_id": "CC-005",
+      "initial_v3_category": "ROUTING_CHANGE",
+      "initial_v3_correct": false,
+      "revisions": 0,
+      "termination_reason": "verifier_verified",
+      "tool_calls": 5,
+      "v2_category": "ROUTING_CHANGE",
+      "v2_correct": false,
+      "verification_rounds": [
+        {
+          "critical_contradictions": [],
+          "recommended_revision": "Minor wording improvement: describe the routing change as having \"apparently\" or \"most likely\" shifted usable capacity from Billing to General Service, and label misrouting and reduced throughput as inferred mechanisms. This does not require changing the root-cause category or investigation status.",
+          "stronger_alternative_if_any": null,
+          "unsupported_or_weak_claims": [
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "routing_change_event",
+              "finding": "The evidence confirms a skill-mapping update and an offsetting queue staffing shift, but does not directly establish individual-call misrouting or measure reduced throughput/queue accumulation. Those causal-chain steps are inferred rather than observed.",
+              "source_tool": "get_events"
+            }
+          ],
+          "verification_status": "VERIFIED",
+          "verification_summary": "The diagnosis survives challenge. The Billing skill-mapping event occurred exactly at onset, Billing lost three staffed agents while General Service gained three with stable center staffing, and queue outcomes diverged sharply. Aggregate demand and AHT do not provide stronger explanations; Billing's volume increase is appropriately treated as a contributor. Queue imbalance is the supported operating mechanism, while the timed routing change is the deeper initiating cause."
+        }
+      ],
+      "verification_statuses": [
+        "VERIFIED"
+      ],
+      "verifier_calls": 1
+    },
+    {
+      "diagnosis_category_changed": false,
+      "execution_failure": false,
+      "final_v3_category": "STAFFING_SHORTFALL",
+      "final_v3_correct": false,
+      "incident_id": "CC-007",
+      "initial_v3_category": "STAFFING_SHORTFALL",
+      "initial_v3_correct": false,
+      "revisions": 2,
+      "termination_reason": "revision_limit_reached",
+      "tool_calls": 8,
+      "v2_category": "STAFFING_SHORTFALL",
+      "v2_correct": false,
+      "verification_rounds": [
+        {
+          "critical_contradictions": [
+            {
+              "check": "symptom_vs_root_cause",
+              "evidence_signal": "adherence_decline",
+              "finding": "The proposal identifies adherence decline as the initiating condition, while productive staffing shortfall is its resulting capacity state. Because ADHERENCE_DROP is an available taxonomy category and the decline begins at 09:15 with stable scheduled and logged-in headcount, STAFFING_SHORTFALL is not the deepest supported primary category.",
+              "source_tool": "analyze_staffing"
+            }
+          ],
+          "recommended_revision": "Change the primary root-cause category to ADHERENCE_DROP and describe the productive staffing shortfall/capacity deficit as the immediate operating consequence. Retain moderate volume as a contributor. Either remove 'queue growth' from the causal chain or label it as inferred congestion rather than directly measured accumulation. Platform and routing causes may remain rejected as unsupported alternatives, but avoid treating the absence of recorded events as conclusive proof of absence.",
+          "stronger_alternative_if_any": "ADHERENCE_DROP",
+          "unsupported_or_weak_claims": [
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "queue_accumulation",
+              "finding": "The causal-chain step 'queue growth' is inferred from higher ASA and abandonment but no direct queue-depth or accumulation result is present.",
+              "source_tool": "get_performance_trends"
+            },
+            {
+              "check": "alternative_explanation",
+              "evidence_signal": "no_corroborating_event",
+              "finding": "The absence of recorded events weakens a platform explanation but does not independently prove that no platform issue occurred. The onset-aligned adherence and productive-capacity loss is the stronger affirmative evidence.",
+              "source_tool": "get_events"
+            }
+          ],
+          "verification_status": "REVISE",
+          "verification_summary": "The incident, timing, magnitude, and adherence-driven capacity loss are well supported: adherence fell from 92.2% to 62.0%, productive agents dropped below the 36\u201340 requirement, and service outcomes deteriorated while logged-in headcount stayed at 49. The material issue is taxonomy and causal depth: the proposal itself shows adherence decline initiating the productive staffing shortfall, so ADHERENCE_DROP is the stronger primary root cause and STAFFING_SHORTFALL is the resulting condition."
+        },
+        {
+          "critical_contradictions": [],
+          "recommended_revision": "Change the primary root-cause category to ADHERENCE_DROP. Retain productive STAFFING_SHORTFALL as the immediate mechanism: adherence fell sharply at 09:15, productive availability dropped below required staffing, and service deteriorated. State that the underlying reason for the adherence collapse\u2014activity-state, schedule, WFM, or another unrecorded issue\u2014remains unresolved. Describe timing as onset-aligned rather than proven sequential within the 09:15 interval. Moderate demand may remain a contributor.",
+          "stronger_alternative_if_any": "ADHERENCE_DROP",
+          "unsupported_or_weak_claims": [
+            {
+              "check": "symptom_vs_root_cause",
+              "evidence_signal": "adherence_decline",
+              "finding": "The proposal identifies the adherence collapse as the initiating condition but labels the resulting productive-staffing shortfall as the primary root cause. Productive staffing fell because adherence fell, making STAFFING_SHORTFALL an intermediate operating condition in the proposal's own causal chain.",
+              "source_tool": "analyze_staffing"
+            },
+            {
+              "check": "causal_timing",
+              "evidence_signal": "adherence_decline",
+              "finding": "Adherence, productive staffing, and service level all change in the 09:15 interval. The available 15-minute data support onset alignment and a direct capacity mechanism, but not a finer-grained claim that the adherence decline temporally preceded service degradation.",
+              "source_tool": "analyze_staffing"
+            }
+          ],
+          "verification_status": "REVISE",
+          "verification_summary": "The material incident and capacity deficit are well supported: adherence and productive staffing fell sharply while scheduled/logged-in headcount stayed constant, AHT did not rise, demand variance was moderate, and service-level calculations were valid. However, the selected taxonomy level conflicts with the stated causal chain. Because ADHERENCE_DROP is an available category and is identified as the initiating supported condition, STAFFING_SHORTFALL should be treated as the resulting mechanism rather than the deepest supported root cause."
+        },
+        {
+          "critical_contradictions": [
+            {
+              "check": "symptom_vs_root_cause",
+              "evidence_signal": "adherence_decline",
+              "finding": "The proposal names STAFFING_SHORTFALL as the primary root cause even though its own causal chain identifies the adherence drop as the initiating condition and staffing shortfall as the resulting capacity state.",
+              "source_tool": "analyze_staffing"
+            }
+          ],
+          "recommended_revision": "Change the primary category to ADHERENCE_DROP, with reduced productive staffing and STAFFING_SHORTFALL described as the resulting operating condition and capacity mechanism. Keep investigation status INCONCLUSIVE because the visible evidence does not identify why adherence collapsed or establish sub-interval ordering. Retain moderate demand only as a possible secondary contributor.",
+          "stronger_alternative_if_any": "ADHERENCE_DROP",
+          "unsupported_or_weak_claims": [
+            {
+              "check": "causal_timing",
+              "evidence_signal": "adherence_decline",
+              "finding": "Adherence, productive staffing, and service level changed within the same 15-minute interval. The evidence supports onset alignment and a capacity mechanism, but not the claim that adherence decline temporally preceded service degradation.",
+              "source_tool": "analyze_staffing"
+            },
+            {
+              "check": "contributor_role",
+              "evidence_signal": "moderate_volume_increase",
+              "finding": "Demand averaged only 4.2% above forecast, varied above and below forecast, and declined in Account Support despite degradation. Treating it as a minor contributor is plausible but not strongly established.",
+              "source_tool": "compare_actual_vs_forecast"
+            }
+          ],
+          "verification_status": "REVISE",
+          "verification_summary": "The material incident and productive-capacity deficit are well supported: adherence and productive staffing fell sharply, service level and throughput deteriorated, AHT did not increase, and service-level calculations are valid. The material defect is taxonomy and causal-role assignment: STAFFING_SHORTFALL is downstream of the proposal's stated initiating adherence collapse. The diagnosis should therefore be revised to ADHERENCE_DROP while preserving uncertainty about its upstream cause and exact within-interval timing."
+        }
+      ],
+      "verification_statuses": [
+        "REVISE",
+        "REVISE",
+        "REVISE"
+      ],
+      "verifier_calls": 3
+    },
+    {
+      "diagnosis_category_changed": false,
+      "execution_failure": false,
+      "final_v3_category": "PLATFORM_INCIDENT",
+      "final_v3_correct": true,
+      "incident_id": "CC-009",
+      "initial_v3_category": "PLATFORM_INCIDENT",
+      "initial_v3_correct": true,
+      "revisions": 0,
+      "termination_reason": "verifier_verified",
+      "tool_calls": 6,
+      "v2_category": "PLATFORM_INCIDENT",
+      "v2_correct": true,
+      "verification_rounds": [
+        {
+          "critical_contradictions": [],
+          "recommended_revision": "Minor: describe moderate volume growth as a possible rather than established contributor, and phrase 'reduced throughput' as impaired or delayed call processing unless total throughput is independently validated.",
+          "stronger_alternative_if_any": null,
+          "unsupported_or_weak_claims": [
+            {
+              "check": "contributor_role",
+              "evidence_signal": "moderate_volume_increase",
+              "finding": "Moderate volume growth is documented, but the evidence does not directly establish that it amplified the platform incident; demand was below forecast at onset and only 2.1% above forecast on average afterward.",
+              "source_tool": "compare_actual_vs_forecast"
+            },
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "asa_increase",
+              "finding": "The causal-chain step 'reduced throughput' is plausible but not directly measured as total processing throughput; the visible evidence directly demonstrates delayed answering and fewer calls answered within threshold.",
+              "source_tool": "recalculate_service_level"
+            }
+          ],
+          "verification_status": "VERIFIED",
+          "verification_summary": "The diagnosis survives adversarial review. An all-queues voice-platform degradation was recorded exactly at the 09:15 onset, while service level fell sharply and ASA rose across all queues. Staffing, productive capacity, adherence, AHT, transfer rates, forecast variance, and metric recalculation do not support the principal alternatives. The incident was material and sustained through the visible window. Minor causal-chain and contributor wording does not change the supported PLATFORM_INCIDENT root cause or LIKELY status."
+        }
+      ],
+      "verification_statuses": [
+        "VERIFIED"
+      ],
+      "verifier_calls": 1
+    },
+    {
+      "diagnosis_category_changed": false,
+      "execution_failure": false,
+      "final_v3_category": "DATA_QUALITY",
+      "final_v3_correct": true,
+      "incident_id": "CC-012",
+      "initial_v3_category": "DATA_QUALITY",
+      "initial_v3_correct": true,
+      "revisions": 0,
+      "termination_reason": "verifier_verified",
+      "tool_calls": 6,
+      "v2_category": "DATA_QUALITY",
+      "v2_correct": true,
+      "verification_rounds": [
+        {
+          "critical_contradictions": [],
+          "recommended_revision": "Minor clarification only: describe the final causal-chain effect as \u201creported service-level degradation\u201d rather than unqualified \u201cservice-level degradation,\u201d and avoid treating answered-greater-than-offered counts as definitive corruption without queue carryover data.",
+          "stronger_alternative_if_any": null,
+          "unsupported_or_weak_claims": [
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "count_conservation_mismatch",
+              "finding": "Answered calls exceeding offered calls within an interval is not necessarily a count-conservation failure because calls offered earlier may be answered from backlog. This evidence is weaker than stated, but the fixed 26-point recalculation mismatch independently supports the diagnosis.",
+              "source_tool": "get_performance_trends"
+            },
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "no_corroborating_event",
+              "finding": "The event result confirms that no event was recorded, but empty available scopes limit its value for excluding an unrecorded platform or routing event. It is supporting absence-of-corroboration evidence, not affirmative proof.",
+              "source_tool": "get_events"
+            }
+          ],
+          "verification_status": "VERIFIED",
+          "verification_summary": "The DATA_QUALITY diagnosis survives challenge. An exact 26.0-point discrepancy begins at the incident start and persists through all 11 subsequent intervals, while pre-incident values recalculate exactly. This directly explains the sustained dashboard alert. Recalculated performance shows only two brief below-target intervals; demand was essentially on forecast, staffing was stable, and AHT did not increase. Localized queue pressure is appropriately treated as a contributor rather than the primary cause."
+        }
+      ],
+      "verification_statuses": [
+        "VERIFIED"
+      ],
+      "verifier_calls": 1
+    },
+    {
+      "diagnosis_category_changed": false,
+      "execution_failure": false,
+      "final_v3_category": "DEMAND_SPIKE",
+      "final_v3_correct": false,
+      "incident_id": "CC-014",
+      "initial_v3_category": "DEMAND_SPIKE",
+      "initial_v3_correct": false,
+      "revisions": 1,
+      "termination_reason": "verifier_verified",
+      "tool_calls": 7,
+      "v2_category": "DEMAND_SPIKE",
+      "v2_correct": false,
+      "verification_rounds": [
+        {
+          "critical_contradictions": [
+            {
+              "check": "causal_timing",
+              "evidence_signal": "stable_demand",
+              "finding": "At the stated 09:45 onset, offered calls were 2.53% below forecast. The largest excess-demand intervals occurred later, so they explain possible later pressure but do not directly establish the initiating cause of the threshold breach; carryover from 09:30 is plausible but queue accumulation was not demonstrated.",
+              "source_tool": "compare_actual_vs_forecast"
+            },
+            {
+              "check": "materiality",
+              "evidence_signal": "brief_unsustained_variance",
+              "finding": "The aggregate post-onset service-level mean remained 85.98%, above the 80% target, and declined only 1.68 points. The visible evidence provides a 75% minimum but not the duration or recurrence of below-target performance, leaving a sustained material incident unproven.",
+              "source_tool": "summarize_incident_window"
+            }
+          ],
+          "recommended_revision": "Reduce confidence and change the status from LIKELY pending interval-level confirmation of sustained below-target service and queue accumulation. Describe localized General Service demand pressure as a plausible contributor rather than a verified material demand spike. If the breach was isolated, classify it as NO_MATERIAL_INCIDENT; retain DEMAND_SPIKE only if duration and temporal linkage to queue buildup are demonstrated.",
+          "stronger_alternative_if_any": "NO_MATERIAL_INCIDENT",
+          "unsupported_or_weak_claims": [
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "moderate_volume_increase",
+              "finding": "The claim that General Service demand exceeded forecast is not directly supported because only aggregate actual-versus-forecast demand was provided; the queue comparison shows a 15.27% increase versus its pre-onset mean, not versus a queue forecast.",
+              "source_tool": "compare_queues"
+            },
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "queue_staffing_imbalance",
+              "finding": "A queue capacity deficit is inferred rather than measured. General Service staffing stayed at 19, but no queue-level required staffing or queue accumulation result establishes that 19 was insufficient.",
+              "source_tool": "compare_queues"
+            },
+            {
+              "check": "incident_significance",
+              "evidence_signal": "brief_unsustained_variance",
+              "finding": "The characterization of sustained and worsening degradation is not established by interval-level service-level evidence. Later demand peaks are visible, but corresponding persistence of below-target service is not shown.",
+              "source_tool": "summarize_incident_window"
+            }
+          ],
+          "verification_status": "REVISE",
+          "verification_summary": "Localized demand pressure is plausible: General Service volume rose against fixed staffing while ASA worsened. However, the demand peak mainly followed onset, queue-level forecast and accumulation evidence are absent, and aggregate post-onset service remained above target with only a modest mean decline. These gaps materially weaken the asserted 0.82-confidence demand-spike diagnosis and leave an isolated, non-material threshold variance as the stronger supported interpretation."
+        },
+        {
+          "critical_contradictions": [],
+          "recommended_revision": "Minor wording improvement: replace \u201cdirectly accumulated seven calls\u201d with \u201chad a seven-call offered-to-answered gap, consistent with transient queue pressure,\u201d and replace categorical claims that no platform event occurred with \u201cno platform event was recorded.\u201d These do not require changing the root-cause category or status.",
+          "stronger_alternative_if_any": null,
+          "unsupported_or_weak_claims": [
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "queue_accumulation",
+              "finding": "The 50 offered versus 43 answered calls in General Service at 10:15 does not by itself prove seven-call queue accumulation; the difference could include abandoned calls. It supports interval pressure, but not direct queue growth without queue-depth or abandonment data.",
+              "source_tool": "analyze_queue"
+            },
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "no_corroborating_event",
+              "finding": "The event log establishes that no platform or routing event was recorded, not conclusively that no such event occurred. The diagnosis generally uses the appropriately qualified wording, but the rejected-hypothesis rationale is categorical.",
+              "source_tool": "get_events"
+            }
+          ],
+          "verification_status": "VERIFIED",
+          "verification_summary": "The diagnosis survives challenge. Both actual below-target intervals coincide with the two largest post-onset, above-forecast demand peaks and peak ASA, while staffing remained stable and AHT did not materially increase. The 09:45 timestamp mismatch and transient recovery are explicitly acknowledged. No investigated alternative explains both breaches better. The direct queue-accumulation claim is overstated, but this does not materially undermine DEMAND_SPIKE as the moderate-confidence primary cause."
+        }
+      ],
+      "verification_statuses": [
+        "REVISE",
+        "VERIFIED"
+      ],
+      "verifier_calls": 2
+    },
+    {
+      "diagnosis_category_changed": false,
+      "execution_failure": false,
+      "final_v3_category": "ROUTING_CHANGE",
+      "final_v3_correct": true,
+      "incident_id": "CC-015",
+      "initial_v3_category": "ROUTING_CHANGE",
+      "initial_v3_correct": true,
+      "revisions": 0,
+      "termination_reason": "verifier_verified",
+      "tool_calls": 7,
+      "v2_category": "ROUTING_CHANGE",
+      "v2_correct": true,
+      "verification_rounds": [
+        {
+          "critical_contradictions": [],
+          "recommended_revision": "Minor only: describe confidence as high but not conclusively confirmed pending rollback results or transferred-contact path validation. No change to the root-cause category or contributor interpretation is required.",
+          "stronger_alternative_if_any": null,
+          "unsupported_or_weak_claims": [
+            {
+              "check": "causal_timing",
+              "evidence_signal": "routing_change_event",
+              "finding": "The deployment and degradation are recorded at the same 15-minute boundary, so the visible evidence establishes tight temporal alignment rather than sub-interval precedence. This limits certainty but does not materially undermine the likely diagnosis.",
+              "source_tool": "get_events"
+            },
+            {
+              "check": "evidence_presence",
+              "evidence_signal": "transfer_rate_increase",
+              "finding": "The evidence strongly associates the routing deployment with doubled transfers and higher AHT, but it does not directly validate incorrect destination or skill mappings; those remain remediation hypotheses to confirm through contact-path review.",
+              "source_tool": "compare_queues"
+            }
+          ],
+          "verification_status": "VERIFIED",
+          "verification_summary": "The diagnosis survives challenge. An all-queue routing deployment coincided exactly with an abrupt, persistent, all-queue increase in transfers and AHT and a material service-level collapse. Staffing and adherence remained stable, service-level calculations were valid, and moderate above-forecast demand does not explain the synchronized transfer shift; demand is appropriately treated as contributory. HANDLE_TIME_INCREASE is correctly identified as an operating mechanism rather than the deepest supported cause."
+        }
+      ],
+      "verification_statuses": [
+        "VERIFIED"
+      ],
+      "verifier_calls": 1
+    }
+  ],
+  "v2_run_id": "d3859d8d-b252-426a-970e-89a471a5fe7c",
+  "verified_correct_without_revision": [
+    "CC-001",
+    "CC-002",
+    "CC-003",
+    "CC-004",
+    "CC-009",
+    "CC-012",
+    "CC-015"
+  ],
+  "verified_incorrect_without_revision": [
+    "CC-005"
+  ],
+  "verifier_corrected_initial_proposal": [],
+  "verifier_harmed_initial_proposal": []
+}

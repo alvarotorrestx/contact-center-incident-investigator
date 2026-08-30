@@ -1,0 +1,84 @@
+{
+  "causal_chain": [
+    "increased_aht",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.95,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "AHT stepped from 368.2 seconds at 09:00 to 458.3 seconds at 09:15 and exceeded 500 seconds from 09:45 onward.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean service level declined from 86.7% before the incident to 60.4% during and after it.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA increased 113.3%, from 30.6 to 65.3 seconds, while answered-call throughput fell.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained at 49 agents throughout the window.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Mean occupancy increased from 74.4% to 96.6% while staffing remained stable, indicating capacity saturation from greater workload per call.",
+      "signal": "queue_accumulation",
+      "source": "staffing"
+    },
+    {
+      "finding": "AHT increased approximately 40\u201341% in every visible queue, confirming a common-mode rather than isolated queue issue.",
+      "signal": "aht_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Account Support volume increased 16.3%, amplifying its service-level impact, while aggregate center demand declined slightly.",
+      "signal": "moderate_volume_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "No platform or routing event was recorded during the full visible window.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    },
+    {
+      "finding": "Recalculated service level matched every reported interval exactly, excluding a reporting artifact.",
+      "signal": "no_corroborating_event",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-003",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "HANDLE_TIME_INCREASE",
+  "primary_root_cause_detail": "A broad, sustained increase in average handle time reduced throughput and saturated available capacity. Mean AHT rose 39.7%, from 375.2 to 524.2 seconds, beginning at the 09:15 incident boundary across all four queues. This drove higher occupancy and ASA, increased abandonment, and lowered service level.",
+  "recommended_actions": [
+    "Identify the common driver of the cross-queue AHT increase beginning at 09:15, including process, knowledge, application-latency, and case-complexity changes.",
+    "Apply temporary capacity relief or workload controls until AHT returns to baseline, prioritizing Account Support.",
+    "Monitor AHT, occupancy, ASA, abandonment, and service level at 15-minute intervals with an AHT deviation alert.",
+    "Review Account Support staffing allocation because its moderate local volume increase amplified the center-wide AHT impact."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in staffing stayed at 49; productive staffing and adherence were effectively unchanged, with no training loss."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No visible platform event corroborated an incident, and call-processing metrics instead showed a sustained AHT-driven capacity pattern."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Service level recalculated exactly across all 16 intervals with no denominator or reporting mismatch."
+    }
+  ],
+  "stakeholder_summary": "The service-level incident was most likely caused by a center-wide 39.7% increase in handle time, not a demand surge or staffing loss. The AHT increase began at the incident boundary, pushed occupancy near saturation, and reduced throughput across every queue. Account Support\u2019s moderate volume increase worsened its local impact."
+}

@@ -1,0 +1,124 @@
+{
+  "anchor_run_id": "d3859d8d-b252-426a-970e-89a471a5fe7c",
+  "benchmark_manifest_sha256": "e8befb1218aa7934d46b9e3ad1338ab3b8cf7e20f58deae176d8caeceaea3fd9",
+  "benchmark_version": "v1",
+  "candidate_run_id": "5324184e-c646-456c-b58b-8e1c2e89a2fc",
+  "cases_category_changed": [],
+  "cases_improved": [],
+  "cases_regressed": [],
+  "cases_unchanged": [
+    "CC-001",
+    "CC-002",
+    "CC-003",
+    "CC-004",
+    "CC-005",
+    "CC-007",
+    "CC-009",
+    "CC-012",
+    "CC-014",
+    "CC-015"
+  ],
+  "cc005": {
+    "anchor_category": "ROUTING_CHANGE",
+    "anchor_correct": false,
+    "candidate_category": "ROUTING_CHANGE",
+    "candidate_correct": false
+  },
+  "estimated_cost_usd": {
+    "anchor": 3.284164,
+    "candidate": 5.8938618
+  },
+  "execution_failures": {
+    "anchor": 0,
+    "candidate": 0
+  },
+  "information_presentation": {
+    "anchor": "all visible raw tables serialized in the initial prompt",
+    "candidate": "incident metadata in the initial prompt; the same visible tables accessed through deterministic read-only tools selected by the investigator"
+  },
+  "metrics": {
+    "causal_reasoning_average": {
+      "anchor": 1.0,
+      "candidate": 0.9,
+      "delta": -0.1
+    },
+    "contributing_exact_accuracy": {
+      "anchor": 0.2,
+      "candidate": 0.3,
+      "delta": 0.1
+    },
+    "contributing_f1": {
+      "anchor": 0.33333333333333337,
+      "candidate": 0.3636363636363636,
+      "delta": 0.030303030303
+    },
+    "contributing_precision": {
+      "anchor": 0.2,
+      "candidate": 0.2222222222222222,
+      "delta": 0.022222222222
+    },
+    "contributing_recall": {
+      "anchor": 1.0,
+      "candidate": 1.0,
+      "delta": 0.0
+    },
+    "evidence_coverage": {
+      "anchor": 0.85,
+      "candidate": 0.825,
+      "delta": -0.025
+    },
+    "non_allowlisted_evidence_rate": {
+      "anchor": 0.38461538461538464,
+      "candidate": 0.417910447761194,
+      "delta": 0.033295063146
+    },
+    "rcia": {
+      "anchor": 0.7,
+      "candidate": 0.7,
+      "delta": 0.0
+    }
+  },
+  "model": "gpt-5.6-sol",
+  "model_configuration": {
+    "reasoning_effort": "medium",
+    "sampling_parameters": "provider_defaults"
+  },
+  "runtime": {
+    "anchor_summed_case_seconds": 792.990075,
+    "anchor_wall_seconds": 793.079731,
+    "candidate_summed_case_seconds": 1421.85583,
+    "candidate_wall_seconds": 1421.932136
+  },
+  "tool_calls": {
+    "anchor_average_per_case": 4.9,
+    "anchor_cases_with_one_or_two": [],
+    "candidate_average_per_case": 6.0,
+    "candidate_cases_with_one_or_two": []
+  },
+  "usage": {
+    "anchor": {
+      "input_tokens": 1337676,
+      "input_tokens_details": {
+        "cache_write_tokens": 275804,
+        "cached_tokens": 1053390
+      },
+      "output_tokens": 72493,
+      "output_tokens_details": {
+        "reasoning_tokens": 7179
+      },
+      "total_tokens": 1410169
+    },
+    "candidate": {
+      "input_tokens": 2153092,
+      "input_tokens_details": {
+        "cache_write_tokens": 622391,
+        "cached_tokens": 1520427
+      },
+      "output_tokens": 106632,
+      "output_tokens_details": {
+        "reasoning_tokens": 15492
+      },
+      "total_tokens": 2259724
+    }
+  }
+}

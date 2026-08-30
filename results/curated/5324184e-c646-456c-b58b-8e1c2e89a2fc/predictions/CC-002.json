@@ -1,0 +1,88 @@
+{
+  "causal_chain": [
+    "staffing_shortfall",
+    "reduced_productive_staffing",
+    "capacity_deficit",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.93,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Logged-in agents fell from 49 before the incident to 44 at 09:15 and as low as 33; the post-incident mean declined 26.72%.",
+      "signal": "logged_in_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Productive staffing decreased 25.58%, from a pre-incident mean of 45.2 agents to 33.64 afterward.",
+      "signal": "productive_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Scheduled staffing remained fixed at 49 while the scheduled-to-logged gap grew from zero to as many as 16 agents.",
+      "signal": "stable_headcount",
+      "source": "staffing"
+    },
+    {
+      "finding": "A center-wide workforce notice reported multiple same-day absences at 09:15, matching the staffing-loss onset.",
+      "signal": "logged_in_staffing_drop",
+      "source": "events"
+    },
+    {
+      "finding": "Mean service level fell from 90.34% before the incident to 66.86% afterward.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Mean ASA increased from 25.21 seconds to 56.66 seconds after incident onset.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "All four queues lost approximately 25\u201329% of staffed capacity and experienced service-level deterioration, demonstrating a center-wide capacity loss rather than localized misallocation.",
+      "signal": "queue_staffing_imbalance",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Offered calls increased 5.97%, adding pressure but not accounting for the much larger capacity and service deterioration.",
+      "signal": "moderate_volume_increase",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-002",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "STAFFING_SHORTFALL",
+  "primary_root_cause_detail": "Multiple same-day absences beginning at 09:15 created an unplanned logged-in staffing deficit. Scheduled headcount remained at 49, but logged-in and productive staffing fell sharply, reducing center-wide capacity and degrading service across all queues.",
+  "recommended_actions": [
+    "Activate same-day absence and reserve-staff escalation procedures when scheduled-to-logged gaps emerge.",
+    "Configure real-time alerts for material logged-in and productive staffing losses by center and queue.",
+    "Rebalance available agents and prioritize critical queues during recovery.",
+    "Review absence-notification timing, backup coverage, and workforce contingency thresholds."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Aggregate volume increased only 5.97%, and Billing degraded despite a 13.96% volume decrease."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Center AHT decreased 0.32%, while queue-level AHT changes remained between -0.44% and +0.75%."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Staffing losses and service degradation occurred across every queue, with no material transfer-rate increase or routing event."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was recorded; the visible event instead identified same-day absences at incident onset."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Mean adherence increased from 92.24% to 93.71%, so adherence decline did not cause the capacity loss."
+    }
+  ],
+  "stakeholder_summary": "The service-level incident was most likely caused by center-wide same-day absences beginning at 09:15. Logged-in and productive capacity fell by roughly one-quarter while schedules and adherence remained stable. Moderate volume growth increased pressure but was not the primary cause."
+}

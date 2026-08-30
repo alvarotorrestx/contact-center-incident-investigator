@@ -1,0 +1,76 @@
+{
+  "causal_chain": [
+    "data_quality_error",
+    "inconsistent_reported_metric",
+    "service_level_degradation"
+  ],
+  "confidence": 0.96,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "All 11 intervals from 09:15 through 11:45 were reported exactly 26.0 points below the formula-based service level; earlier intervals matched.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    },
+    {
+      "finding": "Multiple post-onset intervals reported more answered than offered calls, including 93 answered versus 90 offered at 10:30.",
+      "signal": "count_conservation_mismatch",
+      "source": "performance"
+    },
+    {
+      "finding": "Post-onset offered volume averaged only 0.18% above forecast, excluding a sustained unexpected-demand surge.",
+      "signal": "stable_demand",
+      "source": "forecast"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained 49; productive staffing stayed at 45\u201346 and adherence was nearly unchanged.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "No routing, platform, or other operational event was recorded during the full incident window.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    },
+    {
+      "finding": "Localized pressure affected Account Support, but the other three queues maintained post-onset mean service levels of 87.8%\u201392.1% with unchanged staffing.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    }
+  ],
+  "incident_id": "CC-012",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "DATA_QUALITY",
+  "primary_root_cause_detail": "Beginning exactly at 09:15, the dashboard understated service level by a fixed 26.0 percentage points in every visible interval. Formula-based service level was mostly above target, while post-onset performance records also contained count inconsistencies.",
+  "recommended_actions": [
+    "Correct the dashboard calculation or transformation that introduced the fixed 26-point offset at 09:15.",
+    "Backfill affected intervals using the defined service-level formula and validate count-conservation rules.",
+    "Add automated alerts for fixed metric offsets and answered-call counts exceeding offered-call counts.",
+    "Monitor Account Support during moderate volume increases, while treating its localized pressure separately from the reporting defect."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Volume increased versus the earlier period but averaged essentially on forecast after onset."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Logged-in headcount was constant, productive staffing was stable, and no training capacity was removed."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Post-onset AHT decreased versus the pre-incident mean and averaged below forecast."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "Transfers decreased and no routing event was recorded."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Only localized pressure was visible; staffing was unchanged and most queues remained healthy, so it cannot explain the center-wide fixed metric offset."
+    }
+  ],
+  "stakeholder_summary": "The sustained below-target dashboard alert was primarily a reporting error, not a center-wide operational failure. Correct recalculation shows brief genuine dips at 09:15 and 09:45 amid moderate localized pressure, but not the persistent severe decline displayed."
+}

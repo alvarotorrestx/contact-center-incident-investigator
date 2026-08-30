@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from time import perf_counter
 from typing import Any
@@ -18,6 +19,12 @@ from incident_investigator.investigator.client import ToolOutput
 from incident_investigator.investigator.runner import _sum_usage
 from incident_investigator.persistence import RunStore, estimate_gpt_5_6_sol_cost
 from incident_investigator.tools import CaseToolbox
+from incident_investigator.verifier import (
+    VerificationResult,
+    VerificationStatus,
+    VerifierClient,
+    build_verifier_prompt,
+)
 
 from .client import V2InvestigatorClient, V2TurnMode
 from .prompting import build_v2_prompt
@@ -32,6 +39,10 @@ class V2RunResult:
     termination_reason: str
     duration_seconds: float
     total_usage: dict[str, Any]
+    verifier_call_count: int = 0
+    revision_count: int = 0
+    proposed_diagnoses: tuple[FinalDiagnosis, ...] = ()
+    verification_results: tuple[VerificationResult, ...] = ()
 
 
 class StructuredHypothesisRunner:
@@ -44,17 +55,34 @@ class StructuredHypothesisRunner:
         max_tool_calls: int = 10,
         max_invalid_state_attempts: int = 3,
         max_premature_completion_attempts: int = 3,
+        verifier_client: VerifierClient | None = None,
+        max_revisions: int = 0,
+        system_version: str = "v2_structured_hypothesis_investigator",
     ):
         if not 1 <= max_tool_calls <= 12:
             raise ValueError("max_tool_calls must be between 1 and 12")
         if max_invalid_state_attempts < 1 or max_premature_completion_attempts < 1:
             raise ValueError("V2 retry bounds must be positive")
+        if not 0 <= max_revisions <= 2:
+            raise ValueError("max_revisions must be between 0 and 2")
+        if (verifier_client is None) != (max_revisions == 0):
+            raise ValueError(
+                "A verifier client and positive revision bound must be configured together"
+            )
+        if verifier_client is not None and (
+            verifier_client.model != client.model
+            or verifier_client.reasoning_effort != client.reasoning_effort
+        ):
+            raise ValueError("Investigator and verifier must use the same model configuration")
         self.loader = loader
         self.client = client
         self.store = store
         self.max_tool_calls = max_tool_calls
         self.max_invalid_state_attempts = max_invalid_state_attempts
         self.max_premature_completion_attempts = max_premature_completion_attempts
+        self.verifier_client = verifier_client
+        self.max_revisions = max_revisions
+        self.system_version = system_version
 
     def run_case(self, incident_id: str) -> V2RunResult:
         started = perf_counter()
@@ -68,7 +96,7 @@ class StructuredHypothesisRunner:
             {
                 "run_id": self.store.run_id,
                 "incident_id": incident_id,
-                "system_version": "v2_structured_hypothesis_investigator",
+                "system_version": self.system_version,
                 "agent_stage": "investigator",
                 "event_type": "investigation_started",
                 "step_number": step_number,
@@ -95,6 +123,11 @@ class StructuredHypothesisRunner:
         instruction: str | None = None
         mode: V2TurnMode = "initialize_ledger"
         executed_tools: set[str] = set()
+        tool_evidence: list[dict[str, Any]] = []
+        verifier_call_count = 0
+        revision_count = 0
+        proposed_diagnoses: list[FinalDiagnosis] = []
+        verification_results: list[VerificationResult] = []
 
         while True:
             if mode == "force_final" and instruction is None:
@@ -116,8 +149,10 @@ class StructuredHypothesisRunner:
             instruction = None
 
             if turn.diagnosis is not None:
-                if mode not in {"investigate", "force_final"}:
-                    raise ValueError("V2 investigator diagnosed when a ledger update was required")
+                if mode not in {"investigate", "revise", "force_final"}:
+                    raise ValueError(
+                        "Structured investigator diagnosed when a ledger update was required"
+                    )
                 if turn.diagnosis.incident_id != incident_id:
                     raise ValueError(
                         "Diagnosis incident_id "
@@ -135,12 +170,13 @@ class StructuredHypothesisRunner:
                         {
                             "run_id": self.store.run_id,
                             "incident_id": incident_id,
-                            "system_version": "v2_structured_hypothesis_investigator",
+                            "system_version": self.system_version,
                             "agent_stage": "investigator",
                             "event_type": "premature_completion_blocked",
                             "step_number": step_number,
                             "model": self.client.model,
                             "response_id": turn.response_id,
+                            "revision_number": revision_count,
                             "unmet_termination_criteria": assessment.unmet_criteria,
                             "hypothesis_state": (
                                 ledger.snapshot.model_dump(mode="json") if ledger.snapshot else None
@@ -165,7 +201,118 @@ class StructuredHypothesisRunner:
                     )
                     continue
 
-                termination_reason = assessment.reason
+                proposed_diagnoses.append(turn.diagnosis)
+                if self.verifier_client is not None:
+                    self.store.append_trajectory(
+                        incident_id,
+                        {
+                            "run_id": self.store.run_id,
+                            "incident_id": incident_id,
+                            "system_version": self.system_version,
+                            "agent_stage": "investigator",
+                            "event_type": "proposed_diagnosis",
+                            "step_number": step_number,
+                            "model": self.client.model,
+                            "response_id": turn.response_id,
+                            "revision_number": revision_count,
+                            "hypothesis_state": ledger.snapshot.model_dump(mode="json"),
+                            "proposed_diagnosis": turn.diagnosis.model_dump(mode="json"),
+                        },
+                    )
+                    verifier_prompt = build_verifier_prompt(
+                        incident_metadata=case.incident_metadata,
+                        proposed_diagnosis=turn.diagnosis,
+                        hypothesis_state=ledger.snapshot,
+                        tool_evidence=tool_evidence,
+                        project_root=self.store.project_root,
+                        revision_number=revision_count,
+                    )
+                    step_number += 1
+                    self.store.append_trajectory(
+                        incident_id,
+                        {
+                            "run_id": self.store.run_id,
+                            "incident_id": incident_id,
+                            "system_version": self.system_version,
+                            "agent_stage": "verifier",
+                            "event_type": "verifier_invocation",
+                            "step_number": step_number,
+                            "model": self.verifier_client.model,
+                            "revision_number": revision_count,
+                            "prompt_version": verifier_prompt.version,
+                            "prompt_sha256": verifier_prompt.sha256,
+                        },
+                    )
+                    verifier_started = perf_counter()
+                    verifier_response = self.verifier_client.verify(verifier_prompt)
+                    verifier_duration = perf_counter() - verifier_started
+                    verifier_call_count += 1
+                    verification_results.append(verifier_response.result)
+                    total_usage = _sum_usage(total_usage, verifier_response.usage)
+                    step_number += 1
+                    self.store.append_trajectory(
+                        incident_id,
+                        {
+                            "run_id": self.store.run_id,
+                            "incident_id": incident_id,
+                            "system_version": self.system_version,
+                            "agent_stage": "verifier",
+                            "event_type": "verifier_result",
+                            "step_number": step_number,
+                            "model": self.verifier_client.model,
+                            "response_id": verifier_response.response_id,
+                            "revision_number": revision_count,
+                            "verification": verifier_response.result.model_dump(mode="json"),
+                            "model_usage": verifier_response.usage,
+                            "verifier_duration_seconds": verifier_duration,
+                        },
+                    )
+                    if (
+                        verifier_response.result.verification_status is VerificationStatus.REVISE
+                        and revision_count < self.max_revisions
+                    ):
+                        revision_count += 1
+                        step_number += 1
+                        self.store.append_trajectory(
+                            incident_id,
+                            {
+                                "run_id": self.store.run_id,
+                                "incident_id": incident_id,
+                                "system_version": self.system_version,
+                                "agent_stage": "investigator",
+                                "event_type": "revision_requested",
+                                "step_number": step_number,
+                                "model": self.client.model,
+                                "revision_number": revision_count,
+                                "verifier_feedback": verifier_response.result.model_dump(
+                                    mode="json"
+                                ),
+                            },
+                        )
+                        previous_response_id = turn.response_id
+                        mode = "force_final" if tool_call_count >= self.max_tool_calls else "revise"
+                        instruction = (
+                            f"Adversarial verification requested revision {revision_count} of "
+                            f"{self.max_revisions}. Address these structured findings without "
+                            "blindly changing the diagnosis. Gather another available operational "
+                            "tool result if it would discriminate the challenge; otherwise return "
+                            "a revised or evidence-defended FinalDiagnosis. On the final allowed "
+                            "revision, use INCONCLUSIVE if the challenge cannot be resolved. "
+                            "Verifier findings: "
+                            + json.dumps(
+                                verifier_response.result.model_dump(mode="json"),
+                                sort_keys=True,
+                            )
+                        )
+                        continue
+                    termination_reason = (
+                        "verifier_verified"
+                        if verifier_response.result.verification_status
+                        is VerificationStatus.VERIFIED
+                        else "revision_limit_reached"
+                    )
+                else:
+                    termination_reason = assessment.reason
                 duration = perf_counter() - started
                 estimated_cost = estimate_gpt_5_6_sol_cost(total_usage)
                 self.store.write_prediction(turn.diagnosis)
@@ -174,17 +321,23 @@ class StructuredHypothesisRunner:
                     {
                         "run_id": self.store.run_id,
                         "incident_id": incident_id,
-                        "system_version": "v2_structured_hypothesis_investigator",
+                        "system_version": self.system_version,
                         "agent_stage": "investigator",
                         "event_type": "final_output",
                         "step_number": step_number,
                         "model": self.client.model,
                         "response_id": turn.response_id,
+                        "revision_number": revision_count,
                         "model_usage": turn.usage,
                         "total_token_usage": total_usage,
                         "tool_call_count": tool_call_count,
                         "hypothesis_update_count": hypothesis_update_count,
                         "premature_completion_attempts": premature_completion_attempts,
+                        "verifier_call_count": verifier_call_count,
+                        "revision_count": revision_count,
+                        "verification_statuses": [
+                            item.verification_status.value for item in verification_results
+                        ],
                         "termination_reason": termination_reason,
                         "total_duration_seconds": duration,
                         "estimated_cost_usd": estimated_cost,
@@ -200,12 +353,23 @@ class StructuredHypothesisRunner:
                     termination_reason=termination_reason,
                     duration_seconds=duration,
                     total_usage=total_usage,
+                    verifier_call_count=verifier_call_count,
+                    revision_count=revision_count,
+                    proposed_diagnoses=tuple(proposed_diagnoses),
+                    verification_results=tuple(verification_results),
                 )
 
             if not turn.tool_calls:
-                raise ValueError("V2 investigator returned neither tool calls nor a diagnosis")
+                raise ValueError(
+                    "Structured investigator returned neither tool calls nor a diagnosis"
+                )
 
-            if mode in {"initialize_ledger", "update_ledger"}:
+            ledger_update_requested = (
+                mode == "revise"
+                and len(turn.tool_calls) == 1
+                and turn.tool_calls[0].name == LEDGER_TOOL_NAME
+            )
+            if mode in {"initialize_ledger", "update_ledger"} or ledger_update_requested:
                 if len(turn.tool_calls) != 1 or turn.tool_calls[0].name != LEDGER_TOOL_NAME:
                     raise ValueError("Exactly one hypothesis-ledger update was required")
                 call = turn.tool_calls[0]
@@ -251,13 +415,14 @@ class StructuredHypothesisRunner:
                     {
                         "run_id": self.store.run_id,
                         "incident_id": incident_id,
-                        "system_version": "v2_structured_hypothesis_investigator",
+                        "system_version": self.system_version,
                         "agent_stage": "hypothesis_ledger",
                         "event_type": event_type,
                         "step_number": step_number,
                         "model": self.client.model,
                         "response_id": turn.response_id,
                         "model_usage": turn.usage,
+                        "revision_number": revision_count,
                         **event_payload,
                     },
                 )
@@ -285,7 +450,7 @@ class StructuredHypothesisRunner:
                 {
                     "run_id": self.store.run_id,
                     "incident_id": incident_id,
-                    "system_version": "v2_structured_hypothesis_investigator",
+                    "system_version": self.system_version,
                     "agent_stage": "investigator",
                     "event_type": "model_decision",
                     "step_number": step_number,
@@ -297,6 +462,7 @@ class StructuredHypothesisRunner:
                         ledger.snapshot.model_dump(mode="json") if ledger.snapshot else None
                     ),
                     "model_usage": turn.usage,
+                    "revision_number": revision_count,
                 },
             )
 
@@ -323,13 +489,21 @@ class StructuredHypothesisRunner:
                     }
                 tool_duration = perf_counter() - tool_started
                 tool_call_count += 1
+                tool_evidence.append(
+                    {
+                        "tool_call_number": tool_call_count,
+                        "tool_name": call.name,
+                        "arguments": call.arguments,
+                        "output": output,
+                    }
+                )
                 step_number += 1
                 self.store.append_trajectory(
                     incident_id,
                     {
                         "run_id": self.store.run_id,
                         "incident_id": incident_id,
-                        "system_version": "v2_structured_hypothesis_investigator",
+                        "system_version": self.system_version,
                         "agent_stage": "investigator",
                         "event_type": "tool_result",
                         "step_number": step_number,
@@ -337,6 +511,7 @@ class StructuredHypothesisRunner:
                         "tool_called": call.name,
                         "tool_arguments": call.arguments,
                         "tool_result": output,
+                        "revision_number": revision_count,
                         "hypothesis_state_before_update": (
                             ledger.snapshot.model_dump(mode="json") if ledger.snapshot else None
                         ),

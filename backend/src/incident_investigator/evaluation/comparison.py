@@ -12,6 +12,7 @@ from incident_investigator.persistence.pricing import estimate_gpt_5_6_sol_cost
 
 STAGE0_ANCHOR_RUN_ID = "02b97b0d-d68e-45f8-b678-386f7558dd02"
 V1_RUN_ID = "7fcf7453-609e-4006-8a72-cd1a6b26bcff"
+V2_RUN_ID = "d3859d8d-b252-426a-970e-89a471a5fe7c"
 
 
 def _load_json(path: Path) -> dict[str, Any]:

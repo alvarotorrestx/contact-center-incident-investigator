@@ -13,20 +13,22 @@ If `TONIGHT_PLAN.md` is present locally, it is an internal execution aid only. I
 
 The project documents above define the intended product, benchmark, evaluation methodology, and agent architecture.
 
-## Authorization State: V2 COMPLETE — AWAITING V3 APPROVAL
+## Authorization State: V3 COMPLETE — AWAITING V4 APPROVAL
 
-Stage 0 is frozen and complete. V1 tool-use and V2 structured-hypothesis implementations and their
-measured ten-case experiments are complete. The project is awaiting explicit approval to begin V3.
+Stage 0 is frozen and complete. V1 tool use, V2 structured-hypothesis investigation, and V3
+adversarial verification implementations and their measured ten-case experiments are complete. The
+project is awaiting explicit approval to begin V4.
 
-V3 and all later implementation remain **NO-GO** without explicit user approval. V2 was limited to
-a structured hypothesis ledger, evidence-for/evidence-against tracking, explicit competing-
-hypothesis evaluation, termination discipline, hypothesis trajectories, the configuration-matched
-ten-case experiment, and minimal supporting integration/documentation.
+V4 and all later implementation remain **NO-GO** without explicit user approval. V3 was limited to
+the preserved V2 workflow, one tool-free adversarial verifier, structured contradiction findings,
+at most two verifier-driven revisions per case, verifier/revision trajectories, the configuration-
+matched ten-case experiment, and minimal supporting integration/documentation.
 
-Do not add a verifier, verifier feedback, a revision loop, multi-agent voting, or later-stage UI work
-without explicit approval. V2 did not authorize changing the frozen benchmark, ground truth,
-scoring behavior, taxonomy, output schema, baseline behavior, model configuration, or historical
-experimental artifacts.
+V3 validation, authorized documentation/configuration cleanup, configuration-matched evidence
+reproduction, and evidence curation are allowed. Do not begin V4 UI/product work, add multi-agent
+voting or unrestricted recursive critique, or change the frozen benchmark, ground truth, scoring
+behavior, taxonomy, output schema, baseline behavior, model configuration, or historical
+experimental artifacts without explicit approval.
 
 ## Strict GO / NO-GO Phase Gates
 

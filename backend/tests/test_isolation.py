@@ -97,6 +97,9 @@ def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> No
         / "incident_investigator"
         / "structured_investigator"
         / "runner.py",
+        project_root / "backend" / "src" / "incident_investigator" / "verifier" / "client.py",
+        project_root / "backend" / "src" / "incident_investigator" / "verifier" / "models.py",
+        project_root / "backend" / "src" / "incident_investigator" / "verifier" / "prompting.py",
     ]
     for path in protected:
         files = path.rglob("*.py") if path.is_dir() else [path]

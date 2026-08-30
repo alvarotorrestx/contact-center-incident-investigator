@@ -12,7 +12,13 @@ from incident_investigator.investigator.client import (
 
 from .prompting import V2Prompt
 
-V2TurnMode = Literal["initialize_ledger", "update_ledger", "investigate", "force_final"]
+V2TurnMode = Literal[
+    "initialize_ledger",
+    "update_ledger",
+    "investigate",
+    "revise",
+    "force_final",
+]
 
 
 class V2InvestigatorClient(Protocol):
@@ -73,8 +79,12 @@ class OpenAIV2InvestigatorClient:
         if mode in {"initialize_ledger", "update_ledger"}:
             tools = [prompt.ledger_tool]
             tool_choice = "required"
-        elif mode == "investigate":
-            tools = prompt.operational_tools
+        elif mode in {"investigate", "revise"}:
+            tools = (
+                [prompt.ledger_tool, *prompt.operational_tools]
+                if mode == "revise"
+                else prompt.operational_tools
+            )
             tool_choice = "auto"
         else:
             tools = []
@@ -90,7 +100,7 @@ class OpenAIV2InvestigatorClient:
             "parallel_tool_calls": False,
             "reasoning": {"effort": self.reasoning_effort},
         }
-        if mode in {"investigate", "force_final"}:
+        if mode in {"investigate", "revise", "force_final"}:
             request["text_format"] = FinalDiagnosis
         response = self._client.responses.parse(**request)
 

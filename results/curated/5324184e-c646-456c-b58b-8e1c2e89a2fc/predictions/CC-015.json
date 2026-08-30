@@ -1,0 +1,84 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "increased_transfers",
+    "increased_aht",
+    "reduced_throughput",
+    "service_level_degradation"
+  ],
+  "confidence": 0.95,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Routing configuration version 24.7 was deployed to all queues at exactly 09:15, matching incident onset.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "Transfer rate increased from 6.3% at 09:00 to 13.5% at 09:15 and remained near 13% through the window.",
+      "signal": "transfer_rate_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "AHT increased from 376.5 seconds at 09:00 to 527.9 seconds at 09:15 and averaged 38.5% higher after onset.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "All queues were affected after deployment: transfer rates increased 111%\u2013121%, AHT increased 36%\u201343%, and service level fell 23\u201345 percentage points.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained fixed at 49 agents, with productive staffing and adherence essentially unchanged.",
+      "signal": "stable_headcount",
+      "source": "staffing"
+    },
+    {
+      "finding": "Demand averaged 12.0% above forecast after onset, while AHT averaged 38.0% above forecast; moderate demand pressure contributed but was not the dominant change.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "No mismatch was found: recalculated service level matched all 16 reported intervals exactly.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-015",
+  "investigation_status": "LIKELY",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "Routing configuration version 24.7 was deployed to all queues at 09:15. At the same boundary, transfer rates more than doubled, AHT rose sharply, throughput declined, and service level collapsed across every queue despite stable staffing. The routing change is the most likely initiating cause; increased transfers and handle time were the operational mechanisms.",
+  "recommended_actions": [
+    "Rollback or correct routing configuration version 24.7 and validate destination and skill mappings before redeployment.",
+    "Monitor transfer rate, AHT, ASA, abandonment, and service level by queue immediately after remediation.",
+    "Add deployment guardrails with pre-production routing tests and automatic rollback thresholds for transfer-rate or AHT increases.",
+    "Review transferred contacts from the incident window to identify incorrect routing paths and affected customer intents.",
+    "Maintain short-term capacity coverage for the moderate above-forecast demand until queues recover."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Volume increased moderately\u201418.3% pre/post and 12.0% above forecast\u2014but this does not explain the synchronized doubling of transfers across all queues."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in staffing stayed at 49; productive staffing and adherence were effectively stable."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "The AHT increase was a direct throughput mechanism, but the simultaneous routing deployment and transfer-rate shift provide the deeper initiating cause."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was present; the sole visible operational event was the routing deployment."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Service level recalculated exactly from visible counts in every interval, with no denominator or reporting mismatch."
+    }
+  ],
+  "stakeholder_summary": "The 09:15 all-queue routing deployment is the likely root cause. It coincided with a persistent doubling of transfers, roughly 38% higher AHT, reduced throughput, and broad service-level degradation. Staffing was stable, reported metrics were valid, and moderate demand growth was contributory rather than primary."
+}
