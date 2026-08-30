@@ -1,0 +1,104 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "queue_misrouting",
+    "queue_capacity_imbalance",
+    "capacity_deficit",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.98,
+  "contributing_factors": [
+    "moderate_volume_increase",
+    "localized_queue_misrouting"
+  ],
+  "evidence": [
+    {
+      "finding": "Billing queue skill mappings were updated at 09:15, exactly when the incident began.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "At 09:15 Billing staffing dropped from 12 to 9 agents while General Service increased from 19 to 22; Billing remained at 9 through 11:45.",
+      "signal": "queue_staffing_imbalance",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained constant at 49 agents throughout the window, showing redistribution rather than a center-wide staffing loss.",
+      "signal": "stable_headcount",
+      "source": "staffing"
+    },
+    {
+      "finding": "After the change, Billing service level fell to 14.8% at 09:15 and remained repeatedly far below target, while General Service stayed approximately 94.4%-97.1%.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Billing repeatedly received more calls than it answered, including 29 offered versus 15 answered at 09:15, 31 versus 18 at 09:30, and 30 versus 17 at 10:45.",
+      "signal": "queue_accumulation",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Billing ASA rose from 32.1 seconds at 09:00 to 131.2 seconds at 09:15 and remained elevated for much of the incident.",
+      "signal": "asa_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Overall service level dropped from 93.0% at 09:00 to 67.1% at 09:15 and 59.1% at 09:30, with repeated later intervals below the 80% target.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Demand exceeded forecast at incident onset\u201487 versus 79 calls at 09:15 and 96 versus 79 at 09:30\u2014but total post-incident demand was only modestly above forecast overall.",
+      "signal": "moderate_volume_increase",
+      "source": "forecast"
+    }
+  ],
+  "incident_id": "CC-005",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "The 09:15 Billing skill-mapping update immediately redistributed queue capacity: Billing staffing fell from 12 to 9 agents while General Service rose from 19 to 22, with total staffing unchanged. Billing then developed sustained excess demand relative to throughput, sharply elevated ASA, and severe service-level degradation.",
+  "recommended_actions": [
+    "Rollback or correct the 09:15 Billing skill-mapping change and validate every affected skill-to-queue assignment.",
+    "Restore adequate Billing-skilled capacity and rebalance agents from General Service until the Billing backlog and ASA normalize.",
+    "Add pre-deployment validation and post-change alerts for abrupt queue staffing shifts, service-level divergence, and offered-versus-answered accumulation.",
+    "Review routing-change governance, including approval, testing, rollback criteria, and queue-level capacity impact checks.",
+    "Account for moderate interval-level volume variance in Billing staffing buffers without treating it as the primary cause."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Volume increases were moderate and intermittent, while the sustained failure was localized to Billing and began exactly with the routing change."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Center-wide staffing was stable at 49 scheduled and logged-in agents; the evidence shows queue-level redistribution rather than lost headcount."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Adherence remained within its existing 89.8%-93.9% range and did not show a sustained decline aligned with the incident."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Overall AHT was stable to lower than forecast during most affected intervals, and Billing AHT did not exhibit a sustained increase sufficient to explain the degradation."
+    },
+    {
+      "category": "TRAINING_CAPACITY_LOSS",
+      "reason": "No agents were in training during any interval."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was reported, and unaffected queues continued processing calls normally."
+    },
+    {
+      "category": "FORECAST_ERROR",
+      "reason": "Forecast variance was not large or sustained enough to explain the severe, Billing-specific performance divergence."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "The reported aggregate service-level values reconcile to the supplied formula, and the degradation is corroborated by ASA, abandonment, throughput, and queue-level results."
+    }
+  ],
+  "stakeholder_summary": "CC-005 was caused by the 09:15 Billing routing configuration change, which shifted capacity away from Billing despite stable total staffing. Billing immediately accumulated calls and experienced sharply higher ASA and severe service-level degradation; moderate demand above forecast amplified the initial impact but was not the primary cause."
+}

@@ -1,0 +1,101 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "increased_transfers",
+    "increased_aht",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.97,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Routing configuration version 24.7 was deployed to all queues at 09:15, matching the incident start.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "Overall transfer rate rose abruptly from 6.49% at 09:00 to 12.23% at 09:15 and remained near 12\u201313% through 11:45.",
+      "signal": "transfer_rate_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Overall AHT jumped from 382.7 seconds at 09:00 to 505.4 seconds at 09:15 and remained approximately 501\u2013525 seconds afterward, well above forecasts near 371\u2013379 seconds.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Service level fell from 85.3% at 09:00 to 50.6% at 09:15 and stayed below the 80% target in most subsequent intervals; ASA concurrently rose from 27.6 to 73.5 seconds.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Immediately after deployment, all queues showed higher transfer rates and AHT, while service levels deteriorated unevenly by queue, consistent with routing-related load and call-flow disruption.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained fixed at 49, productive staffing remained 45\u201346, adherence stayed near 91.8\u201393.9%, and no agents were in training during the main incident.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Offered demand was generally only modestly above forecast after 09:15\u2014for example, 86 versus 79 calls at onset\u2014adding pressure but not constituting a surge sufficient to explain the abrupt operational step-change.",
+      "signal": "moderate_volume_increase",
+      "source": "forecast"
+    }
+  ],
+  "incident_id": "CC-004",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "Routing configuration version 24.7 was deployed at 09:15, exactly when transfer rates and AHT increased across all queues. The resulting reduction in call-handling throughput drove higher waits, abandonment, and sustained service-level degradation despite stable staffing.",
+  "recommended_actions": [
+    "Roll back or remediate routing configuration version 24.7 and compare transfer rules with the prior known-good version.",
+    "Audit post-deployment routing paths, skill mappings, overflow rules, and transfer destinations for unintended loops or unnecessary handoffs.",
+    "Validate recovery by monitoring transfer rate, AHT, ASA, abandonment, and service level at both aggregate and queue levels.",
+    "Add deployment guardrails with pre-production call-flow tests and automatic rollback thresholds for abnormal transfer-rate or AHT increases.",
+    "Use temporary overflow or cross-skilled capacity while queues clear, with particular attention to Account Support and Escalations."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Post-incident demand was moderately above forecast but did not exhibit an abrupt surge comparable to the simultaneous doubling of transfer rate and roughly 33% AHT increase."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Logged-in headcount remained 49 and productive staffing remained 45\u201346 throughout the main incident, above forecast requirements of 35\u201339 agents."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Adherence remained stable near 92\u201394% during the sustained degradation and did not decline at 09:15."
+    },
+    {
+      "category": "TRAINING_CAPACITY_LOSS",
+      "reason": "No agents were recorded in training at any interval."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "AHT was a major proximal driver of reduced throughput, but its exact onset alongside the routing deployment and transfer-rate jump indicates it was a consequence of the routing change rather than the deepest supported cause."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Queue staffing stayed fixed at 19, 12, 11, and 7 agents; uneven queue outcomes were downstream manifestations of changed call flows rather than evidence of a separate staffing allocation change."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was supplied; the only recorded operational event was the routing deployment at the exact incident onset."
+    },
+    {
+      "category": "FORECAST_ERROR",
+      "reason": "Forecast underestimation was moderate and cannot explain the abrupt, sustained changes in transfer rate and AHT beginning precisely at deployment."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Reported service levels conform to the supplied formula, and offered calls reconcile with answered plus abandoned calls."
+    }
+  ],
+  "stakeholder_summary": "CC-004 was caused by the 09:15 deployment of routing version 24.7. The change immediately increased transfers and handling time across all queues, reducing throughput and driving sustained service-level failure. Staffing remained stable and sufficient against forecast; moderately elevated volume contributed pressure but was not the primary cause."
+}

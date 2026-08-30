@@ -1,0 +1,101 @@
+{
+  "causal_chain": [
+    "unexpected_demand",
+    "capacity_deficit",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.99,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Offered calls jumped from 72 at 09:00 to 117 at 09:15 and remained between 97 and 136 through 11:45.",
+      "signal": "demand_surge",
+      "source": "performance"
+    },
+    {
+      "finding": "Incident-period volume was 1,308 calls versus 841 forecast (+55.5%); before the incident, 08:00\u201309:00 volume was 370 versus 375 forecast, showing a clear break at 09:15.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained constant at 49 throughout the window, while productive staffing remained stable at 45\u201346 agents.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Service level fell from 94.44% at 09:00 to 51.33% at 09:15 and remained below the 80% target through 11:45, reaching a low of 38.46% at 09:45.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "ASA rose from 19.95 seconds at 09:00 to 74.37 seconds at 09:15 and remained elevated at 49.42\u201392.21 seconds during the incident.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Abandoned calls increased to 9\u201342 per interval during the incident, compared with zero at 09:00, indicating sustained queue buildup under excess demand.",
+      "signal": "queue_accumulation",
+      "source": "performance"
+    },
+    {
+      "finding": "No count mismatch was found: offered calls equal answered plus abandoned calls in every aggregate interval, supporting the validity of the demand surge.",
+      "signal": "count_conservation_mismatch",
+      "source": "performance"
+    },
+    {
+      "finding": "No operational event was recorded to support a routing change or platform incident.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-001",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "DEMAND_SPIKE",
+  "primary_root_cause_detail": "An abrupt, sustained demand surge began at 09:15. Offered calls totaled 1,308 from 09:15 through 11:45 versus 841 forecast, 55.5% above plan. The unchanged 45\u201346 productive agents could not absorb this unplanned workload, producing a capacity deficit, queues, elevated ASA and sustained service-level failure.",
+  "recommended_actions": [
+    "Activate surge-response staffing when interval demand materially exceeds forecast, using overtime, reserve agents or cross-skilled support.",
+    "Implement intraday volume alerts and rapid reforecasting triggers so capacity actions begin at the first sustained forecast variance.",
+    "Review available business and external-demand drivers for the unexplained 09:15 onset and incorporate any recurring pattern into future forecasts.",
+    "Monitor queue backlog, ASA and abandonment during recovery and rebalance cross-skilled capacity where queue-level pressure is highest."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "There was no staffing loss: all 49 scheduled agents remained logged in and productive staffing held at 45\u201346."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Adherence remained stable between 91.84% and 93.88%, with no decline aligned to incident onset."
+    },
+    {
+      "category": "TRAINING_CAPACITY_LOSS",
+      "reason": "No agents were in training at any point in the evaluation window."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Aggregate AHT remained near plan and showed no sustained increase, ranging from 360.44 to 384.82 seconds during the incident against forecasts of approximately 371.54\u2013378.75 seconds."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "No routing event was recorded, and excess demand affected multiple queues rather than presenting as a clearly localized rerouting pattern."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Queue results varied by interval, but degradation was broad across General Service, Billing, Account Support and Escalations as center-wide demand rose; the data do not support queue imbalance as the initiating cause."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was recorded, and calls continued to be processed at high answered volumes without evidence of a systemwide processing interruption."
+    },
+    {
+      "category": "FORECAST_ERROR",
+      "reason": "Actual volume closely matched forecast before 09:15, then changed abruptly and remained elevated. This supports unexpected demand rather than evidence of a persistently defective forecast."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Reported service levels recalculate correctly under the supplied definition, and aggregate offered-call counts reconcile to answered plus abandoned calls."
+    }
+  ],
+  "stakeholder_summary": "CC-001 was caused by a confirmed demand spike beginning at 09:15, not by staffing loss, adherence, AHT, routing or platform failure. Volume ran 55.5% above forecast through 11:45 while productive staffing stayed at 45\u201346, overwhelming available capacity and driving sustained queueing and sub-target service level."
+}
