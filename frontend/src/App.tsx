@@ -345,7 +345,7 @@ export default function App() {
         {(catalogLoading || reportLoading) && <LoadingReport />}
         {!catalogLoading && !reportLoading && !error && report && diagnosis && <DiagnosisView report={report} diagnosis={diagnosis} trajectory={trajectory} liveRunId={liveResult?.run_id ?? ''} />}
       </main>
-      <footer><span>Incident Investigator</span><span>Structured findings from visible operational data</span></footer>
+      <footer><span>Incident Investigator</span><span>Built by Alvaro Torres • Frontier Engineering Challenge 2026</span></footer>
     </div>
   )
 }

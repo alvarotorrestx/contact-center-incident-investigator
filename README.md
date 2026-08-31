@@ -1,5 +1,7 @@
 # Contact Center Incident Investigator
 
+Built by Alvaro Torres for the micro1 Frontier Engineering Challenge 2026
+
 The project now includes a polished React/FastAPI investigation experience over a deterministic
 ten-case synthetic benchmark. The product presents incident impact, a structured diagnosis,
 supporting evidence, causal reasoning, queue and capacity context, rejected alternatives,
@@ -182,10 +184,10 @@ quality and presentation work is complete and did not change this measured decis
 
 ## Representative Agent Trajectories
 
-[`trajectories/representative/README.md`](trajectories/representative/README.md) introduces four
-intentionally selected trajectories covering the winning Stage 0 default, the V1 premature-stop
-failure mode, V2 structured deep investigation, and the removed V3 verifier experiment. Complete
-official trajectory sets remain under `trajectories/curated/`.
+[`trajectories/representative/`](trajectories/representative/) contains the four selected
+submission-facing trajectories covering Stage 0, V1, V2, and V3. Complete official sets remain
+available under [`trajectories/curated/`](trajectories/curated/), with experimental results and
+decisions documented in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Local API and UI
 
