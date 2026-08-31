@@ -315,8 +315,8 @@ experiment, it ran after verification/finalization.
 It may not invent new findings.
 
 Inputs:
-- verified structured diagnosis
-- verified evidence
+- finalized structured diagnosis
+- supporting evidence
 - contributing factors
 - rejected hypotheses
 - causal chain
@@ -371,7 +371,7 @@ Recommended fields:
 
 Store representative trajectories in a human-readable form for submission.
 
-## Planned Improvement Stages
+## Completed Improvement Stages
 ### V0 — Baseline
 Single general-purpose analyst.
 
@@ -405,7 +405,8 @@ Measured outcome: 8/10 RCIA with one escalation, below the Stage 0 anchor. Prese
 but do not promote it. No further reasoning-architecture experiment is planned or authorized.
 
 ### V4 — Product Quality
-Add the polished React investigation experience and presentation improvements.
+Delivered the polished React investigation experience and presentation improvements without
+changing the measured reasoning decision.
 
 At every phase, stop after tests and measured benchmark results and wait for explicit
 approval before beginning the next phase. Keep the frozen benchmark, taxonomy, output

@@ -21,6 +21,13 @@ An agentic workflow that:
 5. Uses a verifier to challenge the proposed diagnosis.
 6. Produces a structured analyst result and stakeholder-ready incident brief.
 
+### Measured Final Product Decision
+The workflow above records the original experimental ambition. Completed configuration-matched
+experiments selected the Stage 0 complete-context single-stage analyst as the product default. The
+V2 tools and hypothesis ledger remain available only as an optional deep-investigation/audit mode;
+the V3 verifier and adaptive escalation are preserved negative experiments, not active product
+modes. V4 product/UI work is complete, and no further reasoning experiment is planned.
+
 ## Hackathon MVP Architecture
 
 ### Frontend

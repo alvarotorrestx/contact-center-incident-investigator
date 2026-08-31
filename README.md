@@ -13,20 +13,28 @@ adaptive escalation remain removed experiments rather than active product modes.
 The benchmark is intentionally frozen at `benchmark/v1`. Do not change cases after observing model
 predictions to improve a score. Genuine benchmark defects require documentation and a new version.
 
+Reasoning experiments and V4 product/UI work are complete. The repository is now in submission
+packaging and cleanup; no further reasoning experiment is planned or authorized.
+
 Stage 0 reports expected-evidence coverage and a non-allowlisted evidence rate. The latter counts
 predicted structured evidence IDs absent from each case's non-exhaustive `supported_signal_ids`
 allowlist; it is not a hallucination or factual-error rate.
 
 ## Local setup
 
-Python 3.12 is preferred; compatible Python 3.11+ is supported. From the repository root:
+Python 3.12 is preferred; compatible Python 3.11+ is supported. The frontend requires Node.js
+`^20.19.0` or `>=22.12.0`, Corepack, and the repository-pinned pnpm 11.19.0. From the repository
+root:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install -r backend\requirements.lock
 .\.venv\Scripts\python.exe -m pip install -e backend
-corepack pnpm --dir frontend install --frozen-lockfile
+corepack enable
+Push-Location frontend
+corepack pnpm install --frozen-lockfile
+Pop-Location
 ```
 
 Generate and validate the frozen benchmark:
@@ -40,9 +48,11 @@ Run backend and frontend tests:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest backend\tests
-corepack pnpm --dir frontend test
-corepack pnpm --dir frontend lint
-corepack pnpm --dir frontend build
+Push-Location frontend
+corepack pnpm test
+corepack pnpm lint
+corepack pnpm build
+Pop-Location
 ```
 
 ## Live ten-case baseline
@@ -61,6 +71,15 @@ baseline requests explicitly use medium reasoning effort and record it in the ru
 
 Local outputs are written beneath `results/local/<run-id>` and trajectories beneath
 `trajectories/local/<run-id>`. They are ignored until intentionally curated.
+
+Score a saved run deterministically against benchmark v1 ground truth:
+
+```powershell
+.\.venv\Scripts\python.exe -m incident_investigator --project-root . evaluate --run-id <run-id>
+```
+
+The evaluator writes `scores.json`, `scores.md`, and `comparison.csv` into the saved run's
+`results/local/<run-id>/` directory.
 
 ## V1 tool-using investigator
 
@@ -94,9 +113,9 @@ frozen benchmark, model, medium reasoning, taxonomy, final schema, and determini
 
 The official V2 run is `d3859d8d-b252-426a-970e-89a471a5fe7c`: ten valid outputs, zero failures,
 7/10 RCIA, and 34/40 expected-evidence coverage. It improved materially over V1's tool-use result
-but remained below the 9/10 Stage 0 anchor and cost substantially more. Complete evidence is curated
-under `results/curated/` and `trajectories/curated/`. V2 does not include a verifier or revision
-loop.
+but remained below the 9/10 Stage 0 anchor. It ran for 793.080 seconds, used 1,410,169 tokens, and
+cost an estimated $3.284164. Complete evidence is curated under `results/curated/` and
+`trajectories/curated/`. V2 does not include a verifier or revision loop.
 
 ## V3 adversarial verification
 
@@ -149,8 +168,8 @@ scored 8/10 RCIA. It escalated only CC-012, used five tools there, changed no ca
 incorrect first pass, and harmed no correct first pass. It covered 36/40 expected evidence items,
 used 489,793 tokens, ran for 338.335 seconds, and cost an estimated $1.6058762. Because it remained
 below the Stage 0 anchor's 9/10 while costing more, Stage 0 remains the recommended default. This
-negative experiment is preserved and curated; no further reasoning-architecture experiment is
-planned before V4.
+negative experiment is preserved and curated; it is not active product behavior, and no further
+reasoning-architecture experiment is planned.
 
 ## Final product reasoning decision
 
@@ -158,8 +177,15 @@ The measured default reasoning path is the Stage 0 complete-context single-stage
 analyst, which remained strongest at 9/10 RCIA. V2 deterministic tools and the hypothesis ledger
 are retained only as an optional deep-investigation, drill-down, and audit capability. V3
 verification and adaptive escalation are preserved as measured negative experiments and are not
-default product behavior. No further reasoning experiments are planned or authorized; V4 is
-limited to product/UI quality and presentation.
+default product behavior. No further reasoning experiments are planned or authorized. V4 product/UI
+quality and presentation work is complete and did not change this measured decision.
+
+## Representative Agent Trajectories
+
+[`trajectories/representative/README.md`](trajectories/representative/README.md) introduces four
+intentionally selected trajectories covering the winning Stage 0 default, the V1 premature-stop
+failure mode, V2 structured deep investigation, and the removed V3 verifier experiment. Complete
+official trajectory sets remain under `trajectories/curated/`.
 
 ## Local API and UI
 
@@ -167,7 +193,8 @@ Start the API and UI in separate terminals from the repository root:
 
 ```powershell
 .\.venv\Scripts\python.exe -m incident_investigator --project-root . serve
-corepack pnpm --dir frontend dev
+Set-Location frontend
+corepack pnpm dev
 ```
 
 Open `http://localhost:5173`. **Standard analysis** is selected by default and immediately loads the

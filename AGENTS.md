@@ -9,21 +9,20 @@ Before making architectural or implementation decisions, read:
 - ARCHITECTURE.md
 - CHANGELOG.md
 
-If `TONIGHT_PLAN.md` is present locally, it is an internal execution aid only. It is intentionally gitignored and is not part of the public project specification.
-
 The project documents above define the intended product, benchmark, evaluation methodology, and agent architecture.
 
-## Authorization State: V4 COMPLETE — AWAITING SUBMISSION-PREP APPROVAL
+## Authorization State: SUBMISSION PACKAGING COMPLETE — AWAITING VIDEO/SUBMISSION APPROVAL
 
 Stage 0 and the measured V1–V3, final-candidate, and adaptive experiments are frozen and complete.
 V4 product-quality work is also complete: the project has a polished single-incident React/FastAPI
 experience, the Stage 0 complete-context analyst remains the default, and the preserved V2 workflow
 is exposed only as an optional deep-investigation/audit view.
 
-Submission, video, deployment, and any later implementation remain **NO-GO** without explicit user
-approval. Validation, documentation/configuration cleanup, local demo execution, and preservation
-or curation of already authorized evidence are allowed. Do not add new reasoning experiments,
-multi-agent orchestration, V3 verification, adaptive escalation, or broad SaaS infrastructure.
+Repository cleanup is complete, representative trajectories are packaged, and security and
+reproducibility validation are complete. Video scripting or recording, final submission-form
+writing, deployment if any, final submission, and any later implementation remain **NO-GO**
+without explicit user approval. Do not add new reasoning experiments, multi-agent orchestration,
+V3 verification, adaptive escalation, or broad SaaS infrastructure.
 
 Do not change the frozen benchmark, ground truth, scoring behavior, taxonomy, output schema,
 measured prompts, model configuration, or historical experimental artifacts without separate
@@ -173,5 +172,3 @@ Do not replace the headline metric with an LLM-as-judge score.
 The repository includes a deliberate `.gitignore`.
 
 You may propose or add standard ignore patterns when new tools/build outputs require them.
-
-Do not remove the `TONIGHT_PLAN.md` ignore rule unless the user explicitly requests that file be committed.
