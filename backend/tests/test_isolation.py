@@ -5,6 +5,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+from incident_investigator.adaptive_escalation import (
+    build_adaptive_investigation_prompt,
+    evaluate_escalation,
+)
 from incident_investigator.baseline import build_baseline_prompt
 from incident_investigator.benchmark import AgentVisibleCaseLoader
 from incident_investigator.evaluation import GroundTruthLoader
@@ -75,6 +79,19 @@ def test_ground_truth_never_reaches_loader_or_prompt(project_root: Path) -> None
         ]:
             assert not (_all_keys(schema) & EVALUATOR_ONLY_KEYS)
 
+        adaptive_decision = evaluate_escalation(visible, diagnosis_from_visible_fixture(visible))
+        assert not (_all_keys(adaptive_decision.to_dict()) & EVALUATOR_ONLY_KEYS)
+        adaptive_prompt = build_adaptive_investigation_prompt(
+            visible,
+            diagnosis_from_visible_fixture(visible),
+            toolbox,
+            project_root,
+            10,
+        )
+        for key in EVALUATOR_ONLY_KEYS:
+            assert f'"{key}":' not in adaptive_prompt.user
+        assert truth.primary_root_cause.detail not in adaptive_prompt.user
+
 
 def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> None:
     protected = [
@@ -126,6 +143,30 @@ def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> No
         / "incident_investigator"
         / "final_candidate"
         / "__init__.py",
+        project_root
+        / "backend"
+        / "src"
+        / "incident_investigator"
+        / "adaptive_escalation"
+        / "__init__.py",
+        project_root
+        / "backend"
+        / "src"
+        / "incident_investigator"
+        / "adaptive_escalation"
+        / "gate.py",
+        project_root
+        / "backend"
+        / "src"
+        / "incident_investigator"
+        / "adaptive_escalation"
+        / "prompting.py",
+        project_root
+        / "backend"
+        / "src"
+        / "incident_investigator"
+        / "adaptive_escalation"
+        / "runner.py",
     ]
     for path in protected:
         files = path.rglob("*.py") if path.is_dir() else [path]
@@ -171,6 +212,22 @@ def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> No
     )
     assert final_candidate_check.returncode == 0, final_candidate_check.stderr
 
+    adaptive_check = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            (
+                "import sys; import incident_investigator.adaptive_escalation; "
+                "assert 'incident_investigator.evaluation' not in sys.modules"
+            ),
+        ],
+        cwd=project_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert adaptive_check.returncode == 0, adaptive_check.stderr
+
 
 def test_frozen_case_files_contain_no_evaluator_fields(project_root: Path) -> None:
     cases_root = project_root / "benchmark" / "v1" / "cases"
@@ -190,3 +247,34 @@ def _valid_tool_arguments(name: str, toolbox: CaseToolbox) -> dict[str, object]:
     if name == "calculate_metric_change":
         return {"metric": "service_level_pct", "time_window": "pre_vs_post_incident"}
     return {}
+
+
+def diagnosis_from_visible_fixture(visible: object) -> object:
+    from incident_investigator.contracts import FinalDiagnosis
+
+    return FinalDiagnosis.model_validate(
+        {
+            "incident_id": visible.incident_id,
+            "investigation_status": "LIKELY",
+            "primary_root_cause_category": "DEMAND_SPIKE",
+            "primary_root_cause_detail": "Visible demand changed near incident onset.",
+            "contributing_factors": [],
+            "confidence": 0.8,
+            "evidence": [
+                {
+                    "signal": "service_level_decline",
+                    "source": "performance",
+                    "finding": "Visible service level changed.",
+                },
+                {
+                    "signal": "actual_above_forecast",
+                    "source": "forecast",
+                    "finding": "Visible actual demand differed from forecast.",
+                },
+            ],
+            "rejected_hypotheses": [],
+            "causal_chain": ["unexpected_demand", "service_level_degradation"],
+            "recommended_actions": ["Monitor visible operating metrics."],
+            "stakeholder_summary": "Visible operational data was assessed.",
+        }
+    )

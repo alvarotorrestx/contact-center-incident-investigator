@@ -1,0 +1,305 @@
+{
+  "average_tool_calls_among_escalated": 5.0,
+  "cases_escalated": 1,
+  "cases_finalized_directly": 9,
+  "categories_changed_after_escalation": [],
+  "correct_first_passes_harmed": [],
+  "diagnoses_changed_after_escalation": [
+    "CC-012"
+  ],
+  "direct_incident_ids": [
+    "CC-001",
+    "CC-002",
+    "CC-003",
+    "CC-004",
+    "CC-005",
+    "CC-007",
+    "CC-009",
+    "CC-014",
+    "CC-015"
+  ],
+  "escalated_incident_ids": [
+    "CC-012"
+  ],
+  "escalated_with_unchanged_category": [
+    "CC-012"
+  ],
+  "incorrect_first_passes_corrected": [],
+  "per_case": [
+    {
+      "category_changed": false,
+      "diagnosis_changed": false,
+      "duration_seconds": 24.427080199995544,
+      "escalated": false,
+      "estimated_cost_usd": 0.104447,
+      "final_category": "DEMAND_SPIKE",
+      "final_correct": true,
+      "first_pass_category": "DEMAND_SPIKE",
+      "first_pass_correct": true,
+      "incident_id": "CC-001",
+      "termination_reason": "first_pass_finalized",
+      "token_usage": {
+        "input_tokens": 13406,
+        "input_tokens_details": {
+          "cache_write_tokens": 13403,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1871,
+        "output_tokens_details": {
+          "reasoning_tokens": 677
+        },
+        "total_tokens": 15277
+      },
+      "tool_call_count": 0,
+      "triggers": []
+    },
+    {
+      "category_changed": false,
+      "diagnosis_changed": false,
+      "duration_seconds": 19.590119800006505,
+      "escalated": false,
+      "estimated_cost_usd": 0.098237,
+      "final_category": "STAFFING_SHORTFALL",
+      "final_correct": true,
+      "first_pass_category": "STAFFING_SHORTFALL",
+      "first_pass_correct": true,
+      "incident_id": "CC-002",
+      "termination_reason": "first_pass_finalized",
+      "token_usage": {
+        "input_tokens": 13476,
+        "input_tokens_details": {
+          "cache_write_tokens": 13473,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1543,
+        "output_tokens_details": {
+          "reasoning_tokens": 516
+        },
+        "total_tokens": 15019
+      },
+      "tool_call_count": 0,
+      "triggers": []
+    },
+    {
+      "category_changed": false,
+      "diagnosis_changed": false,
+      "duration_seconds": 26.501524300023448,
+      "escalated": false,
+      "estimated_cost_usd": 0.102157,
+      "final_category": "HANDLE_TIME_INCREASE",
+      "final_correct": true,
+      "first_pass_category": "HANDLE_TIME_INCREASE",
+      "first_pass_correct": true,
+      "incident_id": "CC-003",
+      "termination_reason": "first_pass_finalized",
+      "token_usage": {
+        "input_tokens": 13412,
+        "input_tokens_details": {
+          "cache_write_tokens": 13409,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1755,
+        "output_tokens_details": {
+          "reasoning_tokens": 623
+        },
+        "total_tokens": 15167
+      },
+      "tool_call_count": 0,
+      "triggers": []
+    },
+    {
+      "category_changed": false,
+      "diagnosis_changed": false,
+      "duration_seconds": 23.98952120001195,
+      "escalated": false,
+      "estimated_cost_usd": 0.104402,
+      "final_category": "ROUTING_CHANGE",
+      "final_correct": true,
+      "first_pass_category": "ROUTING_CHANGE",
+      "first_pass_correct": true,
+      "incident_id": "CC-004",
+      "termination_reason": "first_pass_finalized",
+      "token_usage": {
+        "input_tokens": 13473,
+        "input_tokens_details": {
+          "cache_write_tokens": 13470,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1852,
+        "output_tokens_details": {
+          "reasoning_tokens": 805
+        },
+        "total_tokens": 15325
+      },
+      "tool_call_count": 0,
+      "triggers": []
+    },
+    {
+      "category_changed": false,
+      "diagnosis_changed": false,
+      "duration_seconds": 18.703826200013282,
+      "escalated": false,
+      "estimated_cost_usd": 0.099432,
+      "final_category": "ROUTING_CHANGE",
+      "final_correct": false,
+      "first_pass_category": "ROUTING_CHANGE",
+      "first_pass_correct": false,
+      "incident_id": "CC-005",
+      "termination_reason": "first_pass_finalized",
+      "token_usage": {
+        "input_tokens": 13459,
+        "input_tokens_details": {
+          "cache_write_tokens": 13456,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1607,
+        "output_tokens_details": {
+          "reasoning_tokens": 489
+        },
+        "total_tokens": 15066
+      },
+      "tool_call_count": 0,
+      "triggers": []
+    },
+    {
+      "category_changed": false,
+      "diagnosis_changed": false,
+      "duration_seconds": 19.848116100009065,
+      "escalated": false,
+      "estimated_cost_usd": 0.098827,
+      "final_category": "ADHERENCE_DROP",
+      "final_correct": true,
+      "first_pass_category": "ADHERENCE_DROP",
+      "first_pass_correct": true,
+      "incident_id": "CC-007",
+      "termination_reason": "first_pass_finalized",
+      "token_usage": {
+        "input_tokens": 13410,
+        "input_tokens_details": {
+          "cache_write_tokens": 13407,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1589,
+        "output_tokens_details": {
+          "reasoning_tokens": 448
+        },
+        "total_tokens": 14999
+      },
+      "tool_call_count": 0,
+      "triggers": []
+    },
+    {
+      "category_changed": false,
+      "diagnosis_changed": false,
+      "duration_seconds": 30.49962049999158,
+      "escalated": false,
+      "estimated_cost_usd": 0.105992,
+      "final_category": "PLATFORM_INCIDENT",
+      "final_correct": true,
+      "first_pass_category": "PLATFORM_INCIDENT",
+      "first_pass_correct": true,
+      "incident_id": "CC-009",
+      "termination_reason": "first_pass_finalized",
+      "token_usage": {
+        "input_tokens": 13475,
+        "input_tokens_details": {
+          "cache_write_tokens": 13472,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1931,
+        "output_tokens_details": {
+          "reasoning_tokens": 830
+        },
+        "total_tokens": 15406
+      },
+      "tool_call_count": 0,
+      "triggers": []
+    },
+    {
+      "category_changed": false,
+      "diagnosis_changed": true,
+      "duration_seconds": 137.67976519998047,
+      "escalated": true,
+      "estimated_cost_usd": 0.6972582,
+      "final_category": "DATA_QUALITY",
+      "final_correct": true,
+      "first_pass_category": "DATA_QUALITY",
+      "first_pass_correct": true,
+      "incident_id": "CC-012",
+      "termination_reason": "escalated:criteria_satisfied",
+      "token_usage": {
+        "input_tokens": 342873,
+        "input_tokens_details": {
+          "cache_write_tokens": 74367,
+          "cached_tokens": 267628
+        },
+        "output_tokens": 10743,
+        "output_tokens_details": {
+          "reasoning_tokens": 2265
+        },
+        "total_tokens": 353616
+      },
+      "tool_call_count": 5,
+      "triggers": [
+        "visible_metric_consistency_failure"
+      ]
+    },
+    {
+      "category_changed": false,
+      "diagnosis_changed": false,
+      "duration_seconds": 18.243532699998468,
+      "escalated": false,
+      "estimated_cost_usd": 0.097297,
+      "final_category": "DEMAND_SPIKE",
+      "final_correct": false,
+      "first_pass_category": "DEMAND_SPIKE",
+      "first_pass_correct": false,
+      "incident_id": "CC-014",
+      "termination_reason": "first_pass_finalized",
+      "token_usage": {
+        "input_tokens": 13412,
+        "input_tokens_details": {
+          "cache_write_tokens": 13409,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1512,
+        "output_tokens_details": {
+          "reasoning_tokens": 516
+        },
+        "total_tokens": 14924
+      },
+      "tool_call_count": 0,
+      "triggers": []
+    },
+    {
+      "category_changed": false,
+      "diagnosis_changed": false,
+      "duration_seconds": 18.778678300004685,
+      "escalated": false,
+      "estimated_cost_usd": 0.097827,
+      "final_category": "ROUTING_CHANGE",
+      "final_correct": true,
+      "first_pass_category": "ROUTING_CHANGE",
+      "first_pass_correct": true,
+      "incident_id": "CC-015",
+      "termination_reason": "first_pass_finalized",
+      "token_usage": {
+        "input_tokens": 13470,
+        "input_tokens_details": {
+          "cache_write_tokens": 13467,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1524,
+        "output_tokens_details": {
+          "reasoning_tokens": 367
+        },
+        "total_tokens": 14994
+      },
+      "tool_call_count": 0,
+      "triggers": []
+    }
+  ],
+  "trigger_counts": {
+    "visible_metric_consistency_failure": 1
+  }
+}

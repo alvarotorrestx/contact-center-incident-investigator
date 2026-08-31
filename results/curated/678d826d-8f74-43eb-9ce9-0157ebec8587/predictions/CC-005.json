@@ -1,0 +1,107 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "queue_misrouting",
+    "queue_capacity_imbalance",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.97,
+  "contributing_factors": [
+    "moderate_volume_increase",
+    "localized_queue_misrouting"
+  ],
+  "evidence": [
+    {
+      "finding": "Billing queue skill mappings were updated at 09:15, exactly when the incident began.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "At 09:15, Billing staffed agents fell from 12 to 9 while General Service increased from 19 to 22; those levels persisted through 11:45.",
+      "signal": "queue_staffing_imbalance",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Billing service level fell from 90.5% at 09:00 to 14.8% at 09:15 and remained frequently far below target, while General Service stayed approximately 94.4%-97.1% after the change.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Billing offered 29 calls but answered only 15 at 09:15, and offered 31 but answered 18 at 09:30; Billing ASA rose to 131.2 and 117.2 seconds respectively.",
+      "signal": "queue_accumulation",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Overall service level dropped from 93.0% at 09:00 to 67.1% at 09:15 and 59.1% at 09:30, with repeated below-target intervals afterward.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained constant at 49 throughout the window, with 44-46 productive agents and no training assignments.",
+      "signal": "stable_headcount",
+      "source": "staffing"
+    },
+    {
+      "finding": "Actual demand exceeded forecast at incident onset\u201487 versus 79 calls at 09:15 and 96 versus 79 at 09:30\u2014amplifying the routing-created Billing constraint but not explaining the persistent queue divergence.",
+      "signal": "moderate_volume_increase",
+      "source": "forecast"
+    },
+    {
+      "finding": "Aggregate AHT and transfer rates did not show a sustained increase coincident with the incident; AHT was generally at or below forecast and transfer rates remained near 6%.",
+      "signal": "no_corroborating_event",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-005",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "The 09:15 Billing skill-mapping change redistributed three staffed agents from Billing to General Service, reducing Billing staffing from 12 to 9 while General Service rose from 19 to 22. Billing then experienced severe, sustained queue-local degradation despite stable total headcount, indicating that the routing configuration created a localized capacity imbalance rather than an enterprise-wide staffing shortage.",
+  "recommended_actions": [
+    "Rollback or correct the 09:15 Billing skill-mapping change and validate all affected agent-skill assignments.",
+    "Restore sufficient Billing coverage, including the three agents shifted to General Service, and monitor Billing backlog, ASA, and service level during recovery.",
+    "Add pre-deployment validation for queue staffing distribution and skill eligibility, with alerts for abrupt queue-level staffing changes.",
+    "Require post-change monitoring and automatic rollback criteria when a routing update causes material queue-level service divergence.",
+    "Review forecast-overage contingency rules so temporary cross-skilled capacity can be directed to Billing during moderate demand increases."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Volume was moderately above forecast at onset, but later varied above and below forecast. It does not explain the exact-timestamp staffing redistribution or why Billing deteriorated while General Service remained strong."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Total scheduled and logged-in headcount remained fixed at 49 and productive staffing stayed within 44-46 agents; the shortage was localized to Billing through redistribution."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Aggregate AHT did not rise materially and was often below forecast; Billing AHT also did not remain elevated enough to explain the sustained service failure."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Adherence remained in its existing 89.8%-93.9% range and did not decline at incident onset."
+    },
+    {
+      "category": "TRAINING_CAPACITY_LOSS",
+      "reason": "Agents in training were zero throughout the evaluation window."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was supplied, and the sharply queue-specific impact aligned with a documented routing configuration change."
+    },
+    {
+      "category": "FORECAST_ERROR",
+      "reason": "Forecast variance contributed at onset but was not sustained and cannot account for the simultaneous transfer of staffing capacity away from Billing."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "The reported aggregate service-level values reconcile to the supplied formula, and offered-call counts reconcile with answered plus abandoned calls."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Queue imbalance is an immediate mechanism, but the deeper evidenced cause is the Billing routing configuration change that created the imbalance."
+    }
+  ],
+  "stakeholder_summary": "CC-005 was caused by the 09:15 Billing routing change, which shifted three staffed agents from Billing to General Service and created a localized Billing capacity imbalance. Moderate above-forecast demand amplified the initial impact, but stable total staffing, normal AHT, and strong General Service performance rule out an enterprise-wide staffing, handle-time, or platform problem."
+}

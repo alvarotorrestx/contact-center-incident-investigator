@@ -1,0 +1,98 @@
+{
+  "causal_chain": [
+    "data_quality_error",
+    "inconsistent_reported_metric",
+    "service_level_degradation",
+    "no_sustained_impact"
+  ],
+  "confidence": 0.99,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "From 09:15 through 11:45, every reported service-level value is exactly 26 percentage points below answered_within_threshold / (offered_calls - short_abandoned_calls). At 11:45, for example, 60/63 = 95.24% versus 69.24% reported.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    },
+    {
+      "finding": "The displayed metric abruptly fell from a correctly calculated 81.33% at 09:00 to 48.42% at 09:15 and remained below the 80% target for the rest of the window.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "Recalculated service level was below target at 09:15 (74.42%) and 09:45 (78.21%), but recovered to at least 85% from 10:00 onward; therefore the displayed sustained degradation was not operationally corroborated.",
+      "signal": "brief_unsustained_variance",
+      "source": "performance"
+    },
+    {
+      "finding": "Several aggregate answered-call counts exceed the sum of queue-level answered calls by three, including 09:15 (81 versus 78) and 10:15 (86 versus 83), indicating an additional aggregation consistency issue.",
+      "signal": "count_conservation_mismatch",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "During 09:15-11:45, offered demand totaled 864 calls versus 841 forecast, approximately 2.7% above forecast overall, with isolated higher intervals rather than a sustained surge.",
+      "signal": "moderate_volume_increase",
+      "source": "forecast"
+    },
+    {
+      "finding": "Logged-in staffing remained fixed at 49, productive staffing stayed at 45-46, adherence remained 91.84%-93.88%, and no agents were in training.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "No routing, platform, or other operational event was recorded to explain the exact and persistent 26-point reporting offset.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-012",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "DATA_QUALITY",
+  "primary_root_cause_detail": "Beginning at 09:15, the dashboard service-level field is systematically 26 percentage points below the value produced by the supplied metric definition. For example, 64 / (88 - 2) = 74.42%, not 48.42%; the same exact offset persists through 11:45. This reporting defect created the sustained below-target alert, although recalculated operational service level was mostly above target after the initial localized dips.",
+  "recommended_actions": [
+    "Correct the dashboard service-level calculation or transformation that applies the 26-point downward offset, then backfill affected intervals from 09:15 onward.",
+    "Add automated validation that independently recalculates service level from component counts and alerts on any material mismatch.",
+    "Reconcile aggregate answered-call counts with queue-level totals and document whether backlog answers or aggregation logic account for the three-call differences.",
+    "Continue monitoring the isolated true service-level misses and use intraday load balancing if moderate volume increases concentrate in specific queues."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Demand was only about 2.7% above forecast over the incident period and cannot explain an exact 26-point metric offset continuing through lower-volume intervals."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "All 49 scheduled agents remained logged in, with 45-46 productive agents versus only 36-40 required."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Adherence remained stable between 91.84% and 93.88%, with no incident-aligned decline."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Actual AHT generally tracked forecast and did not rise persistently at incident onset."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "No routing-change event was supplied, and queue patterns do not account for the uniform dashboard offset."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Some queues experienced episodic service variation, but staffing by queue remained constant and the variation cannot produce the exact aggregate reporting error."
+    },
+    {
+      "category": "TRAINING_CAPACITY_LOSS",
+      "reason": "Agents in training remained zero throughout the window."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event or call-processing disruption was recorded."
+    },
+    {
+      "category": "FORECAST_ERROR",
+      "reason": "Aggregate demand variance was modest and staffing exceeded forecast requirements throughout the window."
+    }
+  ],
+  "stakeholder_summary": "CC-012 was a confirmed dashboard data-quality incident, not a sustained operational service failure. The reported service level was understated by exactly 26 percentage points from 09:15 through 11:45. Recalculation shows brief genuine misses early in the period but recovery to at least 85% from 10:00 onward. Staffing was stable and above forecast requirements; modestly elevated volume was contributory only."
+}

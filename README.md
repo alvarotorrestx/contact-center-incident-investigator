@@ -127,6 +127,34 @@ use the Stage 0 complete-context structured analyst as the default reasoning pat
 the deterministic tools, V2 ledger workflow, and trajectories as an optional deep-investigation
 and audit mode. The V3 verifier remains removed.
 
+## Adaptive escalation experiment
+
+The final reasoning experiment kept the Stage 0 complete-context analyst as the first pass and
+invoked complete-context V2 investigation only when the frozen generic deterministic gate found
+uncertainty, insufficient structured support, a hard visible-data inconsistency, or a missing/late
+claimed causal event.
+
+```powershell
+.\.venv\Scripts\python.exe -m incident_investigator --project-root . run-adaptive
+```
+
+Official run `678d826d-8f74-43eb-9ce9-0157ebec8587` completed all ten cases with zero failures and
+scored 8/10 RCIA. It escalated only CC-012, used five tools there, changed no category, corrected no
+incorrect first pass, and harmed no correct first pass. It covered 36/40 expected evidence items,
+used 489,793 tokens, ran for 338.335 seconds, and cost an estimated $1.6058762. Because it remained
+below the Stage 0 anchor's 9/10 while costing more, Stage 0 remains the recommended default. This
+negative experiment is preserved and curated; no further reasoning-architecture experiment is
+planned before V4.
+
+## Final product reasoning decision
+
+The measured default reasoning path is the Stage 0 complete-context single-stage structured
+analyst, which remained strongest at 9/10 RCIA. V2 deterministic tools and the hypothesis ledger
+are retained only as an optional deep-investigation, drill-down, and audit capability. V3
+verification and adaptive escalation are preserved as measured negative experiments and are not
+default product behavior. No further reasoning experiments are planned or authorized; V4 is
+limited to product/UI quality and presentation.
+
 ## Local API and UI
 
 ```powershell
@@ -134,6 +162,6 @@ and audit mode. The V3 verifier remains removed.
 corepack pnpm --dir frontend dev
 ```
 
-The existing API still exposes only the Stage 0 `baseline` system version. V1/V2/V3 and final-
-candidate experiments run through the CLI; polished V4 product UI work requires separate phase
-approval.
+The existing API still exposes only the Stage 0 `baseline` system version. V1/V2/V3, final-
+candidate, and adaptive experiments run through the CLI; polished V4 product UI work requires
+separate phase approval.

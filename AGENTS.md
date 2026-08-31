@@ -13,12 +13,14 @@ If `TONIGHT_PLAN.md` is present locally, it is an internal execution aid only. I
 
 The project documents above define the intended product, benchmark, evaluation methodology, and agent architecture.
 
-## Authorization State: FINAL CANDIDATE EXPERIMENT COMPLETE — AWAITING V4 APPROVAL
+## Authorization State: ADAPTIVE EXPERIMENT COMPLETE — AWAITING V4 APPROVAL
 
 Stage 0 is frozen and complete. V1 tool use, V2 structured-hypothesis investigation, and V3
 adversarial verification implementations and their measured ten-case experiments are complete. The
 final-candidate experiment composing V2 discipline with baseline-equivalent initial information
-visibility is also complete. The project is awaiting explicit approval to begin V4.
+visibility is also complete. One final adaptive-escalation reasoning experiment is explicitly
+authorized and is now complete, validated, measured once, and curated. The project is awaiting
+explicit approval to begin V4.
 
 V4 and all later implementation remain **NO-GO** without explicit user approval. V3 was limited to
 the preserved V2 workflow, one tool-free adversarial verifier, structured contradiction findings,
@@ -32,6 +34,13 @@ matched evidence reproduction, and evidence curation are allowed. Do not begin V
 add multi-agent voting or unrestricted recursive critique, or change the frozen benchmark, ground
 truth, scoring behavior, taxonomy, output schema, baseline behavior, model configuration, or
 historical experimental artifacts without explicit approval.
+
+The completed adaptive experiment used the unchanged Stage 0 complete-context analyst as a first
+pass, a frozen deterministic evaluator-independent escalation gate, and the preserved V2 structured
+tool workflow only for escalated cases. It excluded the V3 verifier, revision loop, multi-agent
+voting, and always-on deep investigation. Its one official ten-case run is preserved and curated.
+No further reasoning-architecture experiment is authorized. V4 and later implementation remain
+NO-GO without explicit user approval.
 
 ## Strict GO / NO-GO Phase Gates
 

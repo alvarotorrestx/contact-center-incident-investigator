@@ -5,7 +5,10 @@ Purposeful components only. Add architecture when it addresses an observed failu
 
 The React/Vite frontend is a presentation layer only. Agent reasoning, deterministic analysis tools, benchmark execution, and evaluation live in the Python/FastAPI backend.
 
-Target architecture:
+## A. Final Default Product Architecture
+
+The measured winning default is the Stage 0 complete-context single-stage structured analyst. It
+scored 9/10 RCIA, outperforming every more agentic configuration tested.
 
 ```text
 React/Vite UI
@@ -14,26 +17,46 @@ React/Vite UI
 FastAPI API
      |
      v
-Incident
-   |
-   v
-Investigator Agent
-   |
-   +--> deterministic Python analysis tools
-   |
-   v
-Hypothesis Ledger
-   |
-   v
-Proposed Diagnosis
-   |
-   v
-Verifier Agent
-   |
-   +--> VERIFIED --> Reporting Stage --> API response --> React UI
-   |
-   +--> REVISE ----> Investigator (bounded loop)
+Complete visible incident context
+     |
+     v
+Single-stage structured analyst
+     |
+     v
+Structured diagnosis/report
+     |
+     v
+React UI
 ```
+
+## B. Optional Deep-Investigation / Audit Mode
+
+The V2 workflow remains available when an analyst explicitly needs deeper deterministic drill-down
+or a richer audit trail.
+
+```text
+Complete visible incident context
+     |
+     v
+V2 structured investigator
+     |
+     +--> deterministic tools
+     |
+     +--> hypothesis ledger
+     |
+     v
+Structured diagnosis / audit trail
+```
+
+This path is retained for auditability and deeper investigation, but it is not the default because
+its 7/10 RCIA did not beat the Stage 0 anchor and it required substantially more runtime, tokens,
+and estimated cost.
+
+## C. Removed Experiment Summary
+
+The V3 adversarial verifier is not part of the final product architecture. It corrected no
+diagnosis, left RCIA unchanged from V2 at 7/10, and added substantial runtime, token, and cost
+overhead. Its design and measured evidence remain documented below for auditability.
 
 ## Stage 0 — Baseline
 One general-purpose contact-center operations analyst receives:
@@ -52,7 +75,10 @@ No:
 
 This is intended to be a reasonable basic AI implementation, not a weak strawman.
 
-## Investigator Agent
+## Experimental Tool-Using Investigator
+The sections below document the V1–V3 experiments and the retained optional V2 audit mode; they do
+not replace the final default architecture above.
+
 Goal: determine what caused the incident and prove it.
 
 Responsibilities:
@@ -118,6 +144,43 @@ CC-014 relative to that anchor. The default final reasoning architecture should 
 the complete-context single-stage structured analyst. Retain tools, the ledger workflow, and rich
 trajectories as an optional deep-investigation/audit path. Do not retain the V3 verifier.
 
+### Adaptive Escalation Experiment
+
+The final pre-V4 reasoning experiment keeps the Stage 0 complete-context structured analyst as the
+first pass and selectively invokes the preserved V2 complete-context tool/ledger workflow. The
+adaptive path has system version `adaptive_escalation`; it has no verifier and no revision loop.
+
+The deterministic gate is frozen as `adaptive_gate_1` before the official run. It escalates when
+one or more of these generic checks triggers:
+
+1. the first-pass status is `INCONCLUSIVE`;
+2. first-pass confidence is below `0.70`;
+3. structured support contains fewer than two distinct canonical evidence signals or fewer than
+   two distinct visible sources;
+4. visible counts fail `offered = answered + abandoned`, or recalculated service level differs
+   from the reported value by more than `1.0` percentage point in any interval;
+5. an event-dependent diagnosis (`ROUTING_CHANGE`, `PLATFORM_INCIDENT`, or
+   `TRAINING_CAPACITY_LOSS`) or structured routing/platform event claim has no matching visible
+   event at or before incident onset.
+
+The gate uses only the current first-pass `FinalDiagnosis` and already-loaded `VisibleCase`. It does
+not read incident-specific rules, historical predictions, benchmark scores, ground truth,
+supported-signal allowlists, or evaluator feedback. Direct cases preserve the first-pass diagnosis.
+Escalated cases receive the complete visible case plus the first-pass diagnosis explicitly labeled
+as an unverified starting hypothesis, then use V2 tools, ledger, termination discipline, and the
+unchanged ten-call bound. The deep path may retain or revise the diagnosis solely from visible
+evidence.
+
+Official run `678d826d-8f74-43eb-9ce9-0157ebec8587` escalated only CC-012 on the hard visible-metric
+consistency check. The deep path used five tools and retained the correct `DATA_QUALITY` category;
+it corrected no first-pass category and harmed none. The system scored 8/10 RCIA, with CC-005 and
+CC-014 incorrect, versus 9/10 for the Stage 0 anchor. It consumed 489,793 tokens, ran for 338.335
+seconds, and cost an estimated $1.6058762. Selective escalation reduced cost and runtime materially
+versus always-on V2, but it did not recover the Stage 0 quality anchor and cost more than Stage 0.
+Preserve this as a measured negative experiment. The final default reasoning architecture remains
+the Stage 0 complete-context single-stage analyst; V2 tools/ledger remain an optional audit path,
+and V3 remains removed.
+
 ## Deterministic Python Tools
 Initial tool set:
 
@@ -174,7 +237,12 @@ Suggested statuses:
 - UNLIKELY
 - REJECTED
 
-## Verifier Agent
+## Removed Experiment — Adversarial Verifier
+
+This V3 component is preserved as historical experiment documentation only. It is not part of the
+final product architecture because it corrected no diagnosis and added substantial runtime, token,
+and cost overhead.
+
 Goal: try to disprove the proposed diagnosis rather than solve the incident from scratch.
 
 Checks:
@@ -208,13 +276,14 @@ or
 }
 ```
 
-## Revision Limits
+## Historical V3 Revision Limits
 - Suggested maximum investigation tool calls: 10–12.
 - Suggested maximum verifier-driven revisions: 2.
 - Workflow must be able to return INCONCLUSIVE rather than loop indefinitely or invent certainty.
 
 ## Reporting Stage
-Runs only after verification/finalization.
+Runs after the selected reasoning path finalizes its structured diagnosis. In the removed V3
+experiment, it ran after verification/finalization.
 
 It may not invent new findings.
 
@@ -297,6 +366,16 @@ Measured outcome: preserve V3 as a removed experiment; it did not improve V2.
 ### Final Candidate — Full Context + V2 Discipline
 Supply every agent-visible table initially while retaining V2 tools, ledger, and termination
 discipline. Measured outcome: 8/10 RCIA, better than V2 but below the 9/10 Stage 0 anchor.
+
+### Adaptive Escalation — Complete-Context First Pass + Selective V2
+
+Keep the Stage 0 presentation as the default and invoke complete-context V2 investigation only
+when the frozen deterministic gate finds uncertainty, insufficient independent support, a hard
+visible-data inconsistency, or a missing/late claimed causal event. Run one configuration-matched
+ten-case experiment, then end reasoning-architecture experimentation regardless of the result.
+
+Measured outcome: 8/10 RCIA with one escalation, below the Stage 0 anchor. Preserve the experiment
+but do not promote it. No further reasoning-architecture experiment is planned or authorized.
 
 ### V4 — Product Quality
 Add the polished React investigation experience and presentation improvements.

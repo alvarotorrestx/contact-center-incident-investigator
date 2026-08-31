@@ -170,6 +170,26 @@ The official final-candidate run is `9730ac8f-89d6-4102-acef-528d9027d80e`. It r
 retained V2 discipline and tools, and supplied every visible table initially. It scored 8/10 RCIA
 and must be compared against Stage 0, V1, V2, and V3 using the unchanged deterministic scorer.
 
+The final reasoning experiment is `adaptive_escalation`: run the unchanged Stage 0-style
+complete-context first pass on every case, apply the frozen deterministic `adaptive_gate_1`, and
+invoke complete-context V2 investigation only for triggered cases. The gate criteria are fixed
+before live execution: `INCONCLUSIVE`; confidence below 0.70; fewer than two distinct structured
+evidence signals or sources; any count-conservation failure or service-level recomputation error
+over 1.0 percentage point; or a missing/late visible event for an event-dependent diagnosis or
+structured routing/platform event claim. The gate may not access incident-specific rules,
+historical predictions, ground truth, supported-signal allowlists, scores, or evaluator feedback.
+Run exactly one official benchmark v1 experiment with `gpt-5.6-sol` and medium reasoning, then stop
+reasoning-architecture experimentation regardless of the result.
+
+Official adaptive run `678d826d-8f74-43eb-9ce9-0157ebec8587` completed 10/10 cases with zero
+failures. It escalated one case (CC-012) on `visible_metric_consistency_failure`, finalized nine
+directly, changed no category, corrected no incorrect first pass, and harmed no correct first pass.
+It scored 8/10 RCIA, 36/40 expected-evidence coverage, 34/80 non-allowlisted evidence, 0.400
+contributor exact accuracy, 0.250 precision, 1.000 recall, 0.400 F1, and 1.500/2 mean causal
+reasoning. Runtime was 338.335 seconds, usage was 489,793 tokens, and estimated cost was $1.6058762.
+It trails Stage 0 on RCIA and causal reasoning while costing more, so Stage 0 remains the final
+default reasoning architecture. No further reasoning-architecture experiment is permitted.
+
 ## Reproducibility Controls
 Record:
 - model and exact version/name

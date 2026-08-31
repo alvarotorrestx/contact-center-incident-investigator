@@ -1,0 +1,115 @@
+{
+  "causal_chain": [
+    "increased_aht",
+    "reduced_throughput",
+    "capacity_deficit",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.98,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "AHT increased abruptly from 368 seconds at 09:00 to 458 seconds at 09:15, then remained between 480 and 574 seconds for most of the incident.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "During 09:15\u201311:45, actual AHT exceeded forecast in every interval, reaching roughly 44%\u201353% above forecast late in the window.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "Service level fell below 80% at 09:15 and remained below target through 11:45, reaching a low of 45.9% at 11:15.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "ASA rose from 32 seconds at 09:00 to 44 seconds at incident onset and reached 85 seconds at 10:45, consistent with queueing caused by reduced throughput.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Abandonments increased materially after onset, reaching 16\u201322 calls in several intervals while answered calls declined, indicating accumulating demand.",
+      "signal": "queue_accumulation",
+      "source": "performance"
+    },
+    {
+      "finding": "Staffing remained stable at 49 logged-in and 44\u201346 productive agents throughout the window, exceeding forecast requirements of 35\u201340 agents.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Queue staffing was unchanged throughout: 19 General Service, 12 Billing, 11 Account Support, and 7 Escalations agents.",
+      "signal": "stable_headcount",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "Incident-period offered volume was 868 calls versus 841 forecast, approximately 3% above forecast\u2014an aggravating increase but not a demand surge.",
+      "signal": "moderate_volume_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "AHT increased across all queues after 09:15, showing that the handle-time issue was broad rather than isolated to one queue.",
+      "signal": "aht_increase",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "No routing-change or platform-incident event was recorded.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-003",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "HANDLE_TIME_INCREASE",
+  "primary_root_cause_detail": "A sustained, system-wide increase in average handle time began with the incident. Actual AHT rose from 368 seconds at 09:00 to 458 seconds at 09:15 and reached 574 seconds by 11:45, versus forecasts of approximately 370\u2013379 seconds. This reduced throughput despite stable staffing, drove high occupancy and queue accumulation, and caused the sustained service-level decline.",
+  "recommended_actions": [
+    "Investigate the 09:15 step-change in AHT by call reason, agent, queue, talk time, hold time, and after-call work to identify the underlying process driver.",
+    "Apply real-time AHT alerts against forecast and trigger intraday capacity actions when sustained variance exceeds tolerance.",
+    "Temporarily add cross-skilled capacity, defer offline activities, and rebalance work while AHT remains elevated.",
+    "Review high-duration interactions and agent workflows for knowledge, tooling, or process friction not represented in the event log.",
+    "Retain modest volume contingency because actual demand was slightly above forecast, although it was not the primary cause."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Offered volume was only about 3% above forecast during the incident and was below forecast in several intervals; this was insufficient to explain the sustained deterioration."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "All 49 scheduled agents remained logged in, productive staffing stayed at 44\u201346, and staffing exceeded the 35\u201340 required-agent forecast."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Adherence remained broadly stable near 90%\u201394%, with no sustained decline aligned to the incident."
+    },
+    {
+      "category": "TRAINING_CAPACITY_LOSS",
+      "reason": "No agents were in training in any interval."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "No routing event was recorded, transfer rates remained stable near 6% overall, and AHT increased across all queues."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Queue outcomes varied, but fixed queue staffing and broad AHT escalation across every queue indicate a system-wide throughput issue rather than a localized capacity imbalance."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event or corroborating operational event was supplied."
+    },
+    {
+      "category": "FORECAST_ERROR",
+      "reason": "Volume forecast variance was modest; the major divergence was actual AHT from forecast, representing realized workload inflation rather than a primary demand-forecast failure."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Reported service level recalculates correctly from answered-within-threshold and eligible offered calls, and offered calls reconcile with answered plus abandoned calls."
+    }
+  ],
+  "stakeholder_summary": "CC-003 was caused primarily by a sustained, system-wide handle-time increase beginning at 09:15. Staffing and adherence remained stable and above forecast requirements, while demand was only moderately above forecast. Elevated AHT reduced throughput, created queues and abandonments, and kept service level below the 80% target for the remainder of the window."
+}

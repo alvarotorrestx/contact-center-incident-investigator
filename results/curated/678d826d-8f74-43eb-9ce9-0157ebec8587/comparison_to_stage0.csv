@@ -1,0 +1,9 @@
+metric,anchor,candidate,delta
+rcia,0.9,0.8,-0.1
+evidence_coverage,0.875,0.9,0.025
+non_allowlisted_evidence_rate,0.40789473684210525,0.425,0.017105263158
+contributing_exact_accuracy,0.2,0.4,0.2
+contributing_precision,0.2,0.25,0.05
+contributing_recall,1.0,1.0,0.0
+contributing_f1,0.33333333333333337,0.4,0.066666666667
+causal_reasoning_average,1.8,1.5,-0.3

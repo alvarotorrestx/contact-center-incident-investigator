@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     v3_max_tool_calls: int = Field(default=10, ge=1, le=12)
     v3_max_revisions: int = Field(default=2, ge=1, le=2)
     final_candidate_max_tool_calls: int = Field(default=10, ge=1, le=12)
+    adaptive_max_tool_calls: int = Field(default=10, ge=1, le=12)
     benchmark_version: str = "v1"
 
     @property

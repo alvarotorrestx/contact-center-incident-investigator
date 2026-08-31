@@ -64,6 +64,7 @@ class StructuredHypothesisRunner:
         system_version: str = "v2_structured_hypothesis_investigator",
         prompt_builder: PromptBuilder = build_v2_prompt,
         information_presentation: str = "metadata_initially; visible_tables_via_tools",
+        trajectory_step_offset: int = 0,
     ):
         if not 1 <= max_tool_calls <= 12:
             raise ValueError("max_tool_calls must be between 1 and 12")
@@ -80,6 +81,8 @@ class StructuredHypothesisRunner:
             or verifier_client.reasoning_effort != client.reasoning_effort
         ):
             raise ValueError("Investigator and verifier must use the same model configuration")
+        if trajectory_step_offset < 0:
+            raise ValueError("trajectory_step_offset must be non-negative")
         self.loader = loader
         self.client = client
         self.store = store
@@ -91,6 +94,7 @@ class StructuredHypothesisRunner:
         self.system_version = system_version
         self.prompt_builder = prompt_builder
         self.information_presentation = information_presentation
+        self.trajectory_step_offset = trajectory_step_offset
 
     def run_case(self, incident_id: str) -> V2RunResult:
         started = perf_counter()
@@ -98,7 +102,7 @@ class StructuredHypothesisRunner:
         toolbox = CaseToolbox(case)
         prompt = self.prompt_builder(case, toolbox, self.store.project_root, self.max_tool_calls)
         ledger = HypothesisLedger()
-        step_number = 1
+        step_number = 1 + self.trajectory_step_offset
         self.store.append_trajectory(
             incident_id,
             {

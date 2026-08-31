@@ -1,0 +1,112 @@
+{
+  "causal_chain": [
+    "routing_change",
+    "increased_transfers",
+    "increased_aht",
+    "reduced_throughput",
+    "capacity_deficit",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.97,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Routing configuration version 24.7 was deployed to all queues at 09:15, matching the incident start exactly.",
+      "signal": "routing_change_event",
+      "source": "events"
+    },
+    {
+      "finding": "Aggregate transfer rate increased abruptly from approximately 6% before deployment to 13.49% at 09:15 and remained near 13% through 11:45.",
+      "signal": "transfer_rate_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "AHT rose from 376.55 seconds at 09:00 to 527.91 seconds at 09:15 and remained roughly 498\u2013535 seconds afterward, materially reducing throughput.",
+      "signal": "aht_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Service level fell from 88.24% at 09:00 to 44.71% at 09:15 and remained below the 80% target for every subsequent interval.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "ASA increased from 33.75 seconds at 09:00 to 80.91 seconds at 09:15 and remained elevated, reaching 94.23 seconds at 10:30.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "At deployment, all queues showed simultaneous transfer-rate and AHT increases, with service levels falling to 52.78% in General Service, 40.91% in Billing, 36.84% in Account Support and 37.5% in Escalations.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "All 49 scheduled agents remained logged in throughout the window, while productive staffing stayed within 44\u201346 agents and training remained zero.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Volume was moderately above forecast after deployment\u2014for example, 88 versus 79 calls at 09:15 and 95 versus 78 at 10:30\u2014adding pressure but not accounting for the abrupt transfer and AHT shifts.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "From 09:15 onward, answered calls consistently trailed offered calls, with 13\u201331 abandons in most intervals and occupancy frequently at 100%, demonstrating sustained congestion.",
+      "signal": "queue_accumulation",
+      "source": "performance"
+    }
+  ],
+  "incident_id": "CC-015",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "ROUTING_CHANGE",
+  "primary_root_cause_detail": "Routing configuration version 24.7 was deployed at 09:15, exactly when transfer rates and AHT increased across all queues. The resulting loss of throughput drove sustained queueing, higher ASA and service-level degradation despite stable staffing. Moderately above-forecast volume amplified the impact but does not explain the abrupt, deployment-aligned operational shift.",
+  "recommended_actions": [
+    "Roll back or disable routing configuration version 24.7 and verify recovery of transfer rate, AHT, ASA and service level by queue.",
+    "Compare version 24.7 with the prior routing configuration, focusing on skill mappings, transfer rules, escalation paths and unintended routing loops.",
+    "Run pre-production call-path tests and transfer-rate guardrails before redeployment, with automatic rollback thresholds tied to AHT, transfers and service level.",
+    "Use temporary overflow routing or cross-skilled staffing to drain accumulated demand while the configuration is corrected.",
+    "Review forecast variance and add short-term staffing flexibility for moderate above-forecast volume, while keeping this separate from remediation of the primary routing defect."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Actual volume was moderately above forecast in several intervals, but the increases were insufficient to explain the immediate doubling of transfer rates and roughly 40% AHT increase exactly at deployment."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in staffing remained fixed at 49, and productive staffing stayed within its pre-incident range."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "AHT was a major mechanism of service degradation, but its simultaneous onset with the routing deployment and transfer-rate jump supports treating it as a downstream effect rather than the deepest cause."
+    },
+    {
+      "category": "ADHERENCE_DROP",
+      "reason": "Adherence remained approximately 90\u201394%, consistent with pre-incident levels, with no sustained decline at 09:15."
+    },
+    {
+      "category": "TRAINING_CAPACITY_LOSS",
+      "reason": "No agents were in training during any interval."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Degradation and transfer increases appeared across all queues rather than being isolated to one mismatched queue, and queue staffing did not change."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was reported; the only corroborating operational event was the routing deployment."
+    },
+    {
+      "category": "FORECAST_ERROR",
+      "reason": "Forecast misses contributed some excess demand, but performance deteriorated abruptly through transfer and handling changes even where actual volume was close to forecast."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "The reported service-level values reconcile with the supplied formula, and offered calls reconcile with answered plus abandoned calls."
+    }
+  ],
+  "stakeholder_summary": "The incident was caused by routing configuration version 24.7. Its 09:15 deployment coincided exactly with a broad transfer-rate increase, sharply higher AHT and sustained service-level failure across all queues. Staffing remained stable; moderately elevated volume increased the severity but was not the primary cause."
+}

@@ -50,6 +50,10 @@ def main() -> None:
         "run-final-candidate",
         help="Run V2 discipline with baseline-equivalent initial visible context",
     )
+    subparsers.add_parser(
+        "run-adaptive",
+        help="Run the complete-context first pass with deterministic selective escalation",
+    )
     evaluate = subparsers.add_parser("evaluate", help="Score saved predictions")
     evaluate.add_argument("--run-id", required=True)
     serve = subparsers.add_parser("serve", help="Run the local FastAPI server")
@@ -118,6 +122,22 @@ def main() -> None:
         print(
             json.dumps(
                 {"run_id": run_id, "scores": scores, "comparisons": comparisons},
+                indent=2,
+            )
+        )
+    elif args.command == "run-adaptive":
+        from incident_investigator.adaptive_escalation.batch import run_live_adaptive
+        from incident_investigator.config import get_settings
+
+        run_id, scores, comparisons, analysis = run_live_adaptive(get_settings(project_root))
+        print(
+            json.dumps(
+                {
+                    "run_id": run_id,
+                    "scores": scores,
+                    "comparisons": comparisons,
+                    "adaptive_analysis": analysis,
+                },
                 indent=2,
             )
         )

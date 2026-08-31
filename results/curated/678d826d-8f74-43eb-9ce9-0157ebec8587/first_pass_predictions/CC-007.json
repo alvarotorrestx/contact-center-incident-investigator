@@ -1,0 +1,107 @@
+{
+  "causal_chain": [
+    "adherence_drop",
+    "reduced_productive_staffing",
+    "capacity_deficit",
+    "staffing_shortfall",
+    "reduced_throughput",
+    "queue_growth",
+    "service_level_degradation"
+  ],
+  "confidence": 0.98,
+  "contributing_factors": [
+    "moderate_volume_increase"
+  ],
+  "evidence": [
+    {
+      "finding": "Adherence dropped from 91.8% at 09:00 to 73.5% at 09:15, declined further to 59.2% by 10:30, and ended at 55.1%.",
+      "signal": "adherence_decline",
+      "source": "staffing"
+    },
+    {
+      "finding": "Productive staffing fell from 45 agents at 09:00 to 36 at incident onset, reached 29 at the 10:30 performance low, and ended at 27.",
+      "signal": "productive_staffing_drop",
+      "source": "staffing"
+    },
+    {
+      "finding": "Scheduled and logged-in staffing remained constant at 49 agents, showing that the capacity loss came from adherence/productivity rather than absent headcount.",
+      "signal": "stable_headcount",
+      "source": "staffing"
+    },
+    {
+      "finding": "Service level fell from 93.0% at 09:00 to 50.6% at 09:15 and remained below the 80% target through 11:45, reaching 25.5% at 10:30.",
+      "signal": "service_level_decline",
+      "source": "performance"
+    },
+    {
+      "finding": "ASA increased from 23.2 seconds at 09:00 to 80.2 seconds at incident onset and peaked at 111.7 seconds at 10:30.",
+      "signal": "asa_increase",
+      "source": "performance"
+    },
+    {
+      "finding": "Abandoned calls rose materially during the capacity deficit, including 22 at 09:15 and 41 at 10:30, while occupancy remained at 100% for most of the incident.",
+      "signal": "queue_accumulation",
+      "source": "performance"
+    },
+    {
+      "finding": "Incident-period offered volume was 879 calls versus 841 forecast, about 4.5% above forecast overall; this added pressure but was not large enough to explain the sustained collapse without the productive-staffing loss.",
+      "signal": "actual_above_forecast",
+      "source": "forecast"
+    },
+    {
+      "finding": "Queue results varied by interval, but degradation affected multiple queues and coincided with the center-wide productive-capacity decline rather than an isolated queue failure.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    }
+  ],
+  "incident_id": "CC-007",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "ADHERENCE_DROP",
+  "primary_root_cause_detail": "The sustained service-level failure was primarily caused by collapsing schedule adherence, which reduced productive staffing despite all 49 scheduled agents remaining logged in. Adherence fell from approximately 92% before the incident to 73.5% at 09:15 and ultimately 55.1%; productive agents fell from 45 to 36 at incident onset and then to 27, below the forecast requirement of 36\u201340 agents.",
+  "recommended_actions": [
+    "Investigate the activity states and operational behaviors responsible for the adherence decline beginning at 09:15.",
+    "Configure real-time alerts for abrupt adherence and productive-agent losses, not only logged-in headcount.",
+    "Restore productive staffing to at least the interval requirement of 36\u201340 agents through adherence recovery or approved intraday reallocation.",
+    "Use intraday demand monitoring and contingency staffing to absorb moderate forecast variance while queues recover.",
+    "Review queue-level load and cross-skill options during recovery to prevent localized backlogs from amplifying the center-wide deficit."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Volume was only about 4.5% above forecast across the incident period. Individual intervals were elevated, but the sustained deterioration tracked the much larger decline in productive staffing."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "There was no scheduled or logged-in headcount shortfall: both remained at 49. The deeper cause of the effective capacity deficit was reduced adherence."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Actual center AHT remained broadly stable and close to forecast, with no sustained increase corresponding to the incident."
+    },
+    {
+      "category": "ROUTING_CHANGE",
+      "reason": "No routing-change event was supplied, and queue totals reconcile with center-level offered and answered volumes."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Queue performance diverged at times, but staffing allocations were stable and poor results rotated across several queues; this is better explained by the center-wide productive-capacity deficit."
+    },
+    {
+      "category": "TRAINING_CAPACITY_LOSS",
+      "reason": "Agents in training remained zero throughout the evaluation window."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was recorded, and calls continued to be processed without corroborating AHT or transfer-rate disruption."
+    },
+    {
+      "category": "FORECAST_ERROR",
+      "reason": "The aggregate volume miss was moderate, forecast AHT was accurate, and forecast required staffing was available in logged-in headcount but not in productive staffing."
+    },
+    {
+      "category": "DATA_QUALITY",
+      "reason": "Reported service levels recalculate correctly under the supplied metric definition, and offered calls reconcile to answered plus abandoned calls."
+    }
+  ],
+  "stakeholder_summary": "CC-007 was caused by a confirmed, sustained adherence collapse that reduced productive staffing from 45 agents before the incident to 27, even though all 49 scheduled agents remained logged in. This created a capacity deficit against the 36\u201340 agent requirement, drove queue growth and ASA higher, and held service level below target. Volume was moderately above forecast and contributed pressure, but was not the primary cause."
+}

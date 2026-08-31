@@ -14,6 +14,7 @@ STAGE0_ANCHOR_RUN_ID = "02b97b0d-d68e-45f8-b678-386f7558dd02"
 V1_RUN_ID = "7fcf7453-609e-4006-8a72-cd1a6b26bcff"
 V2_RUN_ID = "d3859d8d-b252-426a-970e-89a471a5fe7c"
 V3_RUN_ID = "5324184e-c646-456c-b58b-8e1c2e89a2fc"
+FINAL_CANDIDATE_RUN_ID = "9730ac8f-89d6-4102-acef-528d9027d80e"
 
 
 def _load_json(path: Path) -> dict[str, Any]:

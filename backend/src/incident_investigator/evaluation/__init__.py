@@ -1,4 +1,5 @@
 from .comparison import (
+    FINAL_CANDIDATE_RUN_ID,
     STAGE0_ANCHOR_RUN_ID,
     V1_RUN_ID,
     V2_RUN_ID,
@@ -12,6 +13,7 @@ from .scoring import BenchmarkScores, PerCaseScore, score_benchmark, score_predi
 
 __all__ = [
     "BenchmarkScores",
+    "FINAL_CANDIDATE_RUN_ID",
     "GroundTruth",
     "GroundTruthLoader",
     "PerCaseScore",

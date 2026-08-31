@@ -1,0 +1,75 @@
+{
+  "causal_chain": [
+    "data_quality_error",
+    "inconsistent_reported_metric",
+    "service_level_degradation",
+    "no_sustained_impact"
+  ],
+  "confidence": 0.99,
+  "contributing_factors": [],
+  "evidence": [
+    {
+      "finding": "Every interval from 09:15 through 11:45 was reported exactly 26.0 percentage points below answered_within_threshold / (offered_calls - short_abandoned_calls); earlier intervals matched the formula.",
+      "signal": "service_level_recalculation_mismatch",
+      "source": "performance"
+    },
+    {
+      "finding": "Recalculated service level was below 80% only at 09:15 and 09:45 and remained at least 85% from 10:00 onward, contradicting the displayed sustained degradation.",
+      "signal": "brief_unsustained_variance",
+      "source": "performance"
+    },
+    {
+      "finding": "Incident-period offered volume averaged only 0.18% above forecast, with alternating positive and negative interval variances rather than a sustained surge.",
+      "signal": "stable_demand",
+      "source": "forecast"
+    },
+    {
+      "finding": "All 49 scheduled agents remained logged in; productive staffing stayed at 45\u201346, adherence remained between 91.84% and 93.88%, and no agents were in training.",
+      "signal": "stable_staffing",
+      "source": "staffing"
+    },
+    {
+      "finding": "Account Support showed localized degradation, but Billing improved and General Service remained strong; unchanged queue staffing and divergent outcomes do not explain the uniform aggregate offset.",
+      "signal": "queue_service_level_divergence",
+      "source": "queue_performance"
+    },
+    {
+      "finding": "No platform, routing, or other operational event was recorded during the incident-and-after window.",
+      "signal": "no_corroborating_event",
+      "source": "events"
+    }
+  ],
+  "incident_id": "CC-012",
+  "investigation_status": "CONFIRMED",
+  "primary_root_cause_category": "DATA_QUALITY",
+  "primary_root_cause_detail": "Beginning exactly at the 09:15 incident boundary, the reported service-level field became 26.0 percentage points lower than the value calculated using the supplied metric definition. The fixed discrepancy persisted through all 11 incident intervals, creating a sustained below-target dashboard alert even though recalculated service recovered from 10:00 onward.",
+  "recommended_actions": [
+    "Correct the dashboard calculation or transformation applying the 26-point downward offset and backfill affected intervals from 09:15 onward.",
+    "Add automated reconciliation between reported service level and an independent calculation from component counts.",
+    "Monitor Account Support separately and rebalance capacity if its localized service deterioration recurs.",
+    "Preserve interval-level validation alerts so reporting defects are distinguished from genuine operational misses."
+  ],
+  "rejected_hypotheses": [
+    {
+      "category": "DEMAND_SPIKE",
+      "reason": "Volume averaged only 0.18% above forecast during the incident; isolated elevated intervals cannot explain a fixed 26-point reporting offset."
+    },
+    {
+      "category": "STAFFING_SHORTFALL",
+      "reason": "Scheduled and logged-in staffing remained 49, with productive staffing stable at 45\u201346 and no training-related capacity loss."
+    },
+    {
+      "category": "HANDLE_TIME_INCREASE",
+      "reason": "Incident-period AHT averaged 0.59% below forecast and was 3.24% below forecast at onset, so no sustained increase preceded the alert."
+    },
+    {
+      "category": "QUEUE_IMBALANCE",
+      "reason": "Localized queue variation contributed to brief genuine misses, but queue staffing was unchanged and the variation cannot produce the identical aggregate reporting discrepancy."
+    },
+    {
+      "category": "PLATFORM_INCIDENT",
+      "reason": "No platform event was recorded, recalculated service recovered, and queues did not exhibit a broad simultaneous collapse."
+    }
+  ],
+  "stakeholder_summary": "CC-012 was a confirmed dashboard data-quality incident rather than a sustained center-wide service failure. An exact 26-point reporting understatement began at 09:15. Genuine service misses were brief, and recalculated service remained at or above 85% from 10:00 onward. Demand, AHT, staffing, queue-wide imbalance, and platform disruption were not primary causes."
+}
