@@ -2,6 +2,8 @@
 
 Built by Alvaro Torres for the micro1 Frontier Engineering Challenge 2026
 
+**Demo video:** [Watch the project walkthrough](https://www.youtube.com/watch?v=RNXo3g1WeTI)
+
 The project now includes a polished React/FastAPI investigation experience over a deterministic
 ten-case synthetic benchmark. The product presents incident impact, a structured diagnosis,
 supporting evidence, causal reasoning, queue and capacity context, rejected alternatives,
@@ -15,8 +17,8 @@ adaptive escalation remain removed experiments rather than active product modes.
 The benchmark is intentionally frozen at `benchmark/v1`. Do not change cases after observing model
 predictions to improve a score. Genuine benchmark defects require documentation and a new version.
 
-Reasoning experiments and V4 product/UI work are complete. The repository is now in submission
-packaging and cleanup; no further reasoning experiment is planned or authorized.
+Reasoning experiments and V4 product/UI work are complete. The repository is submission-ready; no
+further reasoning experiment is planned or authorized.
 
 Stage 0 reports expected-evidence coverage and a non-allowlisted evidence rate. The latter counts
 predicted structured evidence IDs absent from each case's non-exhaustive `supported_signal_ids`

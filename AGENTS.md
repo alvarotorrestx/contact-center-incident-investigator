@@ -11,18 +11,19 @@ Before making architectural or implementation decisions, read:
 
 The project documents above define the intended product, benchmark, evaluation methodology, and agent architecture.
 
-## Authorization State: SUBMISSION PACKAGING COMPLETE — AWAITING VIDEO/SUBMISSION APPROVAL
+## Authorization State: SUBMISSION READY — PROJECT FROZEN
 
-Stage 0 and the measured V1–V3, final-candidate, and adaptive experiments are frozen and complete.
-V4 product-quality work is also complete: the project has a polished single-incident React/FastAPI
-experience, the Stage 0 complete-context analyst remains the default, and the preserved V2 workflow
-is exposed only as an optional deep-investigation/audit view.
+Implementation is complete. Stage 0 and the measured V1–V3, final-candidate, and adaptive reasoning
+and evaluation experiments are complete and frozen. V4 product/UI work is also complete: the
+project has a polished single-incident React/FastAPI experience, the Stage 0 complete-context
+analyst remains the default, and the preserved V2 workflow is exposed only as an optional
+deep-investigation/audit view.
 
 Repository cleanup is complete, representative trajectories are packaged, and security and
-reproducibility validation are complete. Video scripting or recording, final submission-form
-writing, deployment if any, final submission, and any later implementation remain **NO-GO**
-without explicit user approval. Do not add new reasoning experiments, multi-agent orchestration,
-V3 verification, adaptive escalation, or broad SaaS infrastructure.
+reproducibility validation are complete. The demo video is complete. Only final submission remains,
+and it is **NO-GO** without explicit user approval. Do not add new reasoning experiments,
+implementation changes, architecture changes, multi-agent orchestration, V3 verification,
+adaptive escalation, or broad SaaS infrastructure unless explicitly re-authorized.
 
 Do not change the frozen benchmark, ground truth, scoring behavior, taxonomy, output schema,
 measured prompts, model configuration, or historical experimental artifacts without separate
