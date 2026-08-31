@@ -96,6 +96,7 @@ def test_ground_truth_never_reaches_loader_or_prompt(project_root: Path) -> None
 def test_agent_and_api_modules_do_not_import_evaluator(project_root: Path) -> None:
     protected = [
         project_root / "backend" / "src" / "incident_investigator" / "api",
+        project_root / "backend" / "src" / "incident_investigator" / "presentation",
         project_root / "backend" / "src" / "incident_investigator" / "baseline" / "client.py",
         project_root / "backend" / "src" / "incident_investigator" / "baseline" / "prompting.py",
         project_root / "backend" / "src" / "incident_investigator" / "baseline" / "runner.py",

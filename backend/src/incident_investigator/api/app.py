@@ -5,7 +5,7 @@ import json
 from collections.abc import Callable
 from importlib.metadata import version
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 from fastapi import FastAPI, HTTPException
@@ -17,6 +17,7 @@ from incident_investigator.config import Settings, get_settings
 from incident_investigator.contracts import InvestigationRequest
 from incident_investigator.persistence import RunStore
 from incident_investigator.persistence.run_store import utc_now
+from incident_investigator.presentation import DemoReportService
 
 ClientFactory = Callable[[Settings], BaselineClient]
 
@@ -38,6 +39,7 @@ def create_app(
 ) -> FastAPI:
     settings = get_settings(project_root)
     loader = AgentVisibleCaseLoader(settings.cases_root)
+    report_service = DemoReportService(settings.project_root, loader)
     factory = client_factory or _default_client_factory
     application = FastAPI(title="Contact Center Incident Investigator", version=__version__)
 
@@ -53,6 +55,15 @@ def create_app(
     def get_incident(incident_id: str) -> dict[str, Any]:
         try:
             return loader.load(incident_id).model_dump(mode="json")
+        except (FileNotFoundError, ValueError) as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    @application.get("/api/demo/incidents/{incident_id}/report")
+    def get_demo_report(
+        incident_id: str, mode: Literal["default", "audit"] = "default"
+    ) -> dict[str, Any]:
+        try:
+            return report_service.build(incident_id, mode)
         except (FileNotFoundError, ValueError) as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
 

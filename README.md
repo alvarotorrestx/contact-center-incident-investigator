@@ -1,8 +1,14 @@
 # Contact Center Incident Investigator
 
-Stage 0 provides a deterministic ten-case synthetic benchmark, evaluator-isolated ground truth,
-deterministic scoring, a fair tool-free OpenAI baseline, artifact persistence, a minimal FastAPI
-API, and a React/Vite smoke interface.
+The project now includes a polished React/FastAPI investigation experience over a deterministic
+ten-case synthetic benchmark. The product presents incident impact, a structured diagnosis,
+supporting evidence, causal reasoning, queue and capacity context, rejected alternatives,
+recommended actions, a stakeholder brief, and a concise public investigation history.
+
+The measured default remains the Stage 0 complete-context single-stage analyst. The preserved V2
+tool and hypothesis-ledger workflow is available as an optional deep-investigation view for richer
+drill-down and auditability; it is not presented as a higher-accuracy tier. V3 verification and
+adaptive escalation remain removed experiments rather than active product modes.
 
 The benchmark is intentionally frozen at `benchmark/v1`. Do not change cases after observing model
 predictions to improve a score. Genuine benchmark defects require documentation and a new version.
@@ -157,11 +163,26 @@ limited to product/UI quality and presentation.
 
 ## Local API and UI
 
+Start the API and UI in separate terminals from the repository root:
+
 ```powershell
 .\.venv\Scripts\python.exe -m incident_investigator --project-root . serve
 corepack pnpm --dir frontend dev
 ```
 
-The existing API still exposes only the Stage 0 `baseline` system version. V1/V2/V3, final-
-candidate, and adaptive experiments run through the CLI; polished V4 product UI work requires
-separate phase approval.
+Open `http://localhost:5173`. The screen loads the frozen incidents and the curated,
+configuration-matched Stage 0 diagnosis immediately for a fast, repeatable demo. Select **Deep
+investigation** to inspect the preserved V2 tool decisions, hypothesis ledger, and public audit
+trail. Switch incidents at any time; the experience remains centered on one incident rather than
+benchmark scoring.
+
+**Run live analysis** is available in Standard mode and calls the existing Stage 0 production path.
+It requires `OPENAI_API_KEY` and `OPENAI_MODEL=gpt-5.6-sol` in the project-root `.env` (or process
+environment); reasoning effort remains pinned to medium. The optional deep-investigation screen
+uses curated V2 evidence and does not trigger a new model run.
+
+The V4 presentation endpoint derives KPI and queue summaries only from agent-visible case files and
+combines them with curated structured diagnoses and sanitized public trajectory events. It never
+returns evaluator scores, expected answers, supported-signal allowlists, expected causal chains, or
+other evaluator-only fields. The benchmark, scorer, prompts, reasoning implementations, and
+historical artifacts remain unchanged.

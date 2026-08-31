@@ -13,34 +13,22 @@ If `TONIGHT_PLAN.md` is present locally, it is an internal execution aid only. I
 
 The project documents above define the intended product, benchmark, evaluation methodology, and agent architecture.
 
-## Authorization State: ADAPTIVE EXPERIMENT COMPLETE — AWAITING V4 APPROVAL
+## Authorization State: V4 COMPLETE — AWAITING SUBMISSION-PREP APPROVAL
 
-Stage 0 is frozen and complete. V1 tool use, V2 structured-hypothesis investigation, and V3
-adversarial verification implementations and their measured ten-case experiments are complete. The
-final-candidate experiment composing V2 discipline with baseline-equivalent initial information
-visibility is also complete. One final adaptive-escalation reasoning experiment is explicitly
-authorized and is now complete, validated, measured once, and curated. The project is awaiting
-explicit approval to begin V4.
+Stage 0 and the measured V1–V3, final-candidate, and adaptive experiments are frozen and complete.
+V4 product-quality work is also complete: the project has a polished single-incident React/FastAPI
+experience, the Stage 0 complete-context analyst remains the default, and the preserved V2 workflow
+is exposed only as an optional deep-investigation/audit view.
 
-V4 and all later implementation remain **NO-GO** without explicit user approval. V3 was limited to
-the preserved V2 workflow, one tool-free adversarial verifier, structured contradiction findings,
-at most two verifier-driven revisions per case, verifier/revision trajectories, the configuration-
-matched ten-case experiment, and minimal supporting integration/documentation. The final candidate
-was limited to the preserved V2 tools, ledger, termination discipline, and trajectories with all
-agent-visible case data supplied initially; it explicitly excluded the V3 verifier and revision loop.
+Submission, video, deployment, and any later implementation remain **NO-GO** without explicit user
+approval. Validation, documentation/configuration cleanup, local demo execution, and preservation
+or curation of already authorized evidence are allowed. Do not add new reasoning experiments,
+multi-agent orchestration, V3 verification, adaptive escalation, or broad SaaS infrastructure.
 
-Completed-experiment validation, authorized documentation/configuration cleanup, configuration-
-matched evidence reproduction, and evidence curation are allowed. Do not begin V4 UI/product work,
-add multi-agent voting or unrestricted recursive critique, or change the frozen benchmark, ground
-truth, scoring behavior, taxonomy, output schema, baseline behavior, model configuration, or
-historical experimental artifacts without explicit approval.
-
-The completed adaptive experiment used the unchanged Stage 0 complete-context analyst as a first
-pass, a frozen deterministic evaluator-independent escalation gate, and the preserved V2 structured
-tool workflow only for escalated cases. It excluded the V3 verifier, revision loop, multi-agent
-voting, and always-on deep investigation. Its one official ten-case run is preserved and curated.
-No further reasoning-architecture experiment is authorized. V4 and later implementation remain
-NO-GO without explicit user approval.
+Do not change the frozen benchmark, ground truth, scoring behavior, taxonomy, output schema,
+measured prompts, model configuration, or historical experimental artifacts without separate
+explicit approval. V3 verification and adaptive escalation remain preserved negative experiments,
+not active product modes.
 
 ## Strict GO / NO-GO Phase Gates
 

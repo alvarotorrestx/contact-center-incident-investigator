@@ -52,7 +52,34 @@ This path is retained for auditability and deeper investigation, but it is not t
 its 7/10 RCIA did not beat the Stage 0 anchor and it required substantially more runtime, tokens,
 and estimated cost.
 
-## C. Removed Experiment Summary
+## C. V4 Product Presentation Boundary
+
+V4 adds a presentation layer without changing either reasoning path. The primary screen loads one
+frozen incident at a time and presents operational impact, diagnosis, evidence, causal chain,
+contributors, rejected alternatives, actions, stakeholder brief, and a concise public trajectory.
+
+```text
+Frozen visible case tables ----> deterministic presentation summaries --+
+                                                                        |
+Curated structured diagnosis --> public report service ----------------+--> React UI
+                                                                        |
+Curated public trajectory -----> trajectory sanitizer -----------------+
+
+Run live analysis -------------> existing Stage 0 API --------------------> React UI
+```
+
+The default demo report uses the official configuration-matched Stage 0 anchor. The optional Deep
+Investigation view reads the preserved official V2 diagnosis and public trajectory, including
+deterministic tool decisions and structured ledger states. It is an auditability/drill-down mode,
+not an accuracy tier, and it does not activate V3 verification or adaptive escalation.
+
+The report service imports no evaluator module and reads operational summaries only from
+`AgentVisibleCaseLoader`. It returns no scores, expected causes/evidence/contributors/chains,
+supported-signal allowlists, or evaluator metadata. Raw response identifiers, prompt hashes,
+token accounting, and private reasoning are also omitted from the public trajectory. Live product
+requests continue to use the unchanged Stage 0 `baseline` endpoint and contract.
+
+## D. Removed Experiment Summary
 
 The V3 adversarial verifier is not part of the final product architecture. It corrected no
 diagnosis, left RCIA unchanged from V2 at 7/10, and added substantial runtime, token, and cost
