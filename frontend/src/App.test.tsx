@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, expect, test, vi } from 'vitest'
 import App from './App'
 
@@ -63,6 +63,7 @@ function response(body: unknown, ok = true) {
 
 afterEach(() => {
   cleanup()
+  vi.useRealTimers()
   vi.restoreAllMocks()
 })
 
@@ -79,8 +80,8 @@ test('loads the polished standard investigation report', async () => {
   expect(screen.getByRole('heading', { name: /what the diagnosis is based on/i })).toBeInTheDocument()
   expect(screen.getByRole('heading', { name: /how the incident unfolded/i })).toBeInTheDocument()
   expect(screen.getByRole('heading', { name: /ready to share/i })).toBeInTheDocument()
-  expect(screen.getByText(/2 public steps/i)).toBeInTheDocument()
-  expect(screen.getByRole('button', { name: /run live analysis/i })).toBeEnabled()
+  expect(screen.getByText(/2 recorded steps/i)).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: /run fresh analysis/i })).toBeEnabled()
 })
 
 test('switches to deep investigation without presenting it as an accuracy tier', async () => {
@@ -101,8 +102,8 @@ test('switches to deep investigation without presenting it as an accuracy tier',
   fireEvent.click(screen.getByRole('button', { name: /deep investigation audit trail/i }))
 
   expect(await screen.findByRole('heading', { name: /hypothesis ledger/i })).toBeInTheDocument()
-  expect(screen.getByText(/not an accuracy tier/i)).toBeInTheDocument()
-  expect(screen.queryByRole('button', { name: /run live analysis/i })).not.toBeInTheDocument()
+  expect(screen.getByText(/not a more accurate tier/i)).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /run fresh analysis/i })).not.toBeInTheDocument()
 })
 
 test('shows an API error and retries the report', async () => {
@@ -140,9 +141,51 @@ test('runs the live standard analysis and renders its result', async () => {
   render(<App />)
   await screen.findByRole('heading', { name: /demand spike/i })
 
-  fireEvent.click(screen.getByRole('button', { name: /run live analysis/i }))
+  fireEvent.click(screen.getByRole('button', { name: /run fresh analysis/i }))
 
-  expect(await screen.findByText(/live standard analysis completed/i)).toBeInTheDocument()
+  expect(await screen.findByText(/fresh standard analysis completed/i)).toBeInTheDocument()
   expect(screen.getByRole('heading', { name: /routing change/i })).toBeInTheDocument()
   expect(screen.getByLabelText(/87 percent confidence/i)).toBeInTheDocument()
+})
+
+test('keeps the saved report visible when a fresh analysis fails', async () => {
+  vi.stubGlobal('fetch', vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input)
+    if (url === '/api/incidents') return response([incident])
+    if (url === '/api/investigations' && init?.method === 'POST') {
+      return response({ detail: 'Model access unavailable' }, false)
+    }
+    return response(report)
+  }))
+  render(<App />)
+  await screen.findByRole('heading', { name: /demand spike/i })
+
+  fireEvent.click(screen.getByRole('button', { name: /run fresh analysis/i }))
+
+  expect(await screen.findByRole('alert')).toHaveTextContent(/model access unavailable/i)
+  expect(screen.getByRole('heading', { name: /demand spike/i })).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: /retry fresh analysis/i })).toBeEnabled()
+})
+
+test('temporarily confirms when the stakeholder brief is copied', async () => {
+  const writeText = vi.fn().mockResolvedValue(undefined)
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText },
+  })
+  vi.stubGlobal('fetch', vi.fn((input: RequestInfo | URL) => {
+    return String(input) === '/api/incidents' ? response([incident]) : response(report)
+  }))
+  render(<App />)
+  await screen.findByRole('heading', { name: /ready to share/i })
+  vi.useFakeTimers()
+
+  fireEvent.click(screen.getByRole('button', { name: /copy brief/i }))
+  await act(async () => undefined)
+
+  expect(writeText).toHaveBeenCalledWith(report.diagnosis.stakeholder_summary)
+  expect(screen.getByRole('button', { name: /copied/i })).toBeInTheDocument()
+
+  act(() => vi.advanceTimersByTime(1800))
+  expect(screen.getByRole('button', { name: /copy brief/i })).toBeInTheDocument()
 })

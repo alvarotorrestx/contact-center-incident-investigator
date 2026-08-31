@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   investigate,
   listIncidents,
@@ -84,12 +84,6 @@ function ServiceTrend({ points, target }: { points: TrendPoint[]; target: number
   return (
     <div className="trend-wrap">
       <svg className="trend-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Service level trend across the incident window">
-        <defs>
-          <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#4fd1c5" stopOpacity=".28" />
-            <stop offset="1" stopColor="#4fd1c5" stopOpacity="0" />
-          </linearGradient>
-        </defs>
         {[0, 50, 100].map((tick) => <line key={tick} x1={padX} x2={width - padX} y1={y(tick)} y2={y(tick)} className="grid-line" />)}
         <rect x={x(incidentIndex)} y={padTop} width={width - padX - x(incidentIndex)} height={chartHeight} className="incident-zone" />
         <line x1={padX} x2={width - padX} y1={y(target)} y2={y(target)} className="target-line" />
@@ -111,7 +105,7 @@ function Trajectory({ items, mode }: { items: TrajectoryItem[]; mode: Investigat
     <section className="panel trajectory-panel">
       <div className="section-heading">
         <div><p className="section-kicker">Explainability</p><h2>Investigation history</h2></div>
-        <span className="subtle-badge">{items.length} public steps</span>
+        <span className="subtle-badge">{items.length} recorded steps</span>
       </div>
       <p className="section-intro">
         {mode === 'audit'
@@ -123,7 +117,7 @@ function Trajectory({ items, mode }: { items: TrajectoryItem[]; mode: Investigat
           <li key={`${item.step}-${item.title}`}>
             <div className={`timeline-marker ${item.type}`}><span>{item.step}</span></div>
             <div className="timeline-content">
-              <div className="timeline-title"><strong>{item.title}</strong><span>{item.type === 'tool' ? 'Deterministic tool' : humanize(item.type)}</span></div>
+              <div className="timeline-title"><strong>{item.title}</strong><span>{item.type === 'tool' ? 'Analysis tool' : humanize(item.type)}</span></div>
               <p>{item.summary}</p>
               {item.arguments && Object.keys(item.arguments).length > 0 && <code>{JSON.stringify(item.arguments)}</code>}
               {item.changes && item.changes.length > 0 && (
@@ -140,9 +134,28 @@ function Trajectory({ items, mode }: { items: TrajectoryItem[]; mode: Investigat
 function DiagnosisView({ report, diagnosis, trajectory, liveRunId }: { report: DemoReport; diagnosis: Diagnosis; trajectory: TrajectoryItem[]; liveRunId: string }) {
   const incident = report.incident
   const impact = report.impact
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
+  const copyResetTimer = useRef<number | null>(null)
+
+  useEffect(() => () => {
+    if (copyResetTimer.current !== null) window.clearTimeout(copyResetTimer.current)
+  }, [])
+
+  async function copyBrief() {
+    if (copyResetTimer.current !== null) window.clearTimeout(copyResetTimer.current)
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable')
+      await navigator.clipboard.writeText(diagnosis.stakeholder_summary)
+      setCopyState('copied')
+    } catch {
+      setCopyState('failed')
+    }
+    copyResetTimer.current = window.setTimeout(() => setCopyState('idle'), 1800)
+  }
+
   return (
     <div className="report" aria-live="polite">
-      {liveRunId && <div className="live-banner"><Icon name="check" /><span>Live standard analysis completed</span><code>{liveRunId}</code></div>}
+      {liveRunId && <div className="live-banner"><Icon name="check" /><span>Fresh Standard analysis completed</span><code>{liveRunId}</code></div>}
 
       <section className="overview-grid">
         <aside className="panel incident-card">
@@ -162,9 +175,9 @@ function DiagnosisView({ report, diagnosis, trajectory, liveRunId }: { report: D
         <article className="panel diagnosis-card">
           <div className="diagnosis-topline">
             <div className="status-group"><span className="status-badge">{humanize(diagnosis.investigation_status)}</span><span>Finalized diagnosis</span></div>
-            <div className="confidence" aria-label={`${Math.round(diagnosis.confidence * 100)} percent confidence`}>
-              <span className="confidence-ring" style={{ '--confidence': `${diagnosis.confidence * 360}deg` } as React.CSSProperties}><strong>{Math.round(diagnosis.confidence * 100)}</strong><small>%</small></span>
-              <span>Confidence</span>
+            <div className="confidence" aria-label={`${Math.round(diagnosis.confidence * 100)} percent confidence`} title="Model-reported certainty based on the visible operational evidence.">
+              <span className="confidence-ring"><strong>{Math.round(diagnosis.confidence * 100)}</strong><small>%</small></span>
+              <span className="confidence-copy"><span>Confidence</span><small>Model-reported certainty</small></span>
             </div>
           </div>
           <p className="section-kicker">Primary root cause</p>
@@ -195,6 +208,7 @@ function DiagnosisView({ report, diagnosis, trajectory, liveRunId }: { report: D
 
           <section className="panel causal-panel">
             <div className="section-heading"><div><p className="section-kicker">Causal reasoning</p><h2>How the incident unfolded</h2></div></div>
+            <p className="section-intro">The supported sequence from the primary cause to the service impact.</p>
             <ol className="causal-chain">{diagnosis.causal_chain.map((concept, index) => <li key={`${concept}-${index}`}><span>{index + 1}</span><strong>{humanize(concept)}</strong>{index < diagnosis.causal_chain.length - 1 && <Icon name="arrow" />}</li>)}</ol>
           </section>
 
@@ -235,9 +249,10 @@ function DiagnosisView({ report, diagnosis, trajectory, liveRunId }: { report: D
       <section className="bottom-grid">
         <section className="panel rejected-panel">
           <div className="section-heading"><div><p className="section-kicker">Alternatives considered</p><h2>Rejected explanations</h2></div><span className="subtle-badge">{diagnosis.rejected_hypotheses.length} reviewed</span></div>
+          <p className="section-intro">Plausible causes assessed but not supported as the primary explanation.</p>
           <div className="rejected-list">{diagnosis.rejected_hypotheses.map((item) => <details key={item.category}><summary><span><Icon name="check" /></span>{humanize(item.category)}</summary><p>{item.reason}</p></details>)}</div>
         </section>
-        <aside className="panel stakeholder-card"><div className="brief-icon"><Icon name="spark" /></div><p className="section-kicker">Stakeholder brief</p><h2>Ready to share</h2><blockquote>{diagnosis.stakeholder_summary}</blockquote><button type="button" className="copy-button" onClick={() => navigator.clipboard?.writeText(diagnosis.stakeholder_summary)}>Copy brief</button></aside>
+        <aside className="panel stakeholder-card"><div className="brief-icon"><Icon name="spark" /></div><p className="section-kicker">Stakeholder brief</p><h2>Ready to share</h2><blockquote>{diagnosis.stakeholder_summary}</blockquote><button type="button" className="copy-button" aria-live="polite" onClick={copyBrief}>{copyState === 'copied' ? '✓ Copied' : copyState === 'failed' ? 'Copy failed' : 'Copy brief'}</button></aside>
       </section>
 
       <Trajectory items={trajectory} mode={report.mode.id} />
@@ -259,6 +274,7 @@ export default function App() {
   const [reportLoading, setReportLoading] = useState(false)
   const [liveLoading, setLiveLoading] = useState(false)
   const [error, setError] = useState('')
+  const [liveError, setLiveError] = useState('')
   const [catalogAttempt, setCatalogAttempt] = useState(0)
   const [reportAttempt, setReportAttempt] = useState(0)
 
@@ -279,6 +295,7 @@ export default function App() {
     let active = true
     setReportLoading(true)
     setError('')
+    setLiveError('')
     setLiveResult(null)
     loadDemoReport(selected, mode).then((nextReport) => active && setReport(nextReport)).catch((reason: Error) => {
       if (active) { setReport(null); setError(reason.message) }
@@ -289,11 +306,11 @@ export default function App() {
   async function runLiveInvestigation() {
     if (!selected) return
     setLiveLoading(true)
-    setError('')
+    setLiveError('')
     try {
       setLiveResult(await investigate(selected))
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Investigation failed')
+      setLiveError(reason instanceof Error ? reason.message : 'Fresh analysis failed')
     } finally {
       setLiveLoading(false)
     }
@@ -318,16 +335,17 @@ export default function App() {
         <section className="workspace-bar" aria-label="Investigation controls">
           <div className="selector-group"><label htmlFor="incident">Incident</label><select id="incident" value={selected} disabled={catalogLoading} onChange={(event) => setSelected(event.target.value)}>{incidents.map((incident) => <option key={incident.incident_id} value={incident.incident_id}>{incident.incident_id} · {incident.date} · {incident.alert}</option>)}</select></div>
           <div className="mode-control"><span>Analysis mode</span><div className="segmented" role="group" aria-label="Analysis mode"><button type="button" className={mode === 'default' ? 'active' : ''} aria-pressed={mode === 'default'} onClick={() => setMode('default')}><span>Standard</span><small>Recommended</small></button><button type="button" className={mode === 'audit' ? 'active' : ''} aria-pressed={mode === 'audit'} onClick={() => setMode('audit')}><span>Deep investigation</span><small>Audit trail</small></button></div></div>
-          {mode === 'default' ? <button type="button" className="run-button" disabled={!selected || liveLoading || reportLoading} onClick={runLiveInvestigation}><Icon name="spark" />{liveLoading ? 'Analyzing…' : 'Run live analysis'}</button> : <div className="audit-note"><Icon name="queue" /><span>For deeper drill-down and auditability—not an accuracy tier.</span></div>}
+          {mode === 'default' ? <button type="button" className="run-button" title="Makes a new Standard analysis request for the selected incident and replaces the displayed diagnosis." disabled={!selected || liveLoading || reportLoading} onClick={runLiveInvestigation}><Icon name="spark" />{liveLoading ? 'Analyzing…' : 'Run fresh analysis'}</button> : <div className="audit-note"><Icon name="queue" /><span>Optional analyst drill-down</span></div>}
         </section>
 
-        {report && !reportLoading && <div className="mode-description"><strong>{report.mode.label}</strong><span>{report.mode.description}</span>{report.mode.is_default && <i>Default</i>}</div>}
+        {report && !reportLoading && <div className="mode-description"><strong>{report.mode.label}</strong><span>{report.mode.id === 'audit' ? 'Deeper drill-down and a richer audit trail. Optional; not a more accurate tier.' : 'Fast complete-context analysis. Recommended for everyday incident triage.'}</span>{report.mode.is_default && <i>Default</i>}{report.mode.id === 'default' && <small>Fresh analysis makes a new model request and saves the result locally.</small>}</div>}
 
         {error && <section className="error-state" role="alert"><div><strong>We couldn’t load this investigation.</strong><p>{error}</p></div><button type="button" onClick={() => incidents.length ? setReportAttempt((value) => value + 1) : setCatalogAttempt((value) => value + 1)}>Retry</button></section>}
+        {liveError && <section className="error-state live-error" role="alert"><div><strong>The fresh analysis couldn’t be completed.</strong><p>{liveError} The saved report remains available below.</p></div><button type="button" onClick={runLiveInvestigation}>Retry fresh analysis</button></section>}
         {(catalogLoading || reportLoading) && <LoadingReport />}
         {!catalogLoading && !reportLoading && !error && report && diagnosis && <DiagnosisView report={report} diagnosis={diagnosis} trajectory={trajectory} liveRunId={liveResult?.run_id ?? ''} />}
       </main>
-      <footer><span>Incident Investigator</span><span>Visible operational data only · No evaluator fields</span></footer>
+      <footer><span>Incident Investigator</span><span>Structured findings from visible operational data</span></footer>
     </div>
   )
 }

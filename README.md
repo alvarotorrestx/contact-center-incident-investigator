@@ -170,16 +170,25 @@ Start the API and UI in separate terminals from the repository root:
 corepack pnpm --dir frontend dev
 ```
 
-Open `http://localhost:5173`. The screen loads the frozen incidents and the curated,
-configuration-matched Stage 0 diagnosis immediately for a fast, repeatable demo. Select **Deep
-investigation** to inspect the preserved V2 tool decisions, hypothesis ledger, and public audit
-trail. Switch incidents at any time; the experience remains centered on one incident rather than
-benchmark scoring.
+Open `http://localhost:5173`. **Standard analysis** is selected by default and immediately loads the
+saved, configuration-matched complete-context diagnosis for a fast and repeatable demo. **Deep
+Investigation** is optional: it displays the preserved deterministic tool activity, hypothesis
+ledger, and richer audit trail. It is a drill-down/auditability mode, not a higher-accuracy tier,
+and it never launches a fresh V2 model run.
 
-**Run live analysis** is available in Standard mode and calls the existing Stage 0 production path.
-It requires `OPENAI_API_KEY` and `OPENAI_MODEL=gpt-5.6-sol` in the project-root `.env` (or process
-environment); reasoning effort remains pinned to medium. The optional deep-investigation screen
-uses curated V2 evidence and does not trigger a new model run.
+**Run fresh analysis** appears only in Standard mode. It posts the selected incident ID and
+`system_version="baseline"` to `/api/investigations`, which loads the same complete visible incident
+context and executes the existing single-stage structured analyst with medium reasoning. The new
+run is persisted beneath `results/local/` and `trajectories/local/`. When it completes, the screen
+keeps the selected incident and its visible operational/KPI context but replaces the displayed
+diagnosis and compact two-step history with the fresh response for the current session. Switching
+incidents clears that in-memory response and loads the selected incident's saved report; switching
+back does not restore the earlier live response. Because this is a new model call, its category,
+confidence, and findings may differ from the saved demo diagnosis.
+
+Fresh analysis requires `OPENAI_API_KEY` and `OPENAI_MODEL=gpt-5.6-sol` in the project-root `.env`
+(or process environment). Missing credentials, network failure, or unavailable model access is
+shown inline while the saved report remains visible and retryable.
 
 The V4 presentation endpoint derives KPI and queue summaries only from agent-visible case files and
 combines them with curated structured diagnoses and sanitized public trajectory events. It never
